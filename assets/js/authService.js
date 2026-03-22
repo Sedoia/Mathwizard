@@ -297,7 +297,30 @@ class AuthService {
     async login(emailOrUsername, password) {
         await this._firebaseReady;
 
-        const loginEmail = this.mapLoginIdentifier(emailOrUsername);
+        const identifier = this.mapLoginIdentifier(emailOrUsername);
+        let loginEmail = identifier;
+
+        // If identifier doesn't look like an email, try to find user by username
+        if (!identifier.includes('@')) {
+            try {
+                const usersRef = window.firebaseDb.collection(this.USERS_COLLECTION);
+                const usernameQuery = await usersRef
+                    .where('username', '==', identifier)
+                    .limit(1)
+                    .get();
+
+                if (!usernameQuery.empty) {
+                    loginEmail = usernameQuery.docs[0].data().email;
+                } else {
+                    throw new Error(`Username "${emailOrUsername}" not found. Please use email or correct username.`);
+                }
+            } catch (error) {
+                if (error.message.includes('not found')) {
+                    throw error;
+                }
+                throw new Error('Error looking up username. Please try with email instead.');
+            }
+        }
 
         try {
             const credential = await window.firebaseAuth.signInWithEmailAndPassword(loginEmail, password);
