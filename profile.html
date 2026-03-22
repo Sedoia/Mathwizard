@@ -1,0 +1,986 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Math Wizard - Player Profile</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="assets/js/tailwind-config.js"></script>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <script src="https://www.gstatic.com/firebasejs/12.11.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/12.11.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore-compat.js"></script>
+    <script src="assets/js/firebaseConfig.js"></script>
+    <!-- Service Layer Scripts (load in order) -->
+    <script src="assets/js/authService.js"></script>
+    <script src="assets/js/playerService.js"></script>
+    <script src="assets/js/profileRenderer.js"></script>
+    <!-- Profile Page Script -->
+    <script src="assets/js/profile.js" defer></script>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Cinzel+Decorative:wght@400;700;900&family=Crimson+Text:ital,wght@0,400;0,600;0,700;1,400&family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        // Auth check
+        document.addEventListener('DOMContentLoaded', () => {
+            if (!authService.isAuthenticated()) {
+                window.location.href = 'auth.html';
+                return;
+            }
+            
+            // Load user data into profile
+            const user = authService.getCurrentUser();
+            if (user) {
+                // Update player name
+                const nameEl = document.getElementById('player-name');
+                if (nameEl) nameEl.textContent = user.name || user.username;
+                
+                // Update level
+                const levelEl = document.getElementById('player-level');
+                if (levelEl) levelEl.textContent = user.level || 1;
+                
+                // Update gold
+                const goldEl = document.getElementById('player-gold');
+                if (goldEl) goldEl.textContent = (user.gold || 0).toLocaleString();
+                
+                // Update crystals
+                const crystalsEl = document.getElementById('player-crystals');
+                if (crystalsEl) crystalsEl.textContent = (user.crystals || 0).toLocaleString();
+                
+                // Update role badge
+                const roleBadge = document.getElementById('player-role');
+                if (roleBadge && user.role === 'admin') {
+                    roleBadge.textContent = 'Administrator';
+                    roleBadge.classList.add('text-ncst-accent');
+                }
+                
+                // Show admin link if admin
+                const adminLink = document.getElementById('admin-link');
+                if (adminLink && user.role === 'admin') {
+                    adminLink.classList.remove('hidden');
+                }
+
+                const adminLinkMobile = document.getElementById('admin-link-mobile');
+                if (adminLinkMobile && user.role === 'admin') {
+                    adminLinkMobile.classList.remove('hidden');
+                }
+            }
+        });
+        
+        function logout() {
+            authService.logout();
+            window.location.href = 'auth.html';
+        }
+    </script>
+</head>
+<body class="profile-page antialiased selection:bg-ncst-neon selection:text-ncst-dark">
+
+    <div class="fixed inset-0 pointer-events-none z-0">
+        <div class="absolute inset-0 bg-tech-grid"></div>
+    </div>
+
+    <nav class="fixed top-0 w-full z-50 bg-ncst-dark/95 border-b border-ncst-neon/20" style="box-shadow: 0 2px 20px rgba(0,0,0,0.8), 0 1px 0 rgba(201,168,76,0.1);">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 sm:h-20 flex justify-between items-center">
+            <a href="index.html" class="flex items-center gap-2 sm:gap-3 logo-container group hover:opacity-90 transition-opacity">
+                <img src="assets/img/logo.png" alt="Math Wizard Logo" class="w-8 sm:w-10 h-8 sm:h-10 logo-image transition-all duration-500 group-hover:drop-shadow-[0_0_8px_#C9A84C]">
+                <div>
+                    <h1 class="font-magic text-lg sm:text-xl text-white tracking-widest">Math<span class="text-ncst-gold">Wizard</span></h1>
+                    <p class="text-[0.5rem] sm:text-[0.6rem] uppercase tracking-[0.2em] text-ncst-neon font-bold">The Era Of Mages</p>
+                </div>
+            </a>
+
+            <div class="hidden md:flex items-center gap-6">
+                <a href="index.html" class="text-sm uppercase tracking-widest text-ncst-neon hover:text-ncst-gold transition-colors">
+                    <i class="fa-solid fa-home mr-1"></i> Home
+                </a>
+                <a id="admin-link" href="admin.html" class="hidden text-sm uppercase tracking-widest text-ncst-accent hover:text-ncst-gold transition-colors">
+                    <i class="fa-solid fa-shield mr-1"></i> Admin
+                </a>
+                <button id="settings-btn" class="text-sm uppercase tracking-widest text-ncst-neon hover:text-ncst-gold transition-colors">
+                    <i class="fa-solid fa-gear mr-1"></i> Settings
+                </button>
+                <button onclick="logout()" class="px-4 py-2 border border-ncst-accent text-ncst-accent text-sm font-bold uppercase tracking-widest hover:bg-ncst-accent/10 transition-colors rounded-sm">
+                    <i class="fa-solid fa-sign-out-alt mr-1"></i> Log Out
+                </button>
+            </div>
+
+            <button id="mobile-menu-toggle" class="md:hidden text-ncst-neon text-2xl menu-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+        </div>
+
+        <div id="mobile-menu" class="md:hidden hidden border-t border-ncst-neon/20 bg-ncst-dark/95 px-4 py-3 space-y-2">
+            <a href="index.html" class="block text-sm uppercase tracking-widest text-ncst-neon hover:text-ncst-gold transition-colors py-2">
+                <i class="fa-solid fa-home mr-1"></i> Home
+            </a>
+            <a id="admin-link-mobile" href="admin.html" class="hidden block text-sm uppercase tracking-widest text-ncst-accent hover:text-ncst-gold transition-colors py-2">
+                <i class="fa-solid fa-shield mr-1"></i> Admin
+            </a>
+            <button id="mobile-settings-btn" type="button" class="w-full text-left text-sm uppercase tracking-widest text-ncst-neon hover:text-ncst-gold transition-colors py-2">
+                <i class="fa-solid fa-gear mr-1"></i> Settings
+            </button>
+            <button id="mobile-change-password-btn" type="button" class="w-full text-left text-sm uppercase tracking-widest text-ncst-neon hover:text-ncst-gold transition-colors py-2">
+                <i class="fa-solid fa-lock mr-1"></i> Change Password
+            </button>
+            <button onclick="logout()" class="w-full text-left text-sm uppercase tracking-widest text-ncst-accent hover:text-ncst-gold transition-colors py-2">
+                <i class="fa-solid fa-sign-out-alt mr-1"></i> Log Out
+            </button>
+        </div>
+    </nav>
+
+    <div class="absolute inset-0 pointer-events-none"></div>
+
+    <main class="relative z-10 w-full min-h-screen pt-28 px-4 sm:px-6 pb-12">
+        <div class="max-w-6xl mx-auto w-full">
+            <!-- Header with Player Info -->
+            <div class="grid sm:grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8 mb-8">
+                <!-- Character Card -->
+                <div class="lg:col-span-1">
+                    <div class="parchment-panel float-card p-6 sm:p-8 text-center border-2 border-ncst-gold">
+                        <div class="relative w-24 sm:w-28 lg:w-32 h-24 sm:h-28 lg:h-32 mx-auto mb-4">
+                            <div class="absolute inset-0 bg-gradient-to-br from-ncst-gold/40 to-ncst-neon/40 rounded-full blur-xl"></div>
+                            <div id="player-avatar-container" class="relative w-full h-full bg-ncst-dark/50 rounded-full border-2 border-ncst-gold flex items-center justify-center">
+                                <i class="fa-solid fa-wizard text-4xl sm:text-5xl text-ncst-gold"></i>
+                            </div>
+                            <div class="absolute -bottom-2 -right-2 bg-ncst-accent px-2 sm:px-3 py-1 rounded-full">
+                                <span class="text-xs font-bold text-white">ONLINE</span>
+                            </div>
+                        </div>
+                        <h2 id="player-name" class="font-magic text-xl sm:text-2xl text-ncst-gold text-gold-glow mb-1 runic-glow">Loading...</h2>
+                        <p class="text-ncst-neon text-xs sm:text-sm font-heading mb-2"><span id="player-role">Calculus Archmage</span> <i class="fa-solid fa-crown text-ncst-gold ml-1"></i></p>
+                        
+                        <!-- Rank Badge -->
+                        <div class="mb-4 p-3 parchment-panel border border-ncst-gold/50">
+                            <div class="flex items-center justify-center gap-2 mb-2">
+                                <i class="fa-solid fa-star text-ncst-gold"></i>
+                                <span class="text-xs uppercase tracking-wider text-ncst-gold font-bold">Legendary Rank</span>
+                                <i class="fa-solid fa-star text-ncst-gold"></i>
+                            </div>
+                            <div class="text-xs text-gray-400">Top 0.5% Players</div>
+                        </div>
+
+                        <div class="space-y-2 text-sm">
+                            <div class="flex justify-between items-center">
+                                <span class="text-gray-400">Level</span>
+                                <span id="player-level" class="text-2xl font-bold text-ncst-gold">1</span>
+                            </div>
+                            <div class="border border-ncst-neon/30 rounded"></div>
+                            <div class="flex justify-between items-center pt-2">
+                                <span class="text-gray-400">Member Since</span>
+                                <span id="player-member-since" class="text-ncst-neon font-bold text-xs">Jan 2024</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Daily Streak -->
+                    <div id="daily-streak-panel" class="parchment-panel p-4 border border-ncst-accent mt-4">
+                        <p class="font-heading text-xs uppercase tracking-wider mb-2" style="color:#d4a843;"><i class="fa-solid fa-fire text-ncst-gold mr-1"></i>Current Streak</p>
+                        <p class="text-3xl font-bold text-ncst-gold runic-glow">47 Days</p>
+                        <p class="font-flavor italic text-xs mt-1" style="color:#a08060;">Play today to keep the flame alive!</p>
+                    </div>
+                </div>
+
+                <!-- Stats Panel -->
+                <div class="lg:col-span-2">
+                    <div class="parchment-panel p-6 sm:p-8">
+                        <h3 class="font-magic text-xl sm:text-2xl text-ncst-gold text-gold-glow mb-4 sm:mb-6">Character Stats</h3>
+                        
+                        <!-- XP Bar -->
+                        <div class="mb-6">
+                            <div class="flex justify-between items-center mb-2 text-xs sm:text-sm">
+                                <span id="xp-level-label" class="text-gray-400 uppercase tracking-wider">Experience to Level 2</span>
+                                <span id="xp-text" class="text-ncst-gold font-bold">0 / 1000 XP</span>
+                            </div>
+                            <div class="h-2 sm:h-3 bg-ncst-dark/50 rounded-full overflow-hidden border border-ncst-neon/30">
+                                <div id="xp-bar" class="h-full w-4/5 bg-gradient-to-r from-ncst-neon to-ncst-gold rounded-full"></div>
+                            </div>
+                        </div>
+
+                        <!-- Stats Grid - Responsive -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mb-6">
+                            <div class="parchment-panel p-4 border-l-4 border-ncst-neon">
+                                <p class="font-heading text-xs uppercase tracking-wider mb-1" style="color:#a08060;"><i class="fa-solid fa-staff mr-1"></i>Calculus Power</p>
+                                <p id="stat-calc-power" class="text-2xl font-bold text-ncst-neon runic-glow">0</p>
+                                <p class="font-flavor italic text-xs mt-1" style="color:#a08060;">+5 from equipment</p>
+                            </div>
+                            <div class="parchment-panel p-4 border-l-4 border-ncst-gold">
+                                <p class="font-heading text-xs uppercase tracking-wider mb-1" style="color:#a08060;"><i class="fa-solid fa-crosshairs mr-1"></i>Accuracy Rate</p>
+                                <p id="stat-accuracy" class="text-2xl font-bold text-ncst-gold runic-glow">0%</p>
+                                <p class="font-flavor italic text-xs mt-1" style="color:#a08060;">Master tier</p>
+                            </div>
+                            <div class="parchment-panel p-4 border-l-4 border-ncst-accent">
+                                <p class="font-heading text-xs uppercase tracking-wider mb-1" style="color:#a08060;"><i class="fa-solid fa-trophy mr-1"></i>Challenges Won</p>
+                                <p id="stat-challenges" class="text-2xl font-bold text-ncst-accent runic-glow">0</p>
+                                <p class="font-flavor italic text-xs mt-1" style="color:#a08060;">Win rate: 96%</p>
+                            </div>
+                            <div class="parchment-panel p-4 border-l-4 border-yellow-400">
+                                <p class="font-heading text-xs uppercase tracking-wider mb-1" style="color:#a08060;"><i class="fa-solid fa-hourglass-end mr-1"></i>Play Time</p>
+                                <p id="stat-play-time" class="text-2xl font-bold text-yellow-400 runic-glow">0h</p>
+                                <p class="font-flavor italic text-xs mt-1" style="color:#a08060;">Avg: 2.6h/day</p>
+                            </div>
+                        </div>
+
+                        <!-- Combat Stats -->
+                        <div class="parchment-panel p-4">
+                            <h4 class="font-heading text-sm text-ncst-gold mb-3 uppercase tracking-wider">Combat Statistics</h4>
+                            <div class="grid grid-cols-3 gap-3 text-center">
+                                <div>
+                                    <p class="text-xs text-gray-400 mb-1">Crit Rate</p>
+                                    <p id="stat-crit-rate" class="text-lg font-bold text-ncst-neon">0%</p>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-gray-400 mb-1">Dodge</p>
+                                    <p id="stat-dodge" class="text-lg font-bold text-ncst-gold">0%</p>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-gray-400 mb-1">Defense</p>
+                                    <p id="stat-defense" class="text-lg font-bold text-ncst-accent">0</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Daily Challenges & Missions -->
+            <div class="grid lg:grid-cols-2 gap-8 mb-8">
+                <!-- Daily Challenges -->
+                <div id="daily-challenges-panel" class="parchment-panel p-8">
+                    <h3 class="font-magic text-2xl text-ncst-gold text-gold-glow mb-6">
+                        <i class="fa-solid fa-sun text-ncst-gold mr-2"></i>Daily Challenges
+                    </h3>
+                    <div id="daily-challenges-list" class="space-y-3">
+                        <div class="p-4 glass-panel rounded-lg border-l-4 border-ncst-neon">
+                            <div class="flex items-start justify-between">
+                                <div>
+                                    <p class="font-bold text-white">Derivative Duel</p>
+                                    <p class="text-xs text-gray-400 mt-1">Solve 5 derivatives perfectly</p>
+                                </div>
+                                <span class="text-ncst-neon font-bold text-sm">3/5</span>
+                            </div>
+                            <div class="h-2 bg-ncst-dark/50 rounded-full mt-2 overflow-hidden">
+                                <div class="h-full w-3/5 bg-ncst-neon rounded-full"></div>
+                            </div>
+                            <p class="text-xs text-ncst-gold mt-2">Reward: 500 XP + 100 Gold</p>
+                        </div>
+
+                        <div class="p-4 glass-panel rounded-lg border-l-4 border-ncst-gold">
+                            <div class="flex items-start justify-between">
+                                <div>
+                                    <p class="font-bold text-white">Integration Challenge</p>
+                                    <p class="text-xs text-gray-400 mt-1">Complete 3 integration battles</p>
+                                </div>
+                                <span class="text-ncst-gold font-bold text-sm">2/3</span>
+                            </div>
+                            <div class="h-2 bg-ncst-dark/50 rounded-full mt-2 overflow-hidden">
+                                <div class="h-full w-2/3 bg-ncst-gold rounded-full"></div>
+                            </div>
+                            <p class="text-xs text-ncst-gold mt-2">Reward: 750 XP + 150 Crystals</p>
+                        </div>
+
+                        <div class="p-4 glass-panel rounded-lg border-l-4 border-ncst-accent opacity-60">
+                            <div class="flex items-start justify-between">
+                                <div>
+                                    <p class="font-bold text-gray-400">Perfect Score</p>
+                                    <p class="text-xs text-gray-500 mt-1">Get 100% accuracy in any challenge</p>
+                                </div>
+                                <span class="text-gray-500 font-bold text-sm">0/1</span>
+                            </div>
+                            <div class="h-2 bg-ncst-dark/50 rounded-full mt-2 overflow-hidden">
+                                <div class="h-full w-0 bg-ncst-accent rounded-full"></div>
+                            </div>
+                            <p class="text-xs text-ncst-accent mt-2">Reward: 1000 XP + 500 Gold</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quest Log -->
+                <div id="active-quests-panel" class="parchment-panel p-8">
+                    <h3 class="font-magic text-2xl text-ncst-gold text-gold-glow mb-6">
+                        <i class="fa-solid fa-scroll text-ncst-gold mr-2"></i>Active Quests
+                    </h3>
+                    <div id="active-quests-list" class="space-y-3">
+                        <div class="p-4 glass-panel rounded-lg hover:border-ncst-neon transition-all cursor-pointer">
+                            <div class="flex items-center justify-between mb-2">
+                                <p class="font-bold text-ncst-neon">The Calculus Prophecy</p>
+                                <span class="text-xs bg-ncst-neon/20 text-ncst-neon px-2 py-1 rounded">Main Quest</span>
+                            </div>
+                            <p class="text-xs text-gray-400 mb-3">Reach Level 50 and master all spell families</p>
+                            <div class="h-1 bg-ncst-dark/50 rounded-full overflow-hidden">
+                                <div class="h-full w-1/2 bg-gradient-to-r from-ncst-neon to-ncst-gold"></div>
+                            </div>
+                        </div>
+
+                        <div class="p-4 glass-panel rounded-lg hover:border-ncst-gold transition-all cursor-pointer">
+                            <div class="flex items-center justify-between mb-2">
+                                <p class="font-bold text-ncst-gold">Dungeon Master</p>
+                                <span class="text-xs bg-ncst-gold/20 text-ncst-gold px-2 py-1 rounded">Side Quest</span>
+                            </div>
+                            <p class="text-xs text-gray-400 mb-3">Clear all 10 dungeon levels without losing</p>
+                            <div class="h-1 bg-ncst-dark/50 rounded-full overflow-hidden">
+                                <div class="h-full w-3/5 bg-gradient-to-r from-ncst-gold to-ncst-accent"></div>
+                            </div>
+                        </div>
+
+                        <div class="p-4 glass-panel rounded-lg hover:border-ncst-accent transition-all cursor-pointer">
+                            <div class="flex items-center justify-between mb-2">
+                                <p class="font-bold text-ncst-accent">Collector's Paradise</p>
+                                <span class="text-xs bg-ncst-accent/20 text-ncst-accent px-2 py-1 rounded">Bonus Quest</span>
+                            </div>
+                            <p class="text-xs text-gray-400 mb-3">Collect all legendary equipment pieces (3/6)</p>
+                            <div class="h-1 bg-ncst-dark/50 rounded-full overflow-hidden">
+                                <div class="h-full w-1/2 bg-ncst-accent"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Currency & Resources -->
+            <div class="grid md:grid-cols-3 gap-6 mb-8">
+                <div class="parchment-panel p-6 border-2 border-ncst-gold text-center">
+                    <div class="text-4xl text-ncst-gold mb-2"><i class="fa-solid fa-coins"></i></div>
+                    <p class="font-heading text-xs uppercase tracking-wider mb-2" style="color:#a08060;">Gold Reserve</p>
+                    <p id="player-gold" class="text-3xl font-bold text-ncst-gold">0</p>
+                </div>
+                <div class="parchment-panel p-6 border-2 border-ncst-neon text-center">
+                    <div class="text-4xl text-ncst-neon mb-2"><i class="fa-solid fa-gem"></i></div>
+                    <p class="font-heading text-xs uppercase tracking-wider mb-2" style="color:#a08060;">Arcane Crystals</p>
+                    <p id="player-crystals" class="text-3xl font-bold text-ncst-neon">0</p>
+                </div>
+                <div class="parchment-panel p-6 border-2 border-ncst-accent text-center">
+                    <div class="text-4xl text-ncst-accent mb-2"><i class="fa-solid fa-zap"></i></div>
+                    <p class="font-heading text-xs uppercase tracking-wider mb-2" style="color:#a08060;">Mana Energy</p>
+                    <p class="text-3xl font-bold text-ncst-accent">85 / 100</p>
+                </div>
+            </div>
+
+            <!-- Inventory & Equipment -->
+            <div class="grid lg:grid-cols-2 gap-8 mb-8">
+                <!-- Inventory -->
+                <div id="inventory-panel" class="parchment-panel p-8">
+                    <h3 class="font-magic text-2xl text-ncst-gold text-gold-glow mb-6">Inventory</h3>
+                    <div id="inventory-list" class="space-y-3">
+                        <div class="flex items-center justify-between p-4 glass-panel rounded-lg hover:border-ncst-neon transition-all cursor-pointer">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 bg-ncst-gold/20 rounded flex items-center justify-center">
+                                    <i class="fa-solid fa-book text-ncst-gold"></i>
+                                </div>
+                                <div>
+                                    <p class="font-bold text-white">Calculus Grimoire</p>
+                                    <p class="text-xs text-gray-400">+15% XP Gain</p>
+                                </div>
+                            </div>
+                            <span class="text-ncst-gold font-bold">x1</span>
+                        </div>
+
+                        <div class="flex items-center justify-between p-4 glass-panel rounded-lg hover:border-ncst-neon transition-all cursor-pointer">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 bg-ncst-neon/20 rounded flex items-center justify-center">
+                                    <i class="fa-solid fa-potion text-ncst-neon"></i>
+                                </div>
+                                <div>
+                                    <p class="font-bold text-white">Intelligence Potion</p>
+                                    <p class="text-xs text-gray-400">+20% Accuracy (1 Use)</p>
+                                </div>
+                            </div>
+                            <span class="text-ncst-neon font-bold">x3</span>
+                        </div>
+
+                        <div class="flex items-center justify-between p-4 glass-panel rounded-lg hover:border-ncst-neon transition-all cursor-pointer">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 bg-ncst-accent/20 rounded flex items-center justify-center">
+                                    <i class="fa-solid fa-shield text-ncst-accent"></i>
+                                </div>
+                                <div>
+                                    <p class="font-bold text-white">Aegis Amulet</p>
+                                    <p class="text-xs text-gray-400">Reduce Mistakes by 10%</p>
+                                </div>
+                            </div>
+                            <span class="text-ncst-accent font-bold">x1</span>
+                        </div>
+
+                        <div class="flex items-center justify-between p-4 glass-panel rounded-lg hover:border-ncst-neon transition-all cursor-pointer">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 bg-yellow-400/20 rounded flex items-center justify-center">
+                                    <i class="fa-solid fa-star text-yellow-400"></i>
+                                </div>
+                                <div>
+                                    <p class="font-bold text-white">Wisdom Scroll</p>
+                                    <p class="text-xs text-gray-400">Unlock Hints</p>
+                                </div>
+                            </div>
+                            <span class="text-yellow-400 font-bold">x5</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Equipment -->
+                <div id="equipment-panel" class="parchment-panel p-8">
+                    <h3 class="font-magic text-2xl text-ncst-gold text-gold-glow mb-6">Equipment</h3>
+                    <div id="equipment-list" class="space-y-3">
+                        <div class="p-4 glass-panel rounded-lg border-l-4 border-ncst-gold">
+                            <p class="text-xs text-gray-400 uppercase tracking-wider mb-1">Wand</p>
+                            <p class="font-bold text-white">Wand of Calculus <i class="fa-solid fa-wand-magic-sparkles text-ncst-gold ml-2"></i></p>
+                            <p class="text-xs text-ncst-gold mt-1">+25 Calculus Power</p>
+                        </div>
+
+                        <div class="p-4 glass-panel rounded-lg border-l-4 border-ncst-neon">
+                            <p class="text-xs text-gray-400 uppercase tracking-wider mb-1">Armor</p>
+                            <p class="font-bold text-white">Scholar's Robes <i class="fa-solid fa-shirt text-ncst-neon ml-2"></i></p>
+                            <p class="text-xs text-ncst-neon mt-1">+15% Focus Duration</p>
+                        </div>
+
+                        <div class="p-4 glass-panel rounded-lg border-l-4 border-ncst-accent">
+                            <p class="text-xs text-gray-400 uppercase tracking-wider mb-1">Accessory</p>
+                            <p class="font-bold text-white">Ring of Wisdom <i class="fa-solid fa-ring text-ncst-accent ml-2"></i></p>
+                            <p class="text-xs text-ncst-accent mt-1">+10% Mana Regeneration</p>
+                        </div>
+
+                        <div class="p-4 glass-panel rounded-lg border-l-4 border-gray-600">
+                            <p class="text-xs text-gray-400 uppercase tracking-wider mb-1">Cape</p>
+                            <p class="font-bold text-gray-400">Empty Slot</p>
+                            <p class="text-xs text-gray-500 mt-1">Complete Challenges to unlock</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Profile Navigation Tabs -->
+            <div class="flex flex-wrap gap-2 mb-8 border-b border-white/10 pb-4">
+                <button onclick="showProfileTab('overview')" class="profile-tab active px-3 sm:px-4 py-2 text-xs sm:text-sm font-bold uppercase tracking-wider rounded-lg transition-all bg-ncst-neon/20 text-ncst-neon" data-tab="overview">
+                    <i class="fa-solid fa-home mr-1 sm:mr-2"></i><span class="hidden sm:inline">Overview</span>
+                </button>
+                <button onclick="showProfileTab('statistics')" class="profile-tab px-3 sm:px-4 py-2 text-xs sm:text-sm font-bold uppercase tracking-wider rounded-lg transition-all text-gray-400" data-tab="statistics">
+                    <i class="fa-solid fa-chart-bar mr-1 sm:mr-2"></i><span class="hidden sm:inline">Statistics</span>
+                </button>
+                <button onclick="showProfileTab('purchases')" class="profile-tab px-3 sm:px-4 py-2 text-xs sm:text-sm font-bold uppercase tracking-wider rounded-lg transition-all text-gray-400" data-tab="purchases">
+                    <i class="fa-solid fa-receipt mr-1 sm:mr-2"></i><span class="hidden sm:inline">Purchases</span>
+                </button>
+                <button onclick="showProfileTab('skins')" class="profile-tab px-3 sm:px-4 py-2 text-xs sm:text-sm font-bold uppercase tracking-wider rounded-lg transition-all text-gray-400" data-tab="skins">
+                    <i class="fa-solid fa-shirt mr-1 sm:mr-2"></i><span class="hidden sm:inline">Skins</span>
+                </button>
+                <button onclick="showProfileTab('achievements')" class="profile-tab px-3 sm:px-4 py-2 text-xs sm:text-sm font-bold uppercase tracking-wider rounded-lg transition-all text-gray-400" data-tab="achievements">
+                    <i class="fa-solid fa-trophy mr-1 sm:mr-2"></i><span class="hidden sm:inline">Achievements</span>
+                </button>
+                <button onclick="showProfileTab('settings')" class="profile-tab px-3 sm:px-4 py-2 text-xs sm:text-sm font-bold uppercase tracking-wider rounded-lg transition-all text-gray-400" data-tab="settings">
+                    <i class="fa-solid fa-user-pen mr-1 sm:mr-2"></i><span class="hidden sm:inline">Edit Profile</span>
+                </button>
+            </div>
+
+            <!-- Overview Tab (Original Content) -->
+            <div id="profile-tab-overview" class="profile-tab-content">
+            <!-- Recent Achievements -->
+            <div id="recent-achievements-panel" class="parchment-panel p-6 sm:p-8 mb-8">
+                <h3 class="font-magic text-xl sm:text-2xl text-ncst-gold text-gold-glow mb-6">
+                    <i class="fa-solid fa-medal text-ncst-gold mr-2"></i>Recent Achievements
+                </h3>
+                <div id="recent-achievements-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 sm:gap-4">
+                    <div class="p-4 glass-panel rounded-lg text-center hover:border-ncst-gold transition-all cursor-pointer">
+                        <div class="text-4xl mb-2"><i class="fa-solid fa-medal text-ncst-gold"></i></div>
+                        <p class="font-bold text-white text-sm mb-1">Derivative Master</p>
+                        <p class="text-xs text-gray-400">Solve 50 Derivatives</p>
+                    </div>
+
+                    <div class="p-4 glass-panel rounded-lg text-center hover:border-ncst-neon transition-all cursor-pointer">
+                        <div class="text-4xl mb-2"><i class="fa-solid fa-fire text-ncst-accent"></i></div>
+                        <p class="font-bold text-white text-sm mb-1">Streak King</p>
+                        <p class="text-xs text-gray-400">50 Day Streak</p>
+                    </div>
+
+                    <div class="p-4 glass-panel rounded-lg text-center hover:border-ncst-neon transition-all cursor-pointer">
+                        <div class="text-4xl mb-2"><i class="fa-solid fa-brain text-ncst-neon"></i></div>
+                        <p class="font-bold text-white text-sm mb-1">Genius</p>
+                        <p class="text-xs text-gray-400">Perfect Score 10 Times</p>
+                    </div>
+
+                    <div class="p-4 glass-panel rounded-lg text-center hover:border-ncst-neon transition-all cursor-pointer opacity-50">
+                        <div class="text-4xl mb-2"><i class="fa-solid fa-crown text-yellow-400"></i></div>
+                        <p class="font-bold text-white text-sm mb-1">Legend</p>
+                        <p class="text-xs text-gray-400">Unlock at Level 50</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Battle Log & Recent Activity -->
+            <div class="grid sm:grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 mb-8">
+                <!-- Battle History -->
+                <div id="battle-history-panel" class="parchment-panel p-6 sm:p-8">
+                    <h3 class="font-magic text-xl sm:text-2xl text-ncst-gold text-gold-glow mb-6">
+                        <i class="fa-solid fa-swords text-ncst-accent mr-2"></i>Last 5 Battles
+                    </h3>
+                    <div id="battle-history-list" class="space-y-3">
+                        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between p-3 glass-panel rounded-lg border-l-4 border-green-500 gap-3">
+                            <div class="min-w-0">
+                                <p class="font-bold text-white text-xs sm:text-sm truncate">Integration Duel vs Algebra Bot</p>
+                                <p class="text-xs text-gray-400">2 hours ago • Difficulty: Hard</p>
+                            </div>
+                            <span class="text-green-500 font-bold text-sm flex-shrink-0">WIN</span>
+                        </div>
+
+                        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between p-3 glass-panel rounded-lg border-l-4 border-green-500 gap-3">
+                            <div class="min-w-0">
+                                <p class="font-bold text-white text-xs sm:text-sm truncate">Derivative Challenge vs Calculus Master</p>
+                                <p class="text-xs text-gray-400">5 hours ago • Difficulty: Expert</p>
+                            </div>
+                            <span class="text-green-500 font-bold text-sm flex-shrink-0">WIN</span>
+                        </div>
+
+                        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between p-3 glass-panel rounded-lg border-l-4 border-red-500 gap-3">
+                            <div class="min-w-0">
+                                <p class="font-bold text-white text-xs sm:text-sm truncate">Advanced Calculus Dungeon</p>
+                                <p class="text-xs text-gray-400">1 day ago • Difficulty: Insane</p>
+                            </div>
+                            <span class="text-red-500 font-bold text-sm flex-shrink-0">LOSS</span>
+                        </div>
+
+                        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between p-3 glass-panel rounded-lg border-l-4 border-green-500 gap-3">
+                            <div class="min-w-0">
+                                <p class="font-bold text-white text-xs sm:text-sm truncate">Function Mastery Quiz</p>
+                                <p class="text-xs text-gray-400">2 days ago • Accuracy: 98%</p>
+                            </div>
+                            <span class="text-green-500 font-bold text-sm flex-shrink-0">WIN</span>
+                        </div>
+
+                        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between p-3 glass-panel rounded-lg border-l-4 border-green-500 gap-3">
+                            <div class="min-w-0">
+                                <p class="font-bold text-white text-xs sm:text-sm truncate">Team Battle vs Math Legends</p>
+                                <p class="text-xs text-gray-400">3 days ago • Team Score: 2,450</p>
+                            </div>
+                            <span class="text-green-500 font-bold text-sm flex-shrink-0">WIN</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Leaderboard Position -->
+                <div class="space-y-6">
+                    <div id="leaderboard-panel" class="parchment-panel p-6 sm:p-8">
+                        <h3 class="font-magic text-xl sm:text-2xl text-ncst-gold text-gold-glow mb-4">
+                            <i class="fa-solid fa-chart-line text-ncst-gold mr-2"></i>Leaderboard
+                        </h3>
+                        <div class="text-center mb-6">
+                            <p class="text-xs sm:text-sm text-gray-400 mb-2">Global Rank</p>
+                            <p class="text-4xl sm:text-5xl font-bold text-ncst-gold">#42</p>
+                            <p class="text-xs text-gray-500 mt-2">Out of 50,000+ Players</p>
+                        </div>
+                        <div class="space-y-2 text-xs">
+                            <div class="flex justify-between items-center">
+                                <span class="text-gray-400">Regional Rank</span>
+                                <span class="text-ncst-neon font-bold">#8 (Asia-Pacific)</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-gray-400">School Rank</span>
+                                <span class="text-ncst-neon font-bold">#1 (NCST)</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-gray-400">Total Points</span>
+                                <span class="text-ncst-gold font-bold">45,820 pts</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Next Rank Info -->
+                    <div class="parchment-panel p-6 border-2 border-ncst-neon/30">
+                        <h4 class="font-heading text-ncst-neon mb-3 text-xs uppercase tracking-wider">
+                            <i class="fa-solid fa-arrow-up mr-2"></i>Next Rank: Mythical
+                        </h4>
+                        <p class="text-xs text-gray-400 mb-3">Level 50 • 2,180 points away</p>
+                        <div class="h-2 bg-ncst-dark/50 rounded-full overflow-hidden">
+                            <div class="h-full w-4/5 bg-gradient-to-r from-ncst-neon to-ncst-gold"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="grid sm:grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+                <button id="resume-game-btn" class="rune-btn flex-1 flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-play"></i> <span class="hidden sm:inline">Resume Last Challenge</span><span class="sm:hidden">Resume</span>
+                </button>
+                <button id="new-challenge-btn" class="iron-plaque-btn flex-1 flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-plus"></i> <span class="hidden sm:inline">Start New Challenge</span><span class="sm:hidden">New Challenge</span>
+                </button>
+            </div>
+            </div>
+            <!-- End Overview Tab -->
+
+            <!-- Statistics Tab -->
+            <div id="profile-tab-statistics" class="profile-tab-content hidden">
+                <div class="parchment-panel p-6 sm:p-8 mb-8">
+                    <p class="text-sm text-gray-400">Loading statistics...</p>
+                </div>
+            </div>
+            <!-- End Statistics Tab -->
+
+            <!-- Purchase History Tab -->
+            <div id="profile-tab-purchases" class="profile-tab-content hidden">
+                <div class="parchment-panel p-6 sm:p-8 mb-8">
+                    <p class="text-sm text-gray-400">Loading purchase history...</p>
+                </div>
+            </div>
+            <!-- End Purchase History Tab -->
+
+            <!-- Skins Unlocked Tab -->
+            <div id="profile-tab-skins" class="profile-tab-content hidden">
+                <div class="parchment-panel p-6 sm:p-8 mb-8">
+                    <p class="text-sm text-gray-400">Loading skins...</p>
+                </div>
+            </div>
+            <!-- End Skins Tab -->
+
+            <!-- Achievements Tab -->
+            <div id="profile-tab-achievements" class="profile-tab-content hidden">
+                <div class="parchment-panel p-6 sm:p-8 mb-8">
+                    <p class="text-sm text-gray-400">Loading achievements...</p>
+                </div>
+            </div>
+            <!-- End Achievements Tab -->
+
+            <!-- Edit Profile Tab -->
+            <div id="profile-tab-settings" class="profile-tab-content hidden">
+                <div class="parchment-panel p-6 sm:p-8 mb-8">
+                    <h3 class="font-magic text-2xl text-ncst-gold text-gold-glow mb-6">
+                        <i class="fa-solid fa-user-pen text-ncst-gold mr-2"></i>Edit Profile
+                    </h3>
+
+                    <form id="edit-profile-form" class="space-y-6">
+                        <!-- Avatar Section -->
+                        <div class="flex flex-col sm:flex-row items-center gap-6 pb-6 border-b border-white/10">
+                            <div class="relative group">
+                                <div id="edit-avatar-preview" class="w-24 h-24 bg-gradient-to-br from-ncst-neon/30 to-ncst-gold/30 rounded-full flex items-center justify-center border-2 border-ncst-neon overflow-hidden">
+                                    <i class="fa-solid fa-user text-ncst-neon text-4xl"></i>
+                                </div>
+                                <button id="change-avatar-btn" type="button" class="absolute bottom-0 right-0 w-8 h-8 bg-ncst-neon text-ncst-dark rounded-full flex items-center justify-center hover:bg-ncst-gold transition-colors">
+                                    <i class="fa-solid fa-camera text-sm"></i>
+                                </button>
+                                <input id="avatar-file-input" type="file" accept="image/*" class="hidden">
+                            </div>
+                            <div class="text-center sm:text-left">
+                                <p class="text-white font-bold mb-1">Change Avatar</p>
+                                <p class="text-xs text-gray-400">JPG, PNG or GIF. Max 2MB</p>
+                            </div>
+                        </div>
+
+                        <!-- Profile Info -->
+                        <div class="grid sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-bold text-ncst-neon uppercase tracking-wider mb-2">Display Name</label>
+                                <input id="display-name-input" type="text" value="Alex Merlin" class="w-full px-4 py-3 bg-ncst-dark/50 border border-ncst-neon/30 rounded-lg text-white focus:outline-none focus:border-ncst-neon focus:ring-1 focus:ring-ncst-neon/50 transition-all min-h-[44px]">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-ncst-neon uppercase tracking-wider mb-2">Username</label>
+                                <input id="username-input" type="text" value="@alex_wizard" class="w-full px-4 py-3 bg-ncst-dark/50 border border-ncst-neon/30 rounded-lg text-white focus:outline-none focus:border-ncst-neon focus:ring-1 focus:ring-ncst-neon/50 transition-all min-h-[44px]">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold text-ncst-neon uppercase tracking-wider mb-2">Email Address</label>
+                            <input id="email-input" type="email" value="alex.merlin@ncst.edu" class="w-full px-4 py-3 bg-ncst-dark/50 border border-ncst-neon/30 rounded-lg text-white focus:outline-none focus:border-ncst-neon focus:ring-1 focus:ring-ncst-neon/50 transition-all min-h-[44px]">
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold text-ncst-neon uppercase tracking-wider mb-2">Bio</label>
+                            <textarea id="bio-input" rows="3" placeholder="Tell others about yourself..." class="w-full px-4 py-3 bg-ncst-dark/50 border border-ncst-neon/30 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-ncst-neon focus:ring-1 focus:ring-ncst-neon/50 transition-all resize-none">Math enthusiast and calculus champion from NCST. On a quest to master all mathematical spells! 🧙‍♂️</textarea>
+                        </div>
+
+                        <!-- Social Links -->
+                        <div class="pt-6 border-t border-white/10">
+                            <h4 class="font-bold text-white mb-4 text-sm">Social Links</h4>
+                            <div class="grid sm:grid-cols-2 gap-4">
+                                <div class="relative">
+                                    <i class="fa-brands fa-discord absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                                    <input id="discord-input" type="text" placeholder="Discord username" class="w-full pl-10 pr-4 py-3 bg-ncst-dark/50 border border-ncst-neon/30 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-ncst-neon transition-all min-h-[44px]">
+                                </div>
+                                <div class="relative">
+                                    <i class="fa-brands fa-twitter absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                                    <input id="twitter-input" type="text" placeholder="Twitter handle" class="w-full pl-10 pr-4 py-3 bg-ncst-dark/50 border border-ncst-neon/30 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-ncst-neon transition-all min-h-[44px]">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Privacy Settings -->
+                        <div class="pt-6 border-t border-white/10">
+                            <h4 class="font-bold text-white mb-4 text-sm">Privacy Settings</h4>
+                            <div class="space-y-3">
+                                <label class="flex items-center justify-between p-3 glass-panel rounded-lg cursor-pointer hover:border-ncst-neon transition-all">
+                                    <div>
+                                        <p class="text-white text-sm">Show Online Status</p>
+                                        <p class="text-xs text-gray-400">Let others see when you're online</p>
+                                    </div>
+                                    <input id="privacy-online" type="checkbox" checked class="w-5 h-5 cursor-pointer">
+                                </label>
+                                <label class="flex items-center justify-between p-3 glass-panel rounded-lg cursor-pointer hover:border-ncst-neon transition-all">
+                                    <div>
+                                        <p class="text-white text-sm">Show Profile on Leaderboard</p>
+                                        <p class="text-xs text-gray-400">Display your profile publicly</p>
+                                    </div>
+                                    <input id="privacy-leaderboard" type="checkbox" checked class="w-5 h-5 cursor-pointer">
+                                </label>
+                                <label class="flex items-center justify-between p-3 glass-panel rounded-lg cursor-pointer hover:border-ncst-neon transition-all">
+                                    <div>
+                                        <p class="text-white text-sm">Allow Friend Requests</p>
+                                        <p class="text-xs text-gray-400">Receive requests from other players</p>
+                                    </div>
+                                    <input id="privacy-friends" type="checkbox" checked class="w-5 h-5 cursor-pointer">
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Save Button -->
+                        <div class="pt-6 flex flex-col sm:flex-row gap-4">
+                            <button type="submit" class="rune-btn flex-1 flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-check mr-2"></i> Save Changes
+                            </button>
+                            <button type="button" class="iron-plaque-btn flex-1 flex items-center justify-center gap-2">
+                                Cancel
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Danger Zone -->
+                <div class="parchment-panel p-6 border border-ncst-crim/50">
+                    <h4 class="font-heading text-ncst-crim mb-4 text-sm uppercase tracking-wider">
+                        <i class="fa-solid fa-triangle-exclamation mr-2"></i>Danger Zone
+                    </h4>
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                        <div>
+                            <p class="text-white text-sm font-bold">Delete Account</p>
+                            <p class="text-xs text-gray-400">Permanently delete your account and all data</p>
+                        </div>
+                        <button id="delete-account-btn" type="button" class="px-4 py-2 border border-ncst-accent text-ncst-accent hover:bg-ncst-accent hover:text-white transition-all rounded-lg min-h-[44px] text-sm font-bold">
+                            Delete Account
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <!-- End Edit Profile Tab -->
+
+        </div>
+    </main>
+
+    <!-- Change Password Modal -->
+    <div id="change-password-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-[60] items-center justify-center p-4 sm:p-6">
+        <div class="parchment-panel p-6 sm:p-8 w-full max-w-md">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="font-magic text-xl sm:text-2xl text-ncst-gold text-gold-glow">Change Password</h3>
+                <button id="close-change-password-modal" type="button" class="text-gray-400 hover:text-ncst-neon transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+            </div>
+
+            <form id="change-password-form" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold text-ncst-neon uppercase tracking-wider mb-2">Current Password</label>
+                    <div class="relative">
+                        <input id="cp-current-password" type="password" required class="w-full px-4 pr-12 py-3 bg-ncst-dark/50 border border-ncst-neon/30 rounded-lg text-white focus:outline-none focus:border-ncst-neon min-h-[44px]">
+                        <button type="button" class="password-toggle-btn absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-ncst-neon transition-colors" data-target="cp-current-password" aria-label="Show password">
+                            <i class="fa-solid fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-ncst-neon uppercase tracking-wider mb-2">New Password</label>
+                    <div class="relative">
+                        <input id="cp-new-password" type="password" required minlength="6" class="w-full px-4 pr-12 py-3 bg-ncst-dark/50 border border-ncst-neon/30 rounded-lg text-white focus:outline-none focus:border-ncst-neon min-h-[44px]">
+                        <button type="button" class="password-toggle-btn absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-ncst-neon transition-colors" data-target="cp-new-password" aria-label="Show password">
+                            <i class="fa-solid fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-ncst-neon uppercase tracking-wider mb-2">Confirm New Password</label>
+                    <div class="relative">
+                        <input id="cp-confirm-password" type="password" required minlength="6" class="w-full px-4 pr-12 py-3 bg-ncst-dark/50 border border-ncst-neon/30 rounded-lg text-white focus:outline-none focus:border-ncst-neon min-h-[44px]">
+                        <button type="button" class="password-toggle-btn absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-ncst-neon transition-colors" data-target="cp-confirm-password" aria-label="Show password">
+                            <i class="fa-solid fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="flex gap-3 pt-2">
+                    <button id="submit-change-password" type="submit" class="rune-btn flex-1">Update Password</button>
+                    <button id="cancel-change-password" type="button" class="iron-plaque-btn flex-1">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Delete Account Modal -->
+    <div id="delete-account-modal" class="hidden fixed inset-0 bg-black/85 backdrop-blur-sm z-[60] items-center justify-center p-4 sm:p-6">
+        <div class="parchment-panel p-6 sm:p-8 w-full max-w-md border border-ncst-accent/50">
+            <div class="flex justify-between items-center mb-5">
+                <h3 class="font-magic text-xl sm:text-2xl text-ncst-accent">Delete Account</h3>
+                <button id="close-delete-account-modal" type="button" class="text-gray-400 hover:text-ncst-neon transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+            </div>
+
+            <p class="text-sm text-gray-300 mb-4">This action is permanent. Type <span class="text-ncst-accent font-bold">DELETE</span> to continue.</p>
+
+            <form id="delete-account-form" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold text-ncst-neon uppercase tracking-wider mb-2">Confirmation</label>
+                    <input id="da-confirm-text" type="text" placeholder="Type DELETE" required class="w-full px-4 py-3 bg-ncst-dark/50 border border-ncst-accent/30 rounded-lg text-white focus:outline-none focus:border-ncst-accent min-h-[44px]">
+                </div>
+
+                <div id="da-password-wrap">
+                    <label class="block text-xs font-bold text-ncst-neon uppercase tracking-wider mb-2">Current Password</label>
+                    <div class="relative">
+                        <input id="da-password" type="password" class="w-full px-4 pr-12 py-3 bg-ncst-dark/50 border border-ncst-accent/30 rounded-lg text-white focus:outline-none focus:border-ncst-accent min-h-[44px]">
+                        <button type="button" class="password-toggle-btn absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-ncst-neon transition-colors" data-target="da-password" aria-label="Show password">
+                            <i class="fa-solid fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <p id="da-google-note" class="hidden text-xs text-gray-400">Google account detected. You will confirm deletion in a Google popup.</p>
+
+                <div class="flex gap-3 pt-2">
+                    <button id="submit-delete-account" type="submit" class="px-4 py-3 border border-ncst-accent text-ncst-accent hover:bg-ncst-accent hover:text-white transition-all rounded-lg flex-1 min-h-[44px] text-sm font-bold">Delete Permanently</button>
+                    <button id="cancel-delete-account" type="button" class="iron-plaque-btn flex-1">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settings-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 sm:p-6">
+        <div class="parchment-panel p-6 sm:p-8 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="font-magic text-2xl sm:text-3xl text-ncst-gold text-gold-glow">Chamber Settings</h2>
+                <button id="close-settings" class="text-gray-400 hover:text-ncst-neon transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center">
+                    <i class="fa-solid fa-xmark text-2xl"></i>
+                </button>
+            </div>
+
+            <div class="space-y-6">
+                <!-- Sound Settings -->
+                <div class="pb-6 border-b border-white/10">
+                    <h3 class="font-bold text-white mb-4 text-sm sm:text-base">Sound & Audio</h3>
+                    <div class="space-y-3">
+                        <label class="flex items-center justify-between p-3 glass-panel rounded-lg cursor-pointer hover:border-ncst-neon transition-all">
+                            <span class="text-white text-sm">Sound Effects</span>
+                            <input type="checkbox" checked class="w-5 h-5 cursor-pointer">
+                        </label>
+                        <label class="flex items-center justify-between p-3 glass-panel rounded-lg cursor-pointer hover:border-ncst-neon transition-all">
+                            <span class="text-white text-sm">Background Music</span>
+                            <input type="checkbox" checked class="w-5 h-5 cursor-pointer">
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Gameplay Settings -->
+                <div class="pb-6 border-b border-white/10">
+                    <h3 class="font-bold text-white mb-4 text-sm sm:text-base">Gameplay</h3>
+                    <div class="space-y-3">
+                        <label class="flex flex-col sm:flex-row sm:items-center sm:justify-between p-3 glass-panel rounded-lg cursor-pointer hover:border-ncst-neon transition-all gap-2">
+                            <span class="text-white text-sm">Difficulty</span>
+                            <select class="bg-ncst-dark/50 border border-ncst-neon/30 text-white px-3 py-2 rounded text-sm min-h-[44px]">
+                                <option>Normal</option>
+                                <option>Hard</option>
+                                <option>Expert</option>
+                            </select>
+                        </label>
+                        <label class="flex items-center justify-between p-3 glass-panel rounded-lg cursor-pointer hover:border-ncst-neon transition-all">
+                            <span class="text-white text-sm">Show Hints</span>
+                            <input type="checkbox" checked class="w-5 h-5 cursor-pointer">
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Privacy Settings -->
+                <div>
+                    <h3 class="font-bold text-white mb-4 text-sm sm:text-base">Privacy & Account</h3>
+                    <div class="space-y-3">
+                        <button id="change-password-btn" type="button" class="w-full p-3 glass-panel rounded-lg hover:border-ncst-neon transition-all text-left text-white hover:text-ncst-neon text-sm min-h-[44px] flex items-center">
+                            <i class="fa-solid fa-lock mr-2"></i> Change Password
+                        </button>
+                        <button class="w-full p-3 glass-panel rounded-lg hover:border-ncst-neon transition-all text-left text-white hover:text-ncst-neon text-sm min-h-[44px] flex items-center">
+                            <i class="fa-solid fa-shield mr-2"></i> Privacy Policy
+                        </button>
+                        <button id="modal-delete-account-btn" type="button" class="w-full p-3 glass-panel rounded-lg hover:border-ncst-accent transition-all text-left text-ncst-accent hover:text-ncst-accent text-sm min-h-[44px] flex items-center">
+                            <i class="fa-solid fa-trash mr-2"></i> Delete Account
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <button id="close-settings-btn" class="rune-btn w-full mt-8">Close</button>
+        </div>
+    </div>
+
+    <footer class="relative z-10 py-8 text-center text-xs text-gray-600 font-magic tracking-widest border-t border-ncst-neon/15 bg-ncst-dark mt-12">
+        <p>&copy; 2026 MATH WIZARD. ALL RIGHTS RESERVED.</p>
+        <p class="mt-2 text-gray-700">NATIONAL COLLEGE OF SCIENCE AND TECHNOLOGY</p>
+    </footer>
+
+    <script>
+        // Profile Tab Switching
+        function showProfileTab(tabName) {
+            // Hide all tab contents
+            document.querySelectorAll('.profile-tab-content').forEach(content => {
+                content.classList.add('hidden');
+            });
+            
+            // Remove active state from all tab buttons
+            document.querySelectorAll('.profile-tab').forEach(btn => {
+                btn.classList.remove('active', 'bg-ncst-neon/20', 'text-ncst-neon');
+                btn.classList.add('text-gray-400');
+            });
+            
+            // Show selected tab content
+            const tabContent = document.getElementById('profile-tab-' + tabName);
+            if (tabContent) {
+                tabContent.classList.remove('hidden');
+            }
+            
+            // Add active state to selected tab button
+            const activeBtn = document.querySelector(`[data-tab="${tabName}"]`);
+            if (activeBtn) {
+                activeBtn.classList.add('active', 'bg-ncst-neon/20', 'text-ncst-neon');
+                activeBtn.classList.remove('text-gray-400');
+            }
+
+            if (window.profileRenderer && typeof window.profileRenderer.renderTabContent === 'function') {
+                window.profileRenderer.renderTabContent(tabName);
+            }
+        }
+
+        // Settings Modal
+        function openSettingsModal() {
+            document.getElementById('settings-modal')?.classList.remove('hidden');
+        }
+
+        document.getElementById('settings-btn')?.addEventListener('click', function() {
+            openSettingsModal();
+        });
+
+        document.getElementById('mobile-settings-btn')?.addEventListener('click', function() {
+            openSettingsModal();
+            document.getElementById('mobile-menu')?.classList.add('hidden');
+            document.getElementById('mobile-menu-toggle')?.setAttribute('aria-expanded', 'false');
+        });
+
+        document.getElementById('mobile-change-password-btn')?.addEventListener('click', function() {
+            openSettingsModal();
+            document.getElementById('change-password-btn')?.click();
+            document.getElementById('mobile-menu')?.classList.add('hidden');
+            document.getElementById('mobile-menu-toggle')?.setAttribute('aria-expanded', 'false');
+        });
+
+        document.getElementById('close-settings')?.addEventListener('click', function() {
+            document.getElementById('settings-modal').classList.add('hidden');
+        });
+
+        document.getElementById('close-settings-btn')?.addEventListener('click', function() {
+            document.getElementById('settings-modal').classList.add('hidden');
+        });
+    </script>
+
+</body>
+</html>

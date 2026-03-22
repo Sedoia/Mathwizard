@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Math Wizard - Sign Up / Login</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="assets/js/tailwind-config.js"></script>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <script src="https://www.gstatic.com/firebasejs/12.11.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/12.11.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore-compat.js"></script>
+    <script src="assets/js/firebaseConfig.js"></script>
+    <!-- Service Layer Scripts -->
+    <script src="assets/js/authService.js"></script>
+    <!-- Auth Page Script -->
+    <script src="assets/js/auth.js" defer></script>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Cinzel+Decorative:wght@400;700;900&family=Crimson+Text:ital,wght@0,400;0,600;0,700;1,400&family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="antialiased selection:bg-ncst-neon selection:text-ncst-dark">
+
+    <div class="fixed inset-0 pointer-events-none z-0">
+        <div class="absolute inset-0 bg-tech-grid"></div>
+        <div class="absolute top-0 right-0 w-[500px] h-[500px] bg-ncst-blue rounded-full filter blur-[120px] opacity-40"></div>
+        <div class="absolute bottom-0 left-0 w-[500px] h-[500px] bg-ncst-neon rounded-full filter blur-[120px] opacity-10"></div>
+    </div>
+
+    <nav class="fixed top-0 w-full z-50 bg-ncst-dark/95 border-b border-ncst-neon/20" style="box-shadow: 0 2px 20px rgba(0,0,0,0.8), 0 1px 0 rgba(201,168,76,0.1);">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 sm:h-20 flex justify-between items-center">
+            <a href="index.html" class="flex items-center gap-3 logo-container group hover:opacity-90 transition-opacity">
+                <img src="assets/img/logo.png" alt="Math Wizard Logo" class="w-8 sm:w-10 h-8 sm:h-10 logo-image transition-all duration-500 group-hover:drop-shadow-[0_0_8px_#C9A84C]">
+                <div>
+                    <h1 class="font-magic text-lg sm:text-xl text-white tracking-widest">Math<span class="text-ncst-gold">Wizard</span></h1>
+                    <p class="text-[0.5rem] sm:text-[0.6rem] uppercase tracking-[0.2em] text-ncst-neon font-bold">The Era Of Mages</p>
+                </div>
+            </a>
+
+            <a href="index.html" class="text-xs sm:text-sm uppercase tracking-widest text-ncst-neon hover:text-ncst-gold transition-colors">
+                <i class="fa-solid fa-arrow-left sm:mr-2"></i><span class="hidden sm:inline"> Back to Home</span>
+            </a>
+        </div>
+    </nav>
+
+    <div class="absolute inset-0 pointer-events-none"></div>
+    
+    <main class="relative z-10 min-h-screen flex items-center pt-20 px-4 sm:px-6">
+        <div class="max-w-md w-full mx-auto">
+            <!-- Login Form -->
+            <div id="login-form" class="animate-fadeInLeft">
+                <div class="parchment-panel p-6 sm:p-8">
+                    <div class="text-center mb-8">
+                        <div class="wax-seal wax-seal-gold mx-auto mb-4"><i class="fa-solid fa-hat-wizard text-xl"></i></div>
+                        <h2 class="font-magic text-3xl sm:text-4xl text-ncst-gold text-gold-glow mb-2">Welcome Back</h2>
+                        <p class="font-flavor italic text-xs sm:text-sm" style="color:#a08060;">Return to your calculus adventure, adventurer</p>
+                    </div>
+
+                    <form class="space-y-5">
+                        <div>
+                            <label class="block font-heading text-xs sm:text-sm font-bold text-ncst-gold uppercase tracking-wider mb-2">Email or Username</label>
+                            <input id="login-identifier" type="text" placeholder="student@ncst.edu" required class="w-full px-4 py-3 border border-ncst-gold/30 text-white placeholder-gray-500 focus:outline-none transition-all duration-300 min-h-[44px]">
+                        </div>
+
+                        <div>
+                            <label class="block font-heading text-xs sm:text-sm font-bold text-ncst-gold uppercase tracking-wider mb-2">Password</label>
+                            <div class="relative">
+                                <input id="login-password" type="password" placeholder="••••••••" required class="w-full px-4 pr-12 py-3 border border-ncst-gold/30 text-white placeholder-gray-500 focus:outline-none transition-all duration-300 min-h-[44px]">
+                                <button type="button" class="password-toggle-btn absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-ncst-neon transition-colors" data-target="login-password" aria-label="Show password">
+                                    <i class="fa-solid fa-eye"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 text-xs">
+                            <label class="flex items-center gap-2 text-gray-400 cursor-pointer hover:text-ncst-neon transition-colors">
+                                <input type="checkbox" class="w-4 h-4">
+                                Remember me
+                            </label>
+                            <button type="button" onclick="openForgotPassword()" class="text-ncst-neon hover:text-ncst-gold transition-colors">Forgot password?</button>
+                        </div>
+
+                        <button type="submit" class="rune-btn w-full mt-6">
+                            Enter the Academy
+                        </button>
+                    </form>
+
+                    <div class="mt-6 pt-6 border-t border-white/10 text-center">
+                        <p class="text-gray-400 text-xs sm:text-sm">Don't have an account? 
+                            <button type="button" class="text-ncst-neon hover:text-ncst-gold transition-colors font-bold toggle-auth" onclick="toggleAuth()">
+                                Sign up here
+                            </button>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Signup Form -->
+            <div id="signup-form" class="hidden animate-fadeInRight">
+                <div class="parchment-panel p-8">
+                    <div class="text-center mb-8">
+                        <div class="wax-seal mx-auto mb-4"><i class="fa-solid fa-scroll text-xl"></i></div>
+                        <h2 class="font-magic text-4xl text-ncst-gold text-gold-glow mb-2">Join the Academy</h2>
+                        <p class="font-flavor italic text-sm" style="color:#a08060;">Forge your legend, adventurer</p>
+                    </div>
+
+                    <form class="space-y-4 sm:space-y-5">
+                        <div>
+                            <label class="block font-heading text-xs sm:text-sm font-bold text-ncst-gold uppercase tracking-wider mb-2">Full Name</label>
+                            <input id="signup-name" type="text" placeholder="Your full name" required class="w-full px-4 py-3 sm:py-3.5 min-h-[44px] border border-ncst-gold/30 text-white placeholder-gray-500 text-sm sm:text-base focus:outline-none transition-all duration-300">
+                        </div>
+
+                        <div>
+                            <label class="block font-heading text-xs sm:text-sm font-bold text-ncst-gold uppercase tracking-wider mb-2">Email Address</label>
+                            <input id="signup-email" type="email" placeholder="student@ncst.edu" required class="w-full px-4 py-3 sm:py-3.5 min-h-[44px] border border-ncst-gold/30 text-white placeholder-gray-500 text-sm sm:text-base focus:outline-none transition-all duration-300">
+                        </div>
+
+                        <div>
+                            <label class="block font-heading text-xs sm:text-sm font-bold text-ncst-gold uppercase tracking-wider mb-2">Password</label>
+                            <div class="relative">
+                                <input id="signup-password" type="password" placeholder="••••••••" required class="w-full px-4 pr-12 py-3 sm:py-3.5 min-h-[44px] border border-ncst-gold/30 text-white placeholder-gray-500 text-sm sm:text-base focus:outline-none transition-all duration-300">
+                                <button type="button" class="password-toggle-btn absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-ncst-neon transition-colors" data-target="signup-password" aria-label="Show password">
+                                    <i class="fa-solid fa-eye"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block font-heading text-xs sm:text-sm font-bold text-ncst-gold uppercase tracking-wider mb-2">Confirm Password</label>
+                            <div class="relative">
+                                <input id="signup-confirm-password" type="password" placeholder="••••••••" required class="w-full px-4 pr-12 py-3 sm:py-3.5 min-h-[44px] border border-ncst-gold/30 text-white placeholder-gray-500 text-sm sm:text-base focus:outline-none transition-all duration-300">
+                                <button type="button" class="password-toggle-btn absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-ncst-neon transition-colors" data-target="signup-confirm-password" aria-label="Show password">
+                                    <i class="fa-solid fa-eye"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <label class="flex items-start gap-3 text-xs sm:text-sm text-gray-400 cursor-pointer hover:text-ncst-neon transition-colors mt-2 sm:mt-3 leading-relaxed">
+                            <input id="signup-terms" type="checkbox" class="w-4 h-4 mt-0.5 min-w-[16px] shrink-0 self-start" required>
+                            <span class="pt-0.5">I agree to the Terms of Service and Privacy Policy</span>
+                        </label>
+
+                        <button type="submit" class="rune-btn w-full mt-6 sm:mt-8">
+                            Begin Your Legend
+                        </button>
+                    </form>
+
+                    <div class="mt-6 pt-6 border-t border-ncst-neon/15 text-center">
+                        <p class="text-gray-400 text-sm">Already have an account? 
+                            <button type="button" class="text-ncst-neon hover:text-ncst-gold transition-colors font-bold toggle-auth" onclick="toggleAuth()">
+                                Sign in here
+                            </button>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Social Login -->
+            <div class="mt-8 sm:mt-10 space-y-3 sm:space-y-4">
+                <div class="ornate-hr"><span class="ornate-hr-diamond">&#9670;</span></div>
+                <div class="grid grid-cols-1 gap-3 sm:gap-4">
+                    <button id="google-sso-btn" class="iron-plaque-btn w-full" type="button">
+                        <i class="fa-brands fa-google"></i> Continue with Google
+                    </button>
+                </div>
+            </div>
+
+            <!-- Info Box -->
+            <div class="mt-8 sm:mt-10 p-4 sm:p-5 parchment-panel border-l-4 border-ncst-gold">
+                <p class="font-flavor italic text-xs sm:text-sm">
+                    <i class="fa-solid fa-scroll text-ncst-gold mr-2"></i>
+                    Your Guild Charter is required to sync progress across all devices and unlock legendary achievements!
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="relative z-10 py-6 sm:py-8 px-4 sm:px-6 text-center text-xs sm:text-sm text-gray-600 font-magic tracking-widest border-t border-ncst-neon/15 bg-ncst-dark mt-12">
+        <p>&copy; 2026 MATH WIZARD. ALL RIGHTS RESERVED.</p>
+        <p class="mt-2 text-gray-700 text-xs">NATIONAL COLLEGE OF SCIENCE AND TECHNOLOGY</p>
+    </footer>
+
+    <!-- Forgot Password Modal -->
+    <div id="forgot-password-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-stone-950/92">
+        <div class="parchment-panel p-6 sm:p-8 max-w-md w-full animate-fadeInLeft">
+            <!-- Default State -->
+            <div id="forgot-step-email" class="text-center">
+                <div class="wax-seal wax-seal-gold mx-auto mb-6"><i class="fa-solid fa-key"></i></div>
+                <h3 class="font-magic text-2xl sm:text-3xl text-ncst-gold text-gold-glow mb-2">Lost Your Spell?</h3>
+                <p class="font-flavor italic text-sm mb-6" style="color:#a08060;">Enter your scroll address and a raven shall deliver a restoration link.</p>
+                
+                <form onsubmit="submitForgotPassword(event)" class="space-y-4">
+                        <div class="text-left">
+                            <label class="block font-heading text-xs font-bold text-ncst-gold uppercase tracking-wider mb-2">Email Address</label>
+                            <input type="email" id="forgot-email" placeholder="student@ncst.edu" required class="w-full px-4 py-3 border border-ncst-gold/30 text-white placeholder-gray-500 focus:outline-none transition-all duration-300 min-h-[44px]">
+                        </div>
+                        
+                        <button type="submit" class="rune-btn w-full">Send Raven</button>
+                </form>
+                
+                <button type="button" onclick="closeForgotPassword()" class="mt-4 text-sm text-gray-400 hover:text-ncst-neon transition-colors">
+                    <i class="fa-solid fa-arrow-left mr-2"></i> Back to Login
+                </button>
+            </div>
+            
+            <!-- Success State -->
+            <div id="forgot-step-success" class="text-center hidden">
+                <div class="w-16 h-16 mx-auto mb-6 rounded-full bg-green-500/20 flex items-center justify-center">
+                    <i class="fa-solid fa-check text-green-400 text-2xl"></i>
+                </div>
+                <h3 class="font-magic text-2xl sm:text-3xl text-ncst-gold text-gold-glow mb-2">Raven Dispatched!</h3>
+                <p class="font-flavor italic text-sm mb-6" style="color:#a08060;">A restoration scroll has been sent to your address. Follow the enchantment within.</p>
+                <p class="text-xs text-gray-500 mb-6">If you don't see the email, check your spam folder.</p>
+                
+                <button type="button" onclick="closeForgotPassword()" class="iron-plaque-btn w-full">
+                    Return to Login
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Close modal on outside click -->
+    <script>
+        document.getElementById('forgot-password-modal')?.addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeForgotPassword();
+            }
+        });
+    </script>
+
+</body>
+</html>
