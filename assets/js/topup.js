@@ -118,6 +118,23 @@
     localStorage.setItem('mathwizard_current_user', JSON.stringify(stored));
   }
 
+  function updateCachedPlayerGold(userId, nextGold) {
+    const key = `player_${userId}`;
+    const raw = sessionStorage.getItem(key);
+    if (!raw) {
+      return;
+    }
+
+    try {
+      const parsed = JSON.parse(raw);
+      parsed.currency = parsed.currency || {};
+      parsed.currency.gold = nextGold;
+      sessionStorage.setItem(key, JSON.stringify(parsed));
+    } catch (error) {
+      // Ignore invalid session cache payloads.
+    }
+  }
+
   async function refreshBalanceFromFirestore() {
     const messageEl = document.getElementById('balance-message');
     const goldEl = document.getElementById('balance-gold');
@@ -137,12 +154,30 @@
     }
 
     try {
-      const player = await window.playerService.initializePlayer(userId);
-      const gold = Number(player?.currency?.gold ?? user?.gold ?? 0);
+      const db = window.firebaseDb;
+      if (!db) {
+        return false;
+      }
+
+      const [playerDoc, userDoc] = await Promise.all([
+        db.collection('players').doc(userId).get(),
+        db.collection('users').doc(userId).get()
+      ]);
+
+      const playerGold = playerDoc.exists ? Number(playerDoc.data()?.currency?.gold) : NaN;
+      const userGold = userDoc.exists ? Number(userDoc.data()?.gold) : NaN;
+
+      const gold = Number.isFinite(playerGold)
+        ? playerGold
+        : Number.isFinite(userGold)
+          ? userGold
+          : Number(user?.gold ?? 0);
+
       const safeGold = Number.isFinite(gold) ? Math.max(0, gold) : 0;
 
       goldEl.textContent = formatWholeNumber(safeGold);
       updateStoredUserGold(safeGold);
+      updateCachedPlayerGold(userId, safeGold);
 
       messageEl.textContent = 'Synced from live account data.';
       messageEl.className = 'text-xs min-h-[1.25rem] mt-3 text-ncst-neon';
