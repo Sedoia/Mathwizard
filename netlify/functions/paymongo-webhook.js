@@ -166,51 +166,82 @@ async function processPaidTopupEvent(db, payload, eventData) {
     throw new Error('missing_event_id');
   }
 
-  if (!userId) {
-    throw new Error('missing_user_id');
-  }
-
-  if (!Number.isFinite(creditsToAdd) || creditsToAdd <= 0) {
-    throw new Error('invalid_credits');
-  }
-
   const now = new Date().toISOString();
-  const increment = admin.firestore.FieldValue.increment(creditsToAdd);
 
   const eventRef = db.collection('paymongo_events').doc(eventId);
-  const userRef = db.collection('users').doc(userId);
-  const playerRef = db.collection('players').doc(userId);
+  const pendingRef = checkoutSessionId
+    ? db.collection('paymongo_pending_topups').doc(checkoutSessionId)
+    : null;
 
   let duplicate = false;
+  let resolvedUserId = userId;
+  let resolvedCreditsToAdd = creditsToAdd;
+  let resolvedMetadata = { ...metadata };
 
   await db.runTransaction(async (tx) => {
-    const [eventDoc, userDoc, playerDoc] = await Promise.all([
+    const docs = await Promise.all([
       tx.get(eventRef),
-      tx.get(userRef),
-      tx.get(playerRef)
+      pendingRef ? tx.get(pendingRef) : Promise.resolve(null)
     ]);
+
+    const eventDoc = docs[0];
+    const pendingDoc = docs[1];
 
     if (eventDoc.exists) {
       duplicate = true;
       return;
     }
 
+    const pendingData = pendingDoc?.exists ? (pendingDoc.data() || {}) : {};
+
+    if (!resolvedUserId) {
+      resolvedUserId = String(pendingData.userId || '').trim();
+    }
+
+    if (!Number.isFinite(resolvedCreditsToAdd) || resolvedCreditsToAdd <= 0) {
+      const fallbackCredits = Number(pendingData.credits || 0);
+      if (Number.isFinite(fallbackCredits) && fallbackCredits > 0) {
+        resolvedCreditsToAdd = fallbackCredits;
+      }
+    }
+
+    resolvedMetadata = {
+      ...pendingData,
+      ...resolvedMetadata
+    };
+
+    if (!resolvedUserId) {
+      throw new Error('missing_user_id');
+    }
+
+    if (!Number.isFinite(resolvedCreditsToAdd) || resolvedCreditsToAdd <= 0) {
+      throw new Error('invalid_credits');
+    }
+
+    const userRef = db.collection('users').doc(resolvedUserId);
+    const playerRef = db.collection('players').doc(resolvedUserId);
+
+    const [userDoc, playerDoc] = await Promise.all([
+      tx.get(userRef),
+      tx.get(playerRef)
+    ]);
+
     const existingUser = userDoc.exists ? userDoc.data() || {} : {};
 
     tx.set(userRef, {
-      id: userId,
-      username: existingUser.username || String(metadata?.username || ''),
-      gold: increment,
+      id: resolvedUserId,
+      username: existingUser.username || String(resolvedMetadata?.username || ''),
+      gold: admin.firestore.FieldValue.increment(resolvedCreditsToAdd),
       updatedAt: now,
       lastTopup: {
-        creditsAdded: creditsToAdd,
+        creditsAdded: resolvedCreditsToAdd,
         eventId,
         checkoutSessionId,
         appliedAt: now,
         metadata: {
-          offerId: String(metadata?.offerId || metadata?.offer_id || ''),
-          amountPhp: String(metadata?.amountPhp || metadata?.amount_php || ''),
-          username: String(metadata?.username || '')
+          offerId: String(resolvedMetadata?.offerId || resolvedMetadata?.offer_id || ''),
+          amountPhp: String(resolvedMetadata?.amountPhp || resolvedMetadata?.amount_php || ''),
+          username: String(resolvedMetadata?.username || '')
         }
       }
     }, { merge: true });
@@ -220,10 +251,10 @@ async function processPaidTopupEvent(db, payload, eventData) {
       : {};
 
     tx.set(playerRef, {
-      id: userId,
+      id: resolvedUserId,
       currency: {
         ...playerCurrency,
-        gold: increment
+        gold: admin.firestore.FieldValue.increment(resolvedCreditsToAdd)
       },
       updatedAt: now
     }, { merge: true });
@@ -233,18 +264,27 @@ async function processPaidTopupEvent(db, payload, eventData) {
       type: payload?.data?.attributes?.type || 'unknown',
       createdAt: now,
       processed: true,
-      userId,
-      creditsAdded: creditsToAdd,
+      userId: resolvedUserId,
+      creditsAdded: resolvedCreditsToAdd,
       checkoutSessionId
     });
+
+    if (pendingRef && pendingDoc?.exists) {
+      tx.set(pendingRef, {
+        status: 'applied',
+        appliedAt: now,
+        eventId,
+        updatedAt: now
+      }, { merge: true });
+    }
   });
 
   return {
     duplicate,
-    userId,
-    creditsToAdd,
+    userId: resolvedUserId,
+    creditsToAdd: resolvedCreditsToAdd,
     checkoutSessionId,
-    metadata,
+    metadata: resolvedMetadata,
     eventId
   };
 }

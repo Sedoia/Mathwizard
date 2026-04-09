@@ -1,4 +1,5 @@
 const PAYMONGO_API_BASE = 'https://api.paymongo.com/v1';
+const admin = require('firebase-admin');
 
 const OFFER_CATALOG = Object.freeze({
   credits_100: { id: 'credits_100', credits: 100, amountPhp: 50 },
@@ -52,6 +53,56 @@ function serializeOffers() {
 
 function getAuthHeader(secretKey) {
   return 'Basic ' + Buffer.from(`${secretKey}:`).toString('base64');
+}
+
+function getAdminApp() {
+  if (admin.apps.length) {
+    return admin.app();
+  }
+
+  const raw = process.env.FIREBASE_SERVICE_ACCOUNT;
+  if (!raw) {
+    throw new Error('missing_firebase_service_account');
+  }
+
+  let serviceAccount;
+  try {
+    serviceAccount = JSON.parse(raw);
+  } catch (error) {
+    throw new Error('invalid_firebase_service_account_json');
+  }
+
+  if (serviceAccount.private_key) {
+    serviceAccount.private_key = serviceAccount.private_key.replace(/\\n/g, '\n');
+  }
+
+  admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount)
+  });
+
+  return admin.app();
+}
+
+async function savePendingTopup(checkoutSessionId, data) {
+  if (!checkoutSessionId) {
+    return;
+  }
+
+  getAdminApp();
+  const db = admin.firestore();
+
+  await db.collection('paymongo_pending_topups').doc(checkoutSessionId).set({
+    checkoutSessionId,
+    userId: data.userId,
+    username: data.username,
+    offerId: data.offerId,
+    credits: data.credits,
+    amountPhp: data.amountPhp,
+    paymentMethod: data.paymentMethod,
+    status: 'created',
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString()
+  }, { merge: true });
 }
 
 async function createCheckoutSession(payload, secretKey) {
@@ -166,11 +217,21 @@ exports.handler = async (event) => {
 
     const paymongoData = await createCheckoutSession(checkoutRequest, secretKey);
     const attributes = paymongoData?.data?.attributes || {};
+    const checkoutSessionId = paymongoData?.data?.id || '';
+
+    await savePendingTopup(checkoutSessionId, {
+      userId,
+      username,
+      offerId: offer.id,
+      credits: offer.credits,
+      amountPhp: offer.amountPhp,
+      paymentMethod
+    });
 
     return json(200, {
       ok: true,
       checkoutUrl: attributes.checkout_url,
-      checkoutSessionId: paymongoData?.data?.id,
+      checkoutSessionId,
       offer: {
         id: offer.id,
         credits: offer.credits,
