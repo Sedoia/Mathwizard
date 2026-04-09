@@ -25,3 +25,7 @@ math-wizard-1afd3-firebase-adminsdk-fbsvc-567438bfa2.json
 .env
 .env.*
 !.env.example
+
+.tmp_thesis/
+~$*.docx
+*.zip
