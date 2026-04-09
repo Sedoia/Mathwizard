@@ -315,3 +315,4 @@ class PlayerService {
 }
 
 const playerService = new PlayerService();
+window.playerService = playerService;

@@ -147,19 +147,19 @@
       return false;
     }
 
-    if (!window.authService || !window.playerService) {
-      return false;
-    }
-
-    const user = window.authService.getCurrentUser?.() || getStoredUser();
+    const user = getSessionUser();
     const userId = sanitizeText(user?.id || '', 40);
     if (!userId) {
+      messageEl.textContent = 'No active account session found.';
+      messageEl.className = 'text-xs min-h-[1.25rem] mt-3 text-red-300';
       return false;
     }
 
     try {
       const db = window.firebaseDb;
       if (!db) {
+        messageEl.textContent = 'Firebase is not ready yet. Please retry.';
+        messageEl.className = 'text-xs min-h-[1.25rem] mt-3 text-red-300';
         return false;
       }
 

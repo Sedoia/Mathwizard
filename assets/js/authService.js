@@ -651,3 +651,4 @@ class AuthService {
 }
 
 const authService = new AuthService();
+window.authService = authService;
