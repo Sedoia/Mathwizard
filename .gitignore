@@ -21,6 +21,7 @@ npm-debug.log*
 *.p12
 serviceAccount*.json
 firebase-service-account*.json
+math-wizard-1afd3-firebase-adminsdk-fbsvc-567438bfa2.json
 .env
 .env.*
 !.env.example
