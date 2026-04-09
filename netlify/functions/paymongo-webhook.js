@@ -18,12 +18,68 @@ function parseSignatureHeader(headerValue) {
     .split(',')
     .map((part) => part.trim())
     .forEach((part) => {
-      const [key, value] = part.split('=');
+      const separatorIndex = part.indexOf('=');
+      if (separatorIndex <= 0) {
+        return;
+      }
+
+      const key = part.slice(0, separatorIndex).trim();
+      const value = part.slice(separatorIndex + 1).trim();
+
       if (key && value) {
-        parsed[key.trim()] = value.trim();
+        parsed[key] = value;
       }
     });
   return parsed;
+}
+
+function normalizeSignatureValue(input) {
+  return String(input || '')
+    .trim()
+    .replace(/^sha256=/i, '')
+    .replace(/^"|"$/g, '');
+}
+
+function secureStringEquals(left, right) {
+  const a = Buffer.from(String(left || ''));
+  const b = Buffer.from(String(right || ''));
+
+  if (!a.length || !b.length || a.length !== b.length) {
+    return false;
+  }
+
+  return crypto.timingSafeEqual(a, b);
+}
+
+function buildExpectedSignatures(rawBody, webhookSecret, timestamp) {
+  const bodyHex = crypto
+    .createHmac('sha256', webhookSecret)
+    .update(rawBody)
+    .digest('hex');
+
+  const bodyBase64 = crypto
+    .createHmac('sha256', webhookSecret)
+    .update(rawBody)
+    .digest('base64');
+
+  const expected = [bodyHex, bodyBase64];
+
+  if (timestamp) {
+    const timestampPayload = `${timestamp}.${rawBody}`;
+    const tsHex = crypto
+      .createHmac('sha256', webhookSecret)
+      .update(timestampPayload)
+      .digest('hex');
+
+    const tsBase64 = crypto
+      .createHmac('sha256', webhookSecret)
+      .update(timestampPayload)
+      .digest('base64');
+
+    expected.push(tsHex, tsBase64);
+  }
+
+  return expected;
 }
 
 function signatureLooksValid(rawBody, headerValue, webhookSecret) {
@@ -32,25 +88,20 @@ function signatureLooksValid(rawBody, headerValue, webhookSecret) {
   }
 
   const parsed = parseSignatureHeader(headerValue);
-  const providedCandidates = ['v1', 'te', 'sig']
+  const providedCandidates = ['v1', 'te', 'sig', 'signature']
     .map((key) => parsed[key])
+    .map(normalizeSignatureValue)
     .filter(Boolean);
 
   if (!providedCandidates.length) {
     return false;
   }
 
-  const expected = crypto
-    .createHmac('sha256', webhookSecret)
-    .update(rawBody)
-    .digest('hex');
+  const timestamp = parsed.t || parsed.ts || parsed.timestamp || '';
+  const expectedSignatures = buildExpectedSignatures(rawBody, webhookSecret, timestamp);
 
   return providedCandidates.some((provided) => {
-    try {
-      return crypto.timingSafeEqual(Buffer.from(provided), Buffer.from(expected));
-    } catch (error) {
-      return false;
-    }
+    return expectedSignatures.some((expected) => secureStringEquals(provided, expected));
   });
 }
 
@@ -229,7 +280,12 @@ exports.handler = async (event) => {
     const signatureHeader = event.headers?.['paymongo-signature'] || event.headers?.['Paymongo-Signature'] || '';
 
     if (!signatureLooksValid(rawBody, signatureHeader, process.env.PAYMONGO_WEBHOOK_SECRET || '')) {
-      console.warn('paymongo-webhook invalid signature');
+      const parsed = parseSignatureHeader(signatureHeader);
+      console.warn('paymongo-webhook invalid signature', {
+        hasSignatureHeader: Boolean(signatureHeader),
+        signatureKeys: Object.keys(parsed),
+        bodyLength: rawBody.length
+      });
       return json(401, { error: 'invalid_signature' });
     }
 

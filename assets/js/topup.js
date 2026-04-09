@@ -57,6 +57,10 @@
     }
   }
 
+  function getSessionUser() {
+    return window.authService?.getCurrentUser?.() || getStoredUser() || null;
+  }
+
   function extractBalance(user) {
     if (!user || typeof user !== 'object') {
       return {
@@ -337,7 +341,7 @@
   }
 
   function preloadIdentityFromSession() {
-    const user = getStoredUser();
+    const user = getSessionUser();
     if (!user) {
       return;
     }
@@ -349,7 +353,10 @@
       document.getElementById('username').value = username;
     }
     if (userId) {
-      document.getElementById('user-id').value = userId;
+      const userIdInput = document.getElementById('user-id');
+      userIdInput.value = userId;
+      userIdInput.readOnly = true;
+      userIdInput.classList.add('opacity-80', 'cursor-not-allowed');
     }
   }
 
@@ -361,7 +368,9 @@
       event.preventDefault();
 
       const username = sanitizeText(document.getElementById('username').value, 32);
-      const userId = sanitizeText(document.getElementById('user-id').value, 40);
+      const typedUserId = sanitizeText(document.getElementById('user-id').value, 40);
+      const trustedUserId = sanitizeText(getSessionUser()?.id || '', 40);
+      const userId = trustedUserId || typedUserId;
 
       if (!username || !userId) {
         state.identified = false;
