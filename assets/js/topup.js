@@ -1,5 +1,6 @@
 (function () {
   const API_URL = '/.netlify/functions/paymongo-topup';
+  const REVIEW_DRAFT_KEY = 'mw_topup_checkout_draft';
 
   const state = {
     identified: false,
@@ -267,30 +268,14 @@
     return state.offers.find((offer) => offer.id === state.selectedOfferId) || null;
   }
 
-  function updateSummary() {
-    const summaryEmpty = document.getElementById('summary-empty');
-    const summaryFilled = document.getElementById('summary-filled');
-    const checkoutButton = document.getElementById('checkout-btn');
-    const summaryOffer = document.getElementById('summary-offer');
-    const summaryAmount = document.getElementById('summary-amount');
-    const summaryMethod = document.getElementById('summary-method');
-
-    const offer = getSelectedOffer();
-    const method = getPaymentMethod();
-
-    if (!offer) {
-      summaryEmpty.classList.remove('hidden');
-      summaryFilled.classList.add('hidden');
-      checkoutButton.disabled = true;
+  function updateProceedState() {
+    const reviewButton = document.getElementById('review-btn');
+    if (!reviewButton) {
       return;
     }
 
-    summaryEmpty.classList.add('hidden');
-    summaryFilled.classList.remove('hidden');
-    summaryOffer.textContent = formatCredits(offer.credits);
-    summaryAmount.textContent = formatPeso(offer.amountPhp);
-    summaryMethod.textContent = method === 'paymaya' ? 'PayMaya' : 'GCash';
-    checkoutButton.disabled = !state.identified || state.busy;
+    const offer = getSelectedOffer();
+    reviewButton.disabled = !state.identified || !offer || state.busy;
   }
 
   function renderOffers() {
@@ -325,7 +310,7 @@
           item.classList.remove('ring-2', 'ring-ncst-gold', 'border-ncst-gold');
         });
         button.classList.add('ring-2', 'ring-ncst-gold', 'border-ncst-gold');
-        updateSummary();
+        updateProceedState();
       });
 
       offersGrid.appendChild(button);
@@ -394,7 +379,7 @@
         state.identified = false;
         message.textContent = 'Username and User ID are required.';
         message.className = 'text-xs min-h-[1.25rem] text-red-300';
-        updateSummary();
+        updateProceedState();
         return;
       }
 
@@ -402,7 +387,7 @@
         state.identified = false;
         message.textContent = 'Username must be 3-32 chars and only use letters, numbers, spaces, dot, underscore, or dash.';
         message.className = 'text-xs min-h-[1.25rem] text-red-300';
-        updateSummary();
+        updateProceedState();
         return;
       }
 
@@ -410,7 +395,7 @@
         state.identified = false;
         message.textContent = 'User ID must be 3-40 chars and only use letters, numbers, underscore, or dash.';
         message.className = 'text-xs min-h-[1.25rem] text-red-300';
-        updateSummary();
+        updateProceedState();
         return;
       }
 
@@ -419,7 +404,7 @@
       state.userId = userId;
       message.textContent = 'Identity validated. Select an offer and proceed to checkout.';
       message.className = 'text-xs min-h-[1.25rem] text-ncst-neon';
-      updateSummary();
+      updateProceedState();
     });
   }
 
@@ -427,74 +412,61 @@
     document.querySelectorAll('input[name="paymentMethod"]').forEach((input) => {
       input.addEventListener('change', () => {
         updatePaymentMethodStyles();
-        updateSummary();
+        updateProceedState();
       });
     });
 
     updatePaymentMethodStyles();
   }
 
-  async function startCheckout() {
-    const checkoutMessage = document.getElementById('checkout-message');
-    const checkoutButton = document.getElementById('checkout-btn');
+  function proceedToReview() {
+    const reviewMessage = document.getElementById('review-message');
 
     const selectedOffer = getSelectedOffer();
     const paymentMethod = getPaymentMethod();
 
     if (!state.identified) {
-      checkoutMessage.textContent = 'Confirm your Username and User ID first.';
-      checkoutMessage.className = 'text-xs min-h-[1.25rem] mt-2 text-red-300';
+      reviewMessage.textContent = 'Confirm your Username and User ID first.';
+      reviewMessage.className = 'text-xs min-h-[1.25rem] mt-2 text-red-300';
       return;
     }
 
     if (!selectedOffer) {
-      checkoutMessage.textContent = 'Please select a credit offer.';
-      checkoutMessage.className = 'text-xs min-h-[1.25rem] mt-2 text-red-300';
+      reviewMessage.textContent = 'Please select a credit offer.';
+      reviewMessage.className = 'text-xs min-h-[1.25rem] mt-2 text-red-300';
       return;
     }
 
     if (!paymentMethod) {
-      checkoutMessage.textContent = 'Please select a payment method.';
-      checkoutMessage.className = 'text-xs min-h-[1.25rem] mt-2 text-red-300';
+      reviewMessage.textContent = 'Please select a payment method.';
+      reviewMessage.className = 'text-xs min-h-[1.25rem] mt-2 text-red-300';
       return;
     }
 
-    try {
-      state.busy = true;
-      checkoutButton.disabled = true;
-      checkoutMessage.textContent = 'Preparing secure checkout...';
-      checkoutMessage.className = 'text-xs min-h-[1.25rem] mt-2 text-ncst-neon';
+    const draft = {
+      username: state.username,
+      userId: state.userId,
+      offerId: selectedOffer.id,
+      paymentMethod,
+      offer: {
+        id: selectedOffer.id,
+        credits: selectedOffer.credits,
+        amountPhp: selectedOffer.amountPhp
+      },
+      createdAt: new Date().toISOString()
+    };
 
-      const response = await fetch(API_URL, {
-        method: 'POST',
-        headers: {
-          'content-type': 'application/json'
-        },
-        body: JSON.stringify({
-          username: state.username,
-          userId: state.userId,
-          offerId: selectedOffer.id,
-          paymentMethod
-        })
-      });
-
-      const payload = await response.json();
-      if (!response.ok || !payload.ok || !payload.checkoutUrl) {
-        throw new Error(payload.error || payload.message || 'Could not start checkout.');
-      }
-
-      window.location.href = payload.checkoutUrl;
-    } catch (error) {
-      checkoutMessage.textContent = String(error.message || 'Checkout failed. Please try again.');
-      checkoutMessage.className = 'text-xs min-h-[1.25rem] mt-2 text-red-300';
-      state.busy = false;
-      updateSummary();
-    }
+    sessionStorage.setItem(REVIEW_DRAFT_KEY, JSON.stringify(draft));
+    window.location.href = 'top-up-review.html';
   }
 
-  function wireCheckoutButton() {
-    const checkoutButton = document.getElementById('checkout-btn');
-    checkoutButton.addEventListener('click', startCheckout);
+  function wireProceedButton() {
+    const reviewButton = document.getElementById('review-btn');
+    if (!reviewButton) {
+      return;
+    }
+
+    reviewButton.addEventListener('click', proceedToReview);
   }
 
   function showStatusFromQueryString() {
@@ -513,7 +485,7 @@
     preloadIdentityFromSession();
     wireIdentityForm();
     wirePaymentMethods();
-    wireCheckoutButton();
+    wireProceedButton();
     wireBalanceRefreshButton();
     showStatusFromQueryString();
     await refreshBalanceFromFirestore();
@@ -521,7 +493,7 @@
 
     try {
       await loadOffers();
-      updateSummary();
+      updateProceedState();
     } catch (error) {
       showStatus(String(error.message || 'Unable to load top-up offers.'), 'error');
     }
