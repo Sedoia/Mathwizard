@@ -53,10 +53,10 @@
                 <p class="font-flavor italic text-sm sm:text-base text-gray-300 mt-2">Secure checkout via PayMongo with GCash or PayMaya.</p>
             </div>
 
-            <div id="status-banner" class="hidden mb-6 p-4 border text-sm sm:text-base font-semibold"></div>
+            <div id="status-banner" class="hidden mb-6 p-4 border bg-ncst-dark/50 text-sm sm:text-base font-semibold"></div>
 
             <div class="grid lg:grid-cols-3 gap-6 lg:gap-8">
-                <aside class="lg:col-span-1 space-y-4">
+                <aside class="lg:col-span-1 space-y-4 lg:sticky lg:top-24 lg:self-start">
                     <div class="parchment-panel p-5 sm:p-6">
                         <h3 class="font-heading text-sm uppercase tracking-widest text-ncst-gold mb-3">Current Balance</h3>
                         <div class="border border-ncst-neon/30 p-3 bg-ncst-dark/40">
@@ -68,7 +68,7 @@
                                 <img src="../assets/img/currency-icon.png" alt="Gold coin" class="w-10 h-10 object-contain">
                             </div>
                         </div>
-                        <button id="refresh-balance-btn" type="button" class="w-full mt-3 border border-ncst-gold/30 px-3 py-2 text-xs uppercase tracking-widest text-ncst-neon hover:text-ncst-gold transition-colors">
+                        <button id="refresh-balance-btn" type="button" class="w-full mt-3 border border-ncst-gold/30 px-3 py-2 text-xs uppercase tracking-widest text-ncst-neon hover:text-ncst-gold hover:border-ncst-gold/60 transition-colors">
                             Refresh Balance
                         </button>
                         <p id="balance-message" class="text-xs min-h-[1.25rem] mt-3 text-gray-300">Sign in to load your account balance.</p>
@@ -79,11 +79,11 @@
                         <form id="identity-form" class="space-y-4" novalidate>
                             <div>
                                 <label for="username" class="block text-xs uppercase tracking-widest text-ncst-neon mb-1">Username</label>
-                                <input id="username" name="username" type="text" maxlength="32" autocomplete="username" class="w-full bg-ncst-dark/60 border border-ncst-gold/30 focus:border-ncst-gold outline-none px-3 py-2 text-white" placeholder="e.g. MageRico" required>
+                                <input id="username" name="username" type="text" maxlength="32" autocomplete="username" class="w-full bg-ncst-dark/60 border border-ncst-gold/30 focus:border-ncst-gold focus:ring-1 focus:ring-ncst-gold/40 outline-none px-3 py-2 text-white" placeholder="e.g. MageRico" required>
                             </div>
                             <div>
                                 <label for="user-id" class="block text-xs uppercase tracking-widest text-ncst-neon mb-1">User ID</label>
-                                <input id="user-id" name="userId" type="text" maxlength="40" class="w-full bg-ncst-dark/60 border border-ncst-gold/30 focus:border-ncst-gold outline-none px-3 py-2 text-white" placeholder="e.g. player_1029" required>
+                                <input id="user-id" name="userId" type="text" maxlength="40" class="w-full bg-ncst-dark/60 border border-ncst-gold/30 focus:border-ncst-gold focus:ring-1 focus:ring-ncst-gold/40 outline-none px-3 py-2 text-white" placeholder="e.g. player_1029" required>
                             </div>
                             <button type="submit" class="w-full rune-btn justify-center">
                                 <i class="fa-solid fa-shield-halved"></i> Confirm Identity
@@ -95,12 +95,12 @@
                     <div class="parchment-panel p-5 sm:p-6">
                         <h3 class="font-heading text-sm uppercase tracking-widest text-ncst-gold mb-3">Step 2: Payment Method</h3>
                         <div class="space-y-2" id="payment-methods">
-                            <label class="flex items-center gap-2 p-2 border border-ncst-neon/30 cursor-pointer">
+                            <label class="payment-method-option flex items-center gap-2 p-2 border border-ncst-neon/30 cursor-pointer bg-ncst-dark/30 transition-colors">
                                 <input type="radio" name="paymentMethod" value="gcash" class="accent-yellow-500" checked>
                                 <i class="fa-solid fa-mobile-screen-button text-ncst-neon"></i>
                                 <span class="text-sm text-white">GCash</span>
                             </label>
-                            <label class="flex items-center gap-2 p-2 border border-ncst-neon/30 cursor-pointer">
+                            <label class="payment-method-option flex items-center gap-2 p-2 border border-ncst-neon/30 cursor-pointer bg-ncst-dark/30 transition-colors">
                                 <input type="radio" name="paymentMethod" value="paymaya" class="accent-yellow-500">
                                 <i class="fa-solid fa-wallet text-ncst-neon"></i>
                                 <span class="text-sm text-white">PayMaya</span>

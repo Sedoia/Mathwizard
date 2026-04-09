@@ -44,6 +44,10 @@
     }).format(Math.max(0, Number(value || 0)));
   }
 
+  function formatCredits(value) {
+    return `${formatWholeNumber(value)} Credits`;
+  }
+
   function getStoredUser() {
     const raw = localStorage.getItem('mathwizard_current_user');
     if (!raw) {
@@ -283,7 +287,7 @@
 
     summaryEmpty.classList.add('hidden');
     summaryFilled.classList.remove('hidden');
-    summaryOffer.textContent = `${offer.credits} Credits`;
+    summaryOffer.textContent = formatCredits(offer.credits);
     summaryAmount.textContent = formatPeso(offer.amountPhp);
     summaryMethod.textContent = method === 'paymaya' ? 'PayMaya' : 'GCash';
     checkoutButton.disabled = !state.identified || state.busy;
@@ -304,14 +308,14 @@
       button.innerHTML = `
         <div class="flex items-start justify-between gap-3">
           <div>
-            <p class="font-heading text-white text-lg">${offer.credits} Credits</p>
+            <p class="font-heading text-white text-lg">${formatCredits(offer.credits)}</p>
             <p class="text-xs text-gray-300">Instantly delivered after confirmation</p>
           </div>
           <img src="../assets/img/currency-icon.png" alt="Currency icon" class="w-10 h-10 object-contain">
         </div>
         <div class="mt-4 flex items-center justify-between">
           <p class="text-ncst-gold font-bold text-xl">${formatPeso(offer.amountPhp)}</p>
-          <span class="text-xs uppercase tracking-widest text-ncst-neon">Select</span>
+          <span class="text-[0.65rem] uppercase tracking-[0.18em] text-ncst-neon border border-ncst-neon/30 px-2 py-1 bg-ncst-dark/40">Select</span>
         </div>
       `;
 
@@ -325,6 +329,20 @@
       });
 
       offersGrid.appendChild(button);
+    });
+  }
+
+  function updatePaymentMethodStyles() {
+    const options = document.querySelectorAll('.payment-method-option');
+    options.forEach((option) => {
+      const input = option.querySelector('input[name="paymentMethod"]');
+      const active = Boolean(input?.checked);
+
+      option.classList.toggle('border-ncst-gold', active);
+      option.classList.toggle('bg-ncst-gold/10', active);
+      option.classList.toggle('shadow-[0_0_16px_rgba(201,168,76,0.15)]', active);
+      option.classList.toggle('border-ncst-neon/30', !active);
+      option.classList.toggle('bg-ncst-dark/30', !active);
     });
   }
 
@@ -408,9 +426,12 @@
   function wirePaymentMethods() {
     document.querySelectorAll('input[name="paymentMethod"]').forEach((input) => {
       input.addEventListener('change', () => {
+        updatePaymentMethodStyles();
         updateSummary();
       });
     });
+
+    updatePaymentMethodStyles();
   }
 
   async function startCheckout() {
