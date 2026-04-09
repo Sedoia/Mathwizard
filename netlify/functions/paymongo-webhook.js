@@ -133,11 +133,47 @@ function getAdminApp() {
   return admin.app();
 }
 
+function normalizeIncomingWebhookPayload(payload) {
+  const wrappedType = payload?.data?.attributes?.type || '';
+  const wrappedResource = payload?.data?.attributes?.data || null;
+  const wrappedEventId = payload?.data?.id || '';
+
+  if (wrappedType && wrappedResource) {
+    return {
+      eventType: wrappedType,
+      eventId: wrappedEventId,
+      resource: wrappedResource
+    };
+  }
+
+  const directCheckout = payload?.type === 'checkout_session' && payload?.attributes;
+  if (directCheckout) {
+    const paidByTimestamp = Number(payload?.attributes?.paid_at || 0) > 0;
+    const paidByPayments = Array.isArray(payload?.attributes?.payments)
+      && payload.attributes.payments.some((p) => p?.attributes?.status === 'paid');
+
+    return {
+      eventType: paidByTimestamp || paidByPayments ? 'checkout_session.payment.paid' : 'checkout_session.unknown',
+      eventId: String(payload?.id || ''),
+      resource: payload
+    };
+  }
+
+  return {
+    eventType: '',
+    eventId: String(payload?.data?.id || payload?.id || ''),
+    resource: payload || {}
+  };
+}
+
 async function processPaidTopupEvent(db, payload, eventData) {
-  const eventId = payload?.data?.id || '';
+  const eventId = String(payload?.data?.id || payload?.id || eventData?.id || '');
   const attributes = eventData?.attributes || {};
+  const firstPayment = Array.isArray(attributes?.payments) ? attributes.payments[0] : null;
   const metadata =
     attributes?.metadata
+    || firstPayment?.attributes?.metadata
+    || attributes?.payment_intent?.attributes?.metadata
     || attributes?.checkout_session?.data?.attributes?.metadata
     || attributes?.checkout_session?.attributes?.metadata
     || {};
@@ -330,11 +366,12 @@ exports.handler = async (event) => {
     }
 
     const payload = rawBody ? JSON.parse(rawBody) : {};
-    const eventType = payload?.data?.attributes?.type || '';
-    const eventData = payload?.data?.attributes?.data || {};
+    const normalized = normalizeIncomingWebhookPayload(payload);
+    const eventType = normalized.eventType;
+    const eventData = normalized.resource;
 
     console.log('paymongo-webhook received event:', {
-      eventId: payload?.data?.id || null,
+      eventId: normalized.eventId || null,
       eventType: eventType || 'unknown'
     });
 
@@ -342,7 +379,10 @@ exports.handler = async (event) => {
       getAdminApp();
       const db = admin.firestore();
 
-      const result = await processPaidTopupEvent(db, payload, eventData);
+      const result = await processPaidTopupEvent(db, {
+        ...payload,
+        id: normalized.eventId || payload?.id
+      }, eventData);
 
       if (result.duplicate) {
         return json(200, { ok: true, receivedType: eventType, duplicate: true });
