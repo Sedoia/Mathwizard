@@ -1,0 +1,1006 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Math Wizard - Admin Dashboard</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="assets/js/tailwind-config.js"></script>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <script src="https://www.gstatic.com/firebasejs/12.11.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/12.11.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore-compat.js"></script>
+    <script src="assets/js/firebaseConfig.js"></script>
+    <!-- Auth Service -->
+    <script src="assets/js/authService.js"></script>
+    <!-- Chart.js for graphs -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Cinzel+Decorative:wght@400;700;900&family=Crimson+Text:ital,wght@0,400;0,600;0,700;1,400&family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        // Auth check - redirect if not admin
+        document.addEventListener('DOMContentLoaded', () => {
+            if (!authService.isAuthenticated()) {
+                window.location.href = 'auth.html';
+                return;
+            }
+            if (!authService.isAdmin()) {
+                alert('Access denied. Admin privileges required.');
+                window.location.href = 'profile.html';
+                return;
+            }
+            // Display admin name
+            const user = authService.getCurrentUser();
+            const adminNameEl = document.getElementById('admin-name');
+            if (adminNameEl && user) {
+                adminNameEl.textContent = user.name || user.username;
+            }
+        });
+        
+        function logout() {
+            authService.logout();
+            window.location.href = 'auth.html';
+        }
+    </script>
+</head>
+<body class="antialiased selection:bg-ncst-neon selection:text-ncst-dark">
+
+    <div class="fixed inset-0 pointer-events-none z-0">
+        <div class="absolute inset-0 bg-tech-grid"></div>
+        <div class="absolute top-0 right-0 w-[500px] h-[500px] bg-ncst-blue rounded-full filter blur-[120px] opacity-40"></div>
+        <div class="absolute bottom-0 left-0 w-[500px] h-[500px] bg-ncst-neon rounded-full filter blur-[120px] opacity-10"></div>
+    </div>
+
+    <!-- Admin Navigation -->
+    <nav class="fixed top-0 w-full z-50 bg-ncst-dark/95 border-b border-ncst-neon/20" style="box-shadow: 0 2px 20px rgba(0,0,0,0.8), 0 1px 0 rgba(201,168,76,0.1);">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 sm:h-20 flex justify-between items-center">
+            <div class="flex items-center gap-2 sm:gap-3 group cursor-pointer">
+                <a href="index.html" class="flex items-center gap-2 sm:gap-3 logo-container">
+                    <img src="assets/img/logo.png" alt="Math Wizard Logo" class="w-8 sm:w-10 h-8 sm:h-10 logo-image transition-all duration-500 group-hover:drop-shadow-[0_0_8px_#C9A84C]">
+                    <div>
+                        <h1 class="font-magic text-lg sm:text-xl text-white tracking-widest">Math<span class="text-ncst-gold">Wizard</span></h1>
+                        <p class="text-[0.5rem] sm:text-[0.6rem] uppercase tracking-[0.2em] text-ncst-neon font-bold">The Era Of Mages</p>
+                    </div>
+                </a>
+            </div>
+            
+            <div class="hidden md:flex items-center gap-6">
+                <span class="text-sm text-gray-400"><i class="fa-solid fa-user-shield text-ncst-accent mr-2"></i><span id="admin-name">Administrator</span></span>
+                <button onclick="logout()" class="px-4 py-2 border border-ncst-accent text-ncst-accent text-sm font-bold uppercase tracking-widest hover:bg-ncst-accent/10 transition-colors rounded-sm">
+                    <i class="fa-solid fa-sign-out-alt mr-1"></i> Logout
+                </button>
+            </div>
+            <button class="md:hidden text-ncst-neon text-xl" onclick="logout()"><i class="fa-solid fa-sign-out-alt"></i></button>
+        </div>
+    </nav>
+
+    <div class="absolute inset-0 pointer-events-none"></div>
+
+    <main class="relative z-10 min-h-screen pt-24 px-4 sm:px-6 pb-12">
+        <div class="max-w-7xl mx-auto">
+            
+            <!-- Admin Header -->
+            <div class="mb-8">
+                <div class="section-tag mb-3"><i class="fa-solid fa-crown mr-2"></i>Royal Command Chamber</div>
+                <h1 class="font-magic text-3xl sm:text-4xl text-ncst-gold text-gold-glow mb-2">Admin Dashboard</h1>
+                <p class="font-flavor italic text-sm" style="color:#a08060;">Manage guild ledgers, view annals, and oversee the realm's adventurers</p>
+            </div>
+
+            <!-- Quick Stats Cards -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+                <div class="parchment-panel p-4 sm:p-6 border-l-4 border-ncst-neon">
+                    <p class="font-heading text-xs uppercase tracking-wider mb-1" style="color:#a08060;">Total Gold</p>
+                    <p id="admin-total-gold" class="text-2xl sm:text-3xl font-bold text-ncst-gold runic-glow">₱0.00</p>
+                    <p id="admin-total-gold-note" class="font-flavor italic text-xs text-gray-400 mt-1">No sales recorded yet</p>
+                </div>
+                <div class="parchment-panel p-4 sm:p-6 border-l-4 border-ncst-gold">
+                    <p class="font-heading text-xs uppercase tracking-wider mb-1" style="color:#a08060;">Active Adventurers</p>
+                    <p id="admin-active-users" class="text-2xl sm:text-3xl font-bold text-ncst-gold">0</p>
+                    <p id="admin-active-users-note" class="text-xs text-gray-400 mt-1">No players registered yet</p>
+                </div>
+                <div class="parchment-panel p-4 sm:p-6 border-l-4 border-ncst-accent">
+                    <p class="font-heading text-xs uppercase tracking-wider mb-1" style="color:#a08060;">Total Scrolls Sold</p>
+                    <p id="admin-total-sales" class="text-2xl sm:text-3xl font-bold text-ncst-gold runic-glow">0</p>
+                    <p id="admin-total-sales-note" class="font-flavor italic text-xs text-gray-400 mt-1">Waiting for first purchase</p>
+                </div>
+                <div class="parchment-panel p-4 sm:p-6 border-l-4 border-yellow-400">
+                    <p class="font-heading text-xs uppercase tracking-wider mb-1" style="color:#a08060;">Avg. Quest Duration</p>
+                    <p id="admin-avg-duration" class="text-2xl sm:text-3xl font-bold text-ncst-gold runic-glow">0m</p>
+                    <p id="admin-avg-duration-note" class="font-flavor italic text-xs text-gray-400 mt-1">Not enough gameplay data yet</p>
+                </div>
+            </div>
+
+            <!-- Navigation Tabs -->
+            <div class="flex flex-wrap gap-2 mb-8 border-b border-ncst-neon/15 pb-4">
+                <button onclick="showTab('overview')" class="tab-btn active px-4 py-2 text-sm font-bold uppercase tracking-wider rounded-sm transition-all" data-tab="overview">
+                    <i class="fa-solid fa-chart-line mr-2"></i>Overview
+                </button>
+                <button onclick="showTab('purchases')" class="tab-btn px-4 py-2 text-sm font-bold uppercase tracking-wider rounded-sm transition-all" data-tab="purchases">
+                    <i class="fa-solid fa-shopping-cart mr-2"></i>In-Game Purchases
+                </button>
+                <button onclick="showTab('users')" class="tab-btn px-4 py-2 text-sm font-bold uppercase tracking-wider rounded-sm transition-all" data-tab="users">
+                    <i class="fa-solid fa-users mr-2"></i>Users
+                </button>
+                <button onclick="showTab('items')" class="tab-btn px-4 py-2 text-sm font-bold uppercase tracking-wider rounded-sm transition-all" data-tab="items">
+                    <i class="fa-solid fa-box mr-2"></i>Manage Items
+                </button>
+            </div>
+
+            <!-- Overview Tab -->
+            <div id="tab-overview" class="tab-content">
+                <div class="grid lg:grid-cols-2 gap-6 mb-8">
+                    <!-- Revenue Chart -->
+                    <div class="parchment-panel p-6">
+                        <h3 class="font-magic text-xl text-ncst-gold text-gold-glow mb-4">Revenue Ledger</h3>
+                        <div class="relative h-64">
+                            <canvas id="revenueChart"></canvas>
+                        </div>
+                    </div>
+                    
+                    <!-- User Activity Chart -->
+                    <div class="parchment-panel p-6">
+                        <h3 class="font-magic text-xl text-ncst-gold text-gold-glow mb-4">Adventurer Activity</h3>
+                        <div class="relative h-64">
+                            <canvas id="userActivityChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid lg:grid-cols-3 gap-6">
+                    <!-- Purchase Categories -->
+                    <div class="parchment-panel p-6">
+                        <h3 class="font-magic text-xl text-ncst-gold text-gold-glow mb-4">Scroll Categories</h3>
+                        <div class="relative h-64">
+                            <canvas id="purchaseCategoryChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Top Selling Items -->
+                    <div class="parchment-panel p-6 lg:col-span-2">
+                        <h3 class="font-magic text-xl text-ncst-gold text-gold-glow mb-4">Top Relics Sold</h3>
+                        <div id="top-items-list" class="space-y-3">
+                            <div class="p-4 parchment-panel text-sm text-gray-400">No sales yet. Top relics will appear after first purchases.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- In-Game Purchases Tab -->
+            <div id="tab-purchases" class="tab-content hidden">
+                <div class="parchment-panel p-6 mb-6">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+                        <h3 class="font-magic text-xl text-ncst-gold text-gold-glow">Purchase History</h3>
+                        <div class="flex gap-2">
+                            <input id="purchase-search" type="text" placeholder="Search transactions..." class="px-4 py-2 bg-ncst-dark/50 border border-ncst-neon/30 rounded-lg text-white placeholder-gray-500 text-sm min-h-[44px]">
+                            <select id="purchase-range" class="px-4 py-2 bg-ncst-dark/50 border border-ncst-neon/30 rounded-lg text-white text-sm min-h-[44px]">
+                                <option>All Time</option>
+                                <option>This Week</option>
+                                <option>This Month</option>
+                                <option>This Year</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Purchase Table -->
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm">
+                            <thead>
+                                <tr class="border-b border-white/10">
+                                    <th class="text-left py-3 px-4 text-ncst-neon uppercase tracking-wider text-xs">Transaction ID</th>
+                                    <th class="text-left py-3 px-4 text-ncst-neon uppercase tracking-wider text-xs">User</th>
+                                    <th class="text-left py-3 px-4 text-ncst-neon uppercase tracking-wider text-xs">Item</th>
+                                    <th class="text-left py-3 px-4 text-ncst-neon uppercase tracking-wider text-xs">Amount</th>
+                                    <th class="text-left py-3 px-4 text-ncst-neon uppercase tracking-wider text-xs">Date</th>
+                                    <th class="text-left py-3 px-4 text-ncst-neon uppercase tracking-wider text-xs">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="purchase-table-body" class="text-gray-300">
+                                <tr class="border-b border-white/5">
+                                    <td colspan="6" class="py-6 px-4 text-center text-sm text-gray-400">No purchase records yet.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Pagination -->
+                    <div class="flex justify-between items-center mt-6">
+                        <p id="purchase-summary" class="text-sm text-gray-400">Showing 0 transactions</p>
+                        <div class="flex gap-2">
+                            <button class="iron-plaque-btn px-3 py-2 text-sm min-h-[44px]">Previous</button>
+                            <button class="rune-btn px-3 py-2 text-sm min-h-[44px]">1</button>
+                            <button class="iron-plaque-btn px-3 py-2 text-sm text-gray-400 min-h-[44px]">2</button>
+                            <button class="iron-plaque-btn px-3 py-2 text-sm text-gray-400 min-h-[44px]">3</button>
+                            <button class="iron-plaque-btn px-3 py-2 text-sm min-h-[44px]">Next</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Users Tab -->
+            <div id="tab-users" class="tab-content hidden">
+                <div class="parchment-panel p-6 mb-6">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+                        <h3 class="font-magic text-xl text-ncst-gold text-gold-glow">Adventurer Registry</h3>
+                        <div class="flex gap-2">
+                            <input id="users-search" type="text" placeholder="Search adventurers..." class="px-4 py-2 bg-ncst-dark/50 border border-ncst-neon/30 rounded-lg text-white placeholder-gray-500 text-sm min-h-[44px]">
+                            <button class="rune-btn px-4 text-sm min-h-[44px]">
+                                <i class="fa-solid fa-plus mr-1"></i> Enlist
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Users Table -->
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm">
+                            <thead>
+                                <tr class="border-b border-white/10">
+                                    <th class="text-left py-3 px-4 text-ncst-gold uppercase tracking-wider text-xs">User</th>
+                                    <th class="text-left py-3 px-4 text-ncst-gold uppercase tracking-wider text-xs">Level</th>
+                                    <th class="text-left py-3 px-4 text-ncst-gold uppercase tracking-wider text-xs">Total Spent</th>
+                                    <th class="text-left py-3 px-4 text-ncst-gold uppercase tracking-wider text-xs">Joined</th>
+                                    <th class="text-left py-3 px-4 text-ncst-gold uppercase tracking-wider text-xs">Status</th>
+                                    <th class="text-left py-3 px-4 text-ncst-gold uppercase tracking-wider text-xs">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="users-table-body" class="text-gray-300">
+                                <tr class="border-b border-white/5">
+                                    <td colspan="6" class="py-6 px-4 text-center text-sm text-gray-400">No players registered yet.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Manage Items Tab -->
+            <div id="tab-items" class="tab-content hidden">
+                <div class="grid lg:grid-cols-3 gap-6">
+                    <!-- Add New Item Form -->
+                    <div class="parchment-panel p-6">
+                        <h3 class="font-magic text-xl text-ncst-gold text-gold-glow mb-4">Add New Relic</h3>
+                        <form id="item-form" class="space-y-4">
+                            <input id="item-edit-id" type="hidden">
+                            <div>
+                                <label class="block text-xs text-ncst-neon uppercase tracking-wider mb-2">Item Name</label>
+                                <input id="item-name" type="text" placeholder="Enter item name" required class="w-full px-4 py-3 bg-ncst-dark/50 border border-ncst-neon/30 rounded-lg text-white placeholder-gray-500 text-sm min-h-[44px]">
+                            </div>
+                            <div>
+                                <label class="block text-xs text-ncst-neon uppercase tracking-wider mb-2">Category</label>
+                                <select id="item-category" class="w-full px-4 py-3 bg-ncst-dark/50 border border-ncst-neon/30 rounded-lg text-white text-sm min-h-[44px]">
+                                    <option>Currency Pack</option>
+                                    <option>Skin</option>
+                                    <option>Consumable</option>
+                                    <option>Battle Pass</option>
+                                    <option>Equipment</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs text-ncst-neon uppercase tracking-wider mb-2">Price (₱)</label>
+                                <input id="item-price" type="number" step="0.01" min="0" placeholder="0.00" required class="w-full px-4 py-3 bg-ncst-dark/50 border border-ncst-neon/30 rounded-lg text-white placeholder-gray-500 text-sm min-h-[44px]">
+                            </div>
+                            <div>
+                                <label class="block text-xs text-ncst-neon uppercase tracking-wider mb-2">Description</label>
+                                <textarea id="item-description" rows="3" placeholder="Item description..." class="w-full px-4 py-3 bg-ncst-dark/50 border border-ncst-neon/30 rounded-lg text-white placeholder-gray-500 text-sm resize-none"></textarea>
+                            </div>
+                            <div>
+                                <label class="block text-xs text-ncst-neon uppercase tracking-wider mb-2">Rarity</label>
+                                <select id="item-rarity" class="w-full px-4 py-3 bg-ncst-dark/50 border border-ncst-neon/30 rounded-lg text-white text-sm min-h-[44px]">
+                                    <option>Common</option>
+                                    <option>Rare</option>
+                                    <option>Epic</option>
+                                    <option>Legendary</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs text-ncst-neon uppercase tracking-wider mb-2">Icon</label>
+                                <select id="item-icon" class="w-full px-4 py-3 bg-ncst-dark/50 border border-ncst-neon/30 rounded-lg text-white text-sm min-h-[44px]">
+                                    <option value="fa-gem">Gem</option>
+                                    <option value="fa-shirt">Shirt</option>
+                                    <option value="fa-scroll">Scroll</option>
+                                    <option value="fa-bolt">Bolt</option>
+                                    <option value="fa-coins">Coins</option>
+                                    <option value="fa-wand-magic-sparkles">Magic Wand</option>
+                                    <option value="fa-hat-wizard">Wizard Hat</option>
+                                    <option value="fa-fire-flame-curved">Flame</option>
+                                    <option value="fa-shield">Shield</option>
+                                </select>
+                            </div>
+                            <button id="item-submit-btn" type="submit" class="rune-btn w-full min-h-[44px]">
+                                <i class="fa-solid fa-plus mr-2"></i> Add Relic
+                            </button>
+                            <button id="item-cancel-edit" type="button" class="iron-plaque-btn w-full min-h-[44px] hidden">Cancel Edit</button>
+                        </form>
+                    </div>
+
+                    <!-- Existing Items List -->
+                    <div class="parchment-panel p-6 lg:col-span-2">
+                        <h3 class="font-magic text-xl text-ncst-gold text-gold-glow mb-4">Shop Relics</h3>
+                        <div id="shop-items-list" class="grid sm:grid-cols-2 gap-4">
+                            <div class="parchment-panel p-4 text-sm text-gray-400">No items in shop yet. Add your first relic.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="relative z-10 py-6 px-4 text-center text-xs text-gray-600 border-t border-white/5 bg-black/50">
+        <p>&copy; 2026 MATH WIZARD ADMIN PANEL. ALL RIGHTS RESERVED.</p>
+    </footer>
+
+    <script>
+        function showTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.add('hidden'));
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active', 'bg-ncst-neon/20', 'text-ncst-neon'));
+
+            const selectedTab = document.getElementById('tab-' + tabName);
+            const selectedButton = document.querySelector(`[data-tab="${tabName}"]`);
+
+            if (selectedTab) selectedTab.classList.remove('hidden');
+            if (selectedButton) selectedButton.classList.add('active', 'bg-ncst-neon/20', 'text-ncst-neon');
+        }
+
+        document.querySelector('[data-tab="overview"]')?.classList.add('bg-ncst-neon/20', 'text-ncst-neon');
+
+        const chartColors = {
+            neon: '#64ffda',
+            gold: '#FFD700',
+            accent: '#ff2a6d',
+            blue: '#0ea5e9',
+            violet: '#a855f7'
+        };
+
+        const adminState = {
+            users: [],
+            purchases: [],
+            items: [],
+            revenueChart: null,
+            userActivityChart: null,
+            purchaseCategoryChart: null
+        };
+
+        function toDate(value) {
+            if (!value) return null;
+            if (value instanceof Date) return value;
+            if (typeof value?.toDate === 'function') return value.toDate();
+            const date = new Date(value);
+            return Number.isNaN(date.getTime()) ? null : date;
+        }
+
+        function currency(value) {
+            return `₱${Number(value || 0).toFixed(2)}`;
+        }
+
+        function inferCategory(purchase) {
+            const raw = `${purchase.category || purchase.itemName || purchase.name || ''}`.toLowerCase();
+            if (raw.includes('skin')) return 'Skins';
+            if (raw.includes('battle pass') || raw.includes('pass')) return 'Battle Pass';
+            if (raw.includes('boost') || raw.includes('potion') || raw.includes('consumable')) return 'Consumables';
+            if (raw.includes('equipment') || raw.includes('staff') || raw.includes('wand')) return 'Equipment';
+            return 'Currency Packs';
+        }
+
+        function statusClasses(status) {
+            const normalized = String(status || 'Completed').toLowerCase();
+            if (normalized === 'pending') return 'bg-yellow-500/20 text-yellow-400';
+            if (normalized === 'refunded') return 'bg-red-500/20 text-red-400';
+            return 'bg-green-500/20 text-green-400';
+        }
+
+        function resolvePurchaseIcon(purchase) {
+            if (purchase?.icon) {
+                return purchase.icon;
+            }
+
+            const itemByName = adminState.items.find((item) =>
+                String(item.name || '').toLowerCase() === String(purchase?.itemName || '').toLowerCase()
+            );
+
+            if (itemByName?.icon) {
+                return itemByName.icon;
+            }
+
+            return itemIcon(purchase?.category || purchase?.itemName || '');
+        }
+
+        function getWeekStart(now = new Date()) {
+            const start = new Date(now);
+            const day = start.getDay();
+            const diff = day === 0 ? -6 : 1 - day;
+            start.setDate(start.getDate() + diff);
+            start.setHours(0, 0, 0, 0);
+            return start;
+        }
+
+        function applyRangeFilter(purchases, rangeLabel) {
+            const now = new Date();
+            if (rangeLabel === 'This Week') {
+                const weekStart = getWeekStart(now);
+                return purchases.filter(p => p.date && p.date >= weekStart);
+            }
+            if (rangeLabel === 'This Month') {
+                return purchases.filter(p => p.date && p.date.getMonth() === now.getMonth() && p.date.getFullYear() === now.getFullYear());
+            }
+            if (rangeLabel === 'This Year') {
+                return purchases.filter(p => p.date && p.date.getFullYear() === now.getFullYear());
+            }
+            return purchases;
+        }
+
+        function renderPurchaseRows() {
+            const tbody = document.getElementById('purchase-table-body');
+            const summary = document.getElementById('purchase-summary');
+            const searchTerm = (document.getElementById('purchase-search')?.value || '').trim().toLowerCase();
+            const range = document.getElementById('purchase-range')?.value || 'All Time';
+
+            let rows = applyRangeFilter(adminState.purchases, range);
+
+            if (searchTerm) {
+                rows = rows.filter(p =>
+                    String(p.transactionId).toLowerCase().includes(searchTerm)
+                    || String(p.userEmail || '').toLowerCase().includes(searchTerm)
+                    || String(p.itemName || '').toLowerCase().includes(searchTerm)
+                    || String(p.status || '').toLowerCase().includes(searchTerm)
+                );
+            }
+
+            if (summary) {
+                summary.textContent = `Showing ${rows.length} transaction${rows.length === 1 ? '' : 's'}`;
+            }
+
+            if (!tbody) return;
+
+            if (!rows.length) {
+                tbody.innerHTML = '<tr class="border-b border-white/5"><td colspan="6" class="py-6 px-4 text-center text-sm text-gray-400">No purchase records found.</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = rows.slice(0, 200).map((purchase) => {
+                const dateText = purchase.date ? purchase.date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : 'N/A';
+                const icon = resolvePurchaseIcon(purchase);
+                return `
+                    <tr class="border-b border-white/5 hover:bg-white/5">
+                        <td class="py-3 px-4 font-mono text-xs">${purchase.transactionId}</td>
+                        <td class="py-3 px-4">${purchase.userEmail || 'Unknown user'}</td>
+                        <td class="py-3 px-4">
+                            <div class="flex items-center gap-2">
+                                <span class="w-7 h-7 rounded-md bg-ncst-gold/10 border border-ncst-gold/30 flex items-center justify-center text-ncst-gold">
+                                    <i class="fa-solid ${icon}"></i>
+                                </span>
+                                <span>${purchase.itemName || 'Purchase'}</span>
+                            </div>
+                        </td>
+                        <td class="py-3 px-4 text-ncst-gold font-bold">${currency(purchase.amount)}</td>
+                        <td class="py-3 px-4 text-gray-400">${dateText}</td>
+                        <td class="py-3 px-4"><span class="px-2 py-1 ${statusClasses(purchase.status)} rounded text-xs">${purchase.status || 'Completed'}</span></td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function renderUsersRows() {
+            const tbody = document.getElementById('users-table-body');
+            const searchTerm = (document.getElementById('users-search')?.value || '').trim().toLowerCase();
+            const filteredUsers = adminState.users.filter((user) => {
+                if (!searchTerm) return true;
+                return String(user.name || '').toLowerCase().includes(searchTerm)
+                    || String(user.email || '').toLowerCase().includes(searchTerm)
+                    || String(user.username || '').toLowerCase().includes(searchTerm);
+            });
+
+            if (!tbody) return;
+
+            if (!filteredUsers.length) {
+                tbody.innerHTML = '<tr class="border-b border-white/5"><td colspan="6" class="py-6 px-4 text-center text-sm text-gray-400">No players registered yet.</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = filteredUsers.slice(0, 200).map((user) => {
+                const initials = String(user.name || user.username || 'U').slice(0, 1).toUpperCase();
+                const joinedDate = user.createdAt ? user.createdAt.toLocaleDateString('en-US', { month: 'short', year: 'numeric' }) : 'N/A';
+                const status = user.active ? 'Active' : 'Inactive';
+                const statusClass = user.active ? 'bg-green-500/20 text-green-400' : 'bg-yellow-500/20 text-yellow-400';
+
+                return `
+                    <tr class="border-b border-white/5 hover:bg-white/5">
+                        <td class="py-3 px-4">
+                            <div class="flex items-center gap-3">
+                                <div class="w-8 h-8 bg-ncst-neon/20 rounded-full flex items-center justify-center">
+                                    <span class="text-ncst-neon text-xs font-bold">${initials}</span>
+                                </div>
+                                <div>
+                                    <p class="font-bold text-white">${user.name || user.username || 'Unnamed'}</p>
+                                    <p class="text-xs text-gray-400">${user.email || 'No email'}</p>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="py-3 px-4"><span class="text-ncst-gold font-bold">${Number(user.level || 1)}</span></td>
+                        <td class="py-3 px-4 text-ncst-neon">${currency(user.totalSpent)}</td>
+                        <td class="py-3 px-4 text-gray-400">${joinedDate}</td>
+                        <td class="py-3 px-4"><span class="px-2 py-1 ${statusClass} rounded text-xs">${status}</span></td>
+                        <td class="py-3 px-4 text-gray-500 text-xs">N/A</td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function renderTopItems() {
+            const container = document.getElementById('top-items-list');
+            if (!container) return;
+
+            const grouped = new Map();
+            adminState.purchases.forEach((purchase) => {
+                const key = purchase.itemName || 'Unknown Item';
+                if (!grouped.has(key)) {
+                    grouped.set(key, { itemName: key, count: 0, amount: Number(purchase.amount || 0) });
+                }
+                const row = grouped.get(key);
+                row.count += 1;
+                row.amount = Number(purchase.amount || row.amount || 0);
+            });
+
+            const sorted = Array.from(grouped.values()).sort((a, b) => b.count - a.count).slice(0, 5);
+
+            if (!sorted.length) {
+                container.innerHTML = '<div class="p-4 parchment-panel text-sm text-gray-400">No sales yet. Top relics will appear after first purchases.</div>';
+                return;
+            }
+
+            container.innerHTML = sorted.map((item) => `
+                <div class="flex items-center justify-between p-3 parchment-panel">
+                    <div>
+                        <p class="font-bold text-white">${item.itemName}</p>
+                        <p class="text-xs text-gray-400">In-game item</p>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-ncst-neon font-bold">${item.count} sales</p>
+                        <p class="text-xs text-gray-400">${currency(item.amount)} each</p>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function itemIcon(category) {
+            const key = String(category || '').toLowerCase();
+            if (key.includes('skin')) return 'fa-shirt';
+            if (key.includes('battle')) return 'fa-scroll';
+            if (key.includes('consum')) return 'fa-bolt';
+            if (key.includes('equip')) return 'fa-wand-magic-sparkles';
+            return 'fa-gem';
+        }
+
+        function rarityBadgeClass(rarity) {
+            const key = String(rarity || '').toLowerCase();
+            if (key === 'legendary') return 'bg-ncst-gold/20 text-ncst-gold';
+            if (key === 'epic') return 'bg-purple-500/20 text-purple-400';
+            if (key === 'rare') return 'bg-blue-500/20 text-blue-400';
+            return 'bg-gray-500/20 text-gray-300';
+        }
+
+        function renderItems() {
+            const container = document.getElementById('shop-items-list');
+            if (!container) return;
+
+            if (!adminState.items.length) {
+                container.innerHTML = '<div class="parchment-panel p-4 text-sm text-gray-400">No items in shop yet. Add your first relic.</div>';
+                return;
+            }
+
+            container.innerHTML = adminState.items.map((item) => `
+                <div class="parchment-panel p-4 border border-ncst-gold/30 hover:border-ncst-gold transition-all">
+                    <div class="flex items-start justify-between mb-3">
+                        <div class="w-12 h-12 bg-ncst-gold/20 rounded-lg flex items-center justify-center">
+                            <i class="fa-solid ${item.icon || itemIcon(item.category)} text-ncst-gold text-xl"></i>
+                        </div>
+                        <span class="text-xs px-2 py-1 rounded ${rarityBadgeClass(item.rarity)}">${item.rarity || 'Common'}</span>
+                    </div>
+                    <h4 class="font-bold text-white mb-1">${item.name || 'Unnamed Item'}</h4>
+                    <p class="text-xs text-gray-400 mb-3">${item.description || 'No description provided.'}</p>
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <span class="text-ncst-neon font-bold">${currency(item.price)}</span>
+                            <p class="text-[11px] text-gray-500">${item.category || 'Uncategorized'}</p>
+                        </div>
+                        <div>
+                            <button type="button" data-action="edit-item" data-id="${item.id}" class="text-ncst-gold hover:text-yellow-300 mr-2 text-sm"><i class="fa-solid fa-edit"></i></button>
+                            <button type="button" data-action="delete-item" data-id="${item.id}" class="text-ncst-accent hover:text-red-400 text-sm"><i class="fa-solid fa-trash"></i></button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function resetItemForm() {
+            const form = document.getElementById('item-form');
+            const editId = document.getElementById('item-edit-id');
+            const submitBtn = document.getElementById('item-submit-btn');
+            const cancelBtn = document.getElementById('item-cancel-edit');
+
+            if (form) form.reset();
+            if (editId) editId.value = '';
+            if (submitBtn) submitBtn.innerHTML = '<i class="fa-solid fa-plus mr-2"></i> Add Relic';
+            if (cancelBtn) cancelBtn.classList.add('hidden');
+        }
+
+        function beginEditItem(itemId) {
+            const item = adminState.items.find(row => row.id === itemId);
+            if (!item) return;
+
+            const nameEl = document.getElementById('item-name');
+            const categoryEl = document.getElementById('item-category');
+            const priceEl = document.getElementById('item-price');
+            const descriptionEl = document.getElementById('item-description');
+            const rarityEl = document.getElementById('item-rarity');
+            const iconEl = document.getElementById('item-icon');
+            const editIdEl = document.getElementById('item-edit-id');
+            const submitBtn = document.getElementById('item-submit-btn');
+            const cancelBtn = document.getElementById('item-cancel-edit');
+
+            if (nameEl) nameEl.value = item.name || '';
+            if (categoryEl) categoryEl.value = item.category || 'Currency Pack';
+            if (priceEl) priceEl.value = Number(item.price || 0);
+            if (descriptionEl) descriptionEl.value = item.description || '';
+            if (rarityEl) rarityEl.value = item.rarity || 'Common';
+            if (iconEl) iconEl.value = item.icon || itemIcon(item.category);
+            if (editIdEl) editIdEl.value = item.id;
+            if (submitBtn) submitBtn.innerHTML = '<i class="fa-solid fa-check mr-2"></i> Update Relic';
+            if (cancelBtn) cancelBtn.classList.remove('hidden');
+        }
+
+        async function upsertItemFromForm() {
+            const name = (document.getElementById('item-name')?.value || '').trim();
+            const category = document.getElementById('item-category')?.value || 'Currency Pack';
+            const price = Number(document.getElementById('item-price')?.value || 0);
+            const description = (document.getElementById('item-description')?.value || '').trim();
+            const rarity = document.getElementById('item-rarity')?.value || 'Common';
+            const icon = document.getElementById('item-icon')?.value || itemIcon(category);
+            const editId = (document.getElementById('item-edit-id')?.value || '').trim();
+
+            if (!name) {
+                alert('Item name is required.');
+                return;
+            }
+
+            if (!Number.isFinite(price) || price < 0) {
+                alert('Price must be 0 or higher.');
+                return;
+            }
+
+            const payload = {
+                name,
+                category,
+                price,
+                description,
+                rarity,
+                icon,
+                updatedAt: new Date().toISOString()
+            };
+
+            if (editId) {
+                await window.firebaseDb.collection('shop_items').doc(editId).set(payload, { merge: true });
+            } else {
+                await window.firebaseDb.collection('shop_items').add({
+                    ...payload,
+                    createdAt: new Date().toISOString()
+                });
+            }
+
+            await loadItems();
+            resetItemForm();
+        }
+
+        async function deleteItem(itemId) {
+            if (!itemId) return;
+            const confirmed = window.confirm('Delete this shop item?');
+            if (!confirmed) return;
+
+            await window.firebaseDb.collection('shop_items').doc(itemId).delete();
+            await loadItems();
+            resetItemForm();
+        }
+
+        async function loadItems() {
+            if (!window.firebaseDb) return;
+
+            const snapshot = await window.firebaseDb.collection('shop_items').get();
+            const rows = [];
+
+            snapshot.forEach((doc) => {
+                const data = doc.data() || {};
+                rows.push({
+                    id: doc.id,
+                    name: data.name || 'Unnamed Item',
+                    category: data.category || 'Currency Pack',
+                    price: Number(data.price || 0),
+                    description: data.description || '',
+                    rarity: data.rarity || 'Common',
+                    icon: data.icon || itemIcon(data.category),
+                    createdAt: toDate(data.createdAt),
+                    updatedAt: toDate(data.updatedAt)
+                });
+            });
+
+            rows.sort((a, b) => {
+                const aTime = a.updatedAt?.getTime() || a.createdAt?.getTime() || 0;
+                const bTime = b.updatedAt?.getTime() || b.createdAt?.getTime() || 0;
+                return bTime - aTime;
+            });
+
+            adminState.items = rows;
+            renderItems();
+        }
+
+        function updateStatsCards() {
+            const totalRevenue = adminState.purchases.reduce((sum, p) => sum + Number(p.amount || 0), 0);
+            const totalSales = adminState.purchases.length;
+            const activeUsers = adminState.users.filter(u => u.active).length;
+
+            const playersWithPlaytime = adminState.users.filter(u => Number(u.playTime || 0) > 0 && Number(u.challengesWon || 0) > 0);
+            const avgMinutes = playersWithPlaytime.length
+                ? Math.round(playersWithPlaytime.reduce((sum, u) => sum + ((Number(u.playTime || 0) * 60) / Number(u.challengesWon || 1)), 0) / playersWithPlaytime.length)
+                : 0;
+
+            const setText = (id, value) => {
+                const el = document.getElementById(id);
+                if (el) el.textContent = value;
+            };
+
+            setText('admin-total-gold', currency(totalRevenue));
+            setText('admin-total-sales', totalSales.toLocaleString());
+            setText('admin-active-users', activeUsers.toLocaleString());
+            setText('admin-avg-duration', `${avgMinutes}m`);
+
+            setText('admin-total-gold-note', totalRevenue > 0 ? 'Based on recorded purchases' : 'No sales recorded yet');
+            setText('admin-total-sales-note', totalSales > 0 ? 'Total completed purchases' : 'Waiting for first purchase');
+            setText('admin-active-users-note', adminState.users.length > 0 ? `${adminState.users.length} total registered players` : 'No players registered yet');
+            setText('admin-avg-duration-note', avgMinutes > 0 ? 'Estimated from player stats' : 'Not enough gameplay data yet');
+        }
+
+        function renderCharts() {
+            const revenueCanvas = document.getElementById('revenueChart');
+            const activityCanvas = document.getElementById('userActivityChart');
+            const categoryCanvas = document.getElementById('purchaseCategoryChart');
+            if (!revenueCanvas || !activityCanvas || !categoryCanvas) return;
+
+            if (adminState.revenueChart) adminState.revenueChart.destroy();
+            if (adminState.userActivityChart) adminState.userActivityChart.destroy();
+            if (adminState.purchaseCategoryChart) adminState.purchaseCategoryChart.destroy();
+
+            const monthLabels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            const monthlyRevenue = new Array(12).fill(0);
+            adminState.purchases.forEach((purchase) => {
+                if (purchase.date) {
+                    monthlyRevenue[purchase.date.getMonth()] += Number(purchase.amount || 0);
+                }
+            });
+
+            const weekLabels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+            const weeklyUsers = new Array(7).fill(0);
+            const now = new Date();
+            const weekStart = getWeekStart(now);
+            adminState.users.forEach((user) => {
+                if (!user.createdAt || user.createdAt < weekStart) return;
+                const idx = (user.createdAt.getDay() + 6) % 7;
+                weeklyUsers[idx] += 1;
+            });
+
+            const categoryLabels = ['Currency Packs', 'Skins', 'Battle Pass', 'Consumables', 'Equipment'];
+            const categoryCounts = {
+                'Currency Packs': 0,
+                'Skins': 0,
+                'Battle Pass': 0,
+                'Consumables': 0,
+                'Equipment': 0
+            };
+
+            adminState.purchases.forEach((purchase) => {
+                const category = inferCategory(purchase);
+                categoryCounts[category] += 1;
+            });
+
+            adminState.revenueChart = new Chart(revenueCanvas.getContext('2d'), {
+                type: 'line',
+                data: {
+                    labels: monthLabels,
+                    datasets: [{
+                        label: 'Revenue (₱)',
+                        data: monthlyRevenue,
+                        borderColor: chartColors.neon,
+                        backgroundColor: 'rgba(100, 255, 218, 0.1)',
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#8892b0' } },
+                        x: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#8892b0' } }
+                    }
+                }
+            });
+
+            adminState.userActivityChart = new Chart(activityCanvas.getContext('2d'), {
+                type: 'bar',
+                data: {
+                    labels: weekLabels,
+                    datasets: [{
+                        label: 'New Users',
+                        data: weeklyUsers,
+                        backgroundColor: [chartColors.neon, chartColors.gold, chartColors.neon, chartColors.gold, chartColors.neon, chartColors.accent, chartColors.gold],
+                        borderRadius: 8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#8892b0', precision: 0 } },
+                        x: { grid: { display: false }, ticks: { color: '#8892b0' } }
+                    }
+                }
+            });
+
+            adminState.purchaseCategoryChart = new Chart(categoryCanvas.getContext('2d'), {
+                type: 'doughnut',
+                data: {
+                    labels: categoryLabels,
+                    datasets: [{
+                        data: categoryLabels.map(label => categoryCounts[label]),
+                        backgroundColor: [chartColors.neon, chartColors.gold, chartColors.accent, chartColors.blue, chartColors.violet],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: { color: '#8892b0', padding: 15 }
+                        }
+                    }
+                }
+            });
+        }
+
+        async function loadAdminData() {
+            if (!window.firebaseDb) return;
+
+            const [usersSnapshot, playersSnapshot] = await Promise.all([
+                window.firebaseDb.collection('users').get(),
+                window.firebaseDb.collection('players').get()
+            ]);
+
+            const playerMap = new Map();
+            playersSnapshot.forEach((doc) => {
+                playerMap.set(doc.id, doc.data() || {});
+            });
+
+            const purchases = [];
+            const users = [];
+
+            usersSnapshot.forEach((doc) => {
+                const user = doc.data() || {};
+                if (user.role === 'admin') return;
+
+                const profile = playerMap.get(doc.id) || {};
+                const userPurchases = Array.isArray(user.purchaseHistory) ? user.purchaseHistory : [];
+                const playerPurchases = Array.isArray(profile.purchaseHistory) ? profile.purchaseHistory : [];
+                const mergedPurchases = [...userPurchases, ...playerPurchases];
+                const spent = mergedPurchases.reduce((sum, row) => sum + Number(row.amount || row.price || 0), 0);
+
+                users.push({
+                    id: doc.id,
+                    name: user.name || user.username || 'Unnamed',
+                    username: user.username || '',
+                    email: user.email || '',
+                    createdAt: toDate(user.createdAt),
+                    level: profile.level || user.level || 1,
+                    challengesWon: profile?.stats?.challengesWon || 0,
+                    playTime: profile?.stats?.playTime || 0,
+                    active: true,
+                    totalSpent: spent
+                });
+
+                mergedPurchases.forEach((entry, index) => {
+                    const amount = Number(entry.amount || entry.price || 0);
+                    purchases.push({
+                        transactionId: entry.transactionId || entry.id || `#TXN-${doc.id.slice(0, 6)}-${index + 1}`,
+                        userId: doc.id,
+                        userEmail: user.email || user.username || 'Unknown',
+                        itemName: entry.itemName || entry.name || 'In-game purchase',
+                        amount,
+                        date: toDate(entry.date || entry.createdAt),
+                        status: entry.status || 'Completed',
+                        category: entry.category || '',
+                        icon: entry.icon || ''
+                    });
+                });
+            });
+
+            purchases.sort((a, b) => (b.date?.getTime() || 0) - (a.date?.getTime() || 0));
+            users.sort((a, b) => (b.createdAt?.getTime() || 0) - (a.createdAt?.getTime() || 0));
+
+            adminState.users = users;
+            adminState.purchases = purchases;
+
+            await loadItems();
+
+            updateStatsCards();
+            renderPurchaseRows();
+            renderUsersRows();
+            renderTopItems();
+            renderCharts();
+        }
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            const searchPurchases = document.getElementById('purchase-search');
+            const rangePurchases = document.getElementById('purchase-range');
+            const searchUsers = document.getElementById('users-search');
+            const itemForm = document.getElementById('item-form');
+            const itemCancelEdit = document.getElementById('item-cancel-edit');
+            const itemsContainer = document.getElementById('shop-items-list');
+
+            if (searchPurchases) searchPurchases.addEventListener('input', renderPurchaseRows);
+            if (rangePurchases) rangePurchases.addEventListener('change', renderPurchaseRows);
+            if (searchUsers) searchUsers.addEventListener('input', renderUsersRows);
+
+            if (itemForm) {
+                itemForm.addEventListener('submit', async (event) => {
+                    event.preventDefault();
+                    try {
+                        await upsertItemFromForm();
+                    } catch (error) {
+                        console.error('Failed to save item:', error);
+                        alert('Failed to save item. Check Firestore rules and try again.');
+                    }
+                });
+            }
+
+            if (itemCancelEdit) {
+                itemCancelEdit.addEventListener('click', () => resetItemForm());
+            }
+
+            if (itemsContainer) {
+                itemsContainer.addEventListener('click', async (event) => {
+                    const button = event.target.closest('button[data-action]');
+                    if (!button) return;
+                    const action = button.getAttribute('data-action');
+                    const itemId = button.getAttribute('data-id');
+
+                    if (action === 'edit-item') {
+                        beginEditItem(itemId);
+                        return;
+                    }
+
+                    if (action === 'delete-item') {
+                        try {
+                            await deleteItem(itemId);
+                        } catch (error) {
+                            console.error('Failed to delete item:', error);
+                            alert('Failed to delete item. Check Firestore rules and try again.');
+                        }
+                    }
+                });
+            }
+
+            try {
+                await loadAdminData();
+            } catch (error) {
+                console.error('Failed to load admin data:', error);
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Math Wizard - Review Top-Up</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="../assets/js/tailwind-config.js"></script>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <script src="../assets/js/topup-review.js" defer></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Cinzel+Decorative:wght@400;700;900&family=Crimson+Text:ital,wght@0,400;0,600;0,700;1,400&family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="antialiased selection:bg-ncst-neon selection:text-ncst-dark">
+    <div class="fixed inset-0 pointer-events-none z-0">
+        <div class="absolute inset-0 bg-tech-grid"></div>
+        <div class="absolute top-0 right-0 w-[360px] h-[360px] bg-ncst-blue rounded-full filter blur-[120px] opacity-20"></div>
+        <div class="absolute bottom-0 left-0 w-[360px] h-[360px] bg-ncst-gold rounded-full filter blur-[120px] opacity-10"></div>
+    </div>
+
+    <main class="relative z-10 min-h-screen pt-20 pb-16 px-4 sm:px-6">
+        <section class="max-w-3xl mx-auto">
+            <div class="text-center mb-8">
+                <div class="section-tag inline-flex items-center gap-2 mb-3"><i class="fa-solid fa-receipt"></i> Checkout Review</div>
+                <h1 class="font-magic text-4xl sm:text-5xl text-white text-gold-glow">Review Your Order</h1>
+                <p class="font-flavor italic text-sm sm:text-base text-gray-300 mt-2">Confirm your details before opening secure PayMongo checkout.</p>
+            </div>
+
+            <div class="parchment-panel p-5 sm:p-6">
+                <div class="grid sm:grid-cols-2 gap-4 text-sm">
+                    <p class="text-white"><span class="text-gray-400">Username:</span> <span id="review-username">-</span></p>
+                    <p class="text-white"><span class="text-gray-400">User ID:</span> <span id="review-userid">-</span></p>
+                    <p class="text-white"><span class="text-gray-400">Offer:</span> <span id="review-offer">-</span></p>
+                    <p class="text-white"><span class="text-gray-400">Amount:</span> <span id="review-amount">-</span></p>
+                    <p class="text-white sm:col-span-2"><span class="text-gray-400">Payment Method:</span> <span id="review-method">-</span></p>
+                </div>
+
+                <p id="review-message" class="text-xs min-h-[1.25rem] mt-4 text-gray-300"></p>
+
+                <div class="mt-5 pt-4 border-t border-ncst-neon/20 flex flex-col sm:flex-row gap-3">
+                    <button id="review-back-btn" type="button" class="w-full sm:w-auto border border-ncst-gold/30 px-4 py-2 text-xs uppercase tracking-widest text-ncst-neon hover:text-ncst-gold hover:border-ncst-gold/60 transition-colors">
+                        <i class="fa-solid fa-arrow-left"></i> Back To Top-Up
+                    </button>
+                    <button id="review-checkout-btn" type="button" class="w-full sm:w-auto iron-plaque-btn justify-center">
+                        <i class="fa-solid fa-credit-card"></i> Proceed To Checkout
+                    </button>
+                </div>
+            </div>
+        </section>
+    </main>
+</body>
+</html>

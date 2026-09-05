@@ -1,0 +1,1094 @@
+/* ================================================================
+   MATH WIZARD — GRAND MAGIC ACADEMY
+   "Adventurer's Guild" High Fantasy Theme
+   ================================================================
+   Palette:
+     Deep Dungeon       #1a0e05
+     Aged Mahogany      #2c1a0b
+     Scorched Timber    #3d2010
+     Heraldic Crimson   #8b1a1a
+     Burnished Gold     #d4a843
+     Pale Candlelight   #f0d98a
+     Aged Parchment     #e2c990
+     Faded Parchment    #c9aa7a
+     Forest Sage        #2d6a4f
+     Arcane Teal        #1d6a5e
+     Smoked Stone       #3a2a1e
+   ================================================================ */
+
+/* ─────────────────────────────────────────────────────────────
+   CSS Custom Properties
+───────────────────────────────────────────────────────────── */
+:root {
+    --gold:       #d4a843;
+    --gold-pale:  #f0d98a;
+    --parchment:  #e2c990;
+    --parch-faded:#c9aa7a;
+    --crimson:    #8b1a1a;
+    --dungeon:    #1a0e05;
+    --mahogany:   #2c1a0b;
+    --timber:     #3d2010;
+    --sage:       #2d6a4f;
+    --teal:       #1d6a5e;
+    --stone:      #3a2a1e;
+    --glow-gold:  rgba(212, 168, 67, 0.65);
+    --glow-crim:  rgba(139, 26, 26, 0.65);
+    --shadow-deep:rgba(0, 0, 0, 0.85);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Base
+───────────────────────────────────────────────────────────── */
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    background-color: var(--dungeon);
+    background-image:
+        linear-gradient(
+            rgba(10, 4, 0, 0.88) 0%,
+            rgba(26, 14, 5, 0.92) 60%,
+            rgba(10, 4, 0, 0.96) 100%
+        );
+    background-attachment: fixed;
+    background-size: cover;
+    color: var(--parch-faded);
+    font-family: 'Crimson Text', Georgia, 'Times New Roman', serif;
+    font-size: 1.05rem;
+    overflow-x: hidden;
+}
+
+/* Profile page performance tuning */
+.profile-page .profile-tab-content {
+    content-visibility: auto;
+    contain: layout paint style;
+    contain-intrinsic-size: 480px;
+}
+
+.profile-page .float-card {
+    animation-duration: 8s;
+}
+
+@media (prefers-reduced-motion: reduce), (max-width: 1024px) {
+    .profile-page .float-card,
+    .profile-page .runic-glow,
+    .profile-page .text-gold-glow {
+        animation: none !important;
+    }
+
+    .profile-page .parchment-panel,
+    .profile-page .glass-panel,
+    .profile-page .profile-tab,
+    .profile-page .rune-btn,
+    .profile-page .iron-plaque-btn {
+        transition: none !important;
+    }
+}
+
+a { text-decoration: none; }
+
+/* ─────────────────────────────────────────────────────────────
+   Global Selection
+───────────────────────────────────────────────────────────── */
+::selection {
+    background-color: var(--gold);
+    color: var(--dungeon);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Iron-Track Scrollbar
+───────────────────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 12px; }
+
+::-webkit-scrollbar-track {
+    background: #0a0400;
+    border-left: 2px solid #2c1a0b;
+    box-shadow: inset 0 0 4px rgba(0,0,0,0.9);
+}
+
+::-webkit-scrollbar-thumb {
+    background:
+        linear-gradient(180deg, #4a3018 0%, #2a1808 40%, #4a3018 100%);
+    border: 1px solid rgba(212,168,67,0.3);
+    border-radius: 1px;
+    box-shadow:
+        inset 0 1px 0 rgba(212,168,67,0.25),
+        0 0 6px rgba(0,0,0,0.6);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, #6a4828 0%, #3a2808 40%, #6a4828 100%);
+    border-color: rgba(212,168,67,0.6);
+    box-shadow: 0 0 10px rgba(212,168,67,0.3);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Stone-Masonry Grid Background
+───────────────────────────────────────────────────────────── */
+.bg-tech-grid {
+    background-image:
+        linear-gradient(rgba(212,168,67,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(212,168,67,0.04) 1px, transparent 1px),
+        linear-gradient(rgba(80,40,10,0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(80,40,10,0.025) 1px, transparent 1px);
+    background-size: 80px 60px, 80px 60px, 20px 20px, 20px 20px;
+    mask-image: radial-gradient(ellipse at center, black 0%, transparent 80%);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   PARCHMENT PANEL — Angled corners via multi-layer background
+───────────────────────────────────────────────────────────── */
+.parchment-panel {
+    position: relative;
+    background:
+        linear-gradient(135deg, rgba(212,168,67,0.4) 12px, transparent 12px) top left,
+        linear-gradient(225deg, rgba(212,168,67,0.4) 12px, transparent 12px) top right,
+        linear-gradient(315deg, rgba(212,168,67,0.4) 12px, transparent 12px) bottom right,
+        linear-gradient(45deg,  rgba(212,168,67,0.4) 12px, transparent 12px) bottom left,
+        linear-gradient(160deg, #2c1a0b 0%, #1a0e05 70%, #120a03 100%);
+    background-repeat: no-repeat;
+    background-size:
+        18px 18px, 18px 18px, 18px 18px, 18px 18px,
+        100% 100%;
+    border: 1px solid rgba(212,168,67,0.28);
+    box-shadow:
+        inset 0 1px 0 rgba(212,168,67,0.14),
+        inset 0 -2px 6px rgba(0,0,0,0.6),
+        0 8px 32px rgba(0,0,0,0.75),
+        0 2px 8px rgba(0,0,0,0.9);
+    transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.parchment-panel::before {
+    content: '\25C6';
+    position: absolute;
+    top: 3px; left: 6px;
+    color: rgba(212,168,67,0.55);
+    font-size: 7px;
+    pointer-events: none;
+    z-index: 2;
+    line-height: 1;
+}
+.parchment-panel::after {
+    content: '\25C6';
+    position: absolute;
+    bottom: 3px; right: 6px;
+    color: rgba(212,168,67,0.55);
+    font-size: 7px;
+    pointer-events: none;
+    z-index: 2;
+    line-height: 1;
+}
+
+.parchment-panel:hover {
+    border-color: rgba(212,168,67,0.55);
+    box-shadow:
+        inset 0 1px 0 rgba(212,168,67,0.22),
+        inset 0 -2px 6px rgba(0,0,0,0.6),
+        0 12px 40px rgba(0,0,0,0.85),
+        0 0 30px rgba(212,168,67,0.10);
+    background:
+        linear-gradient(135deg, rgba(212,168,67,0.5) 12px, transparent 12px) top left,
+        linear-gradient(225deg, rgba(212,168,67,0.5) 12px, transparent 12px) top right,
+        linear-gradient(315deg, rgba(212,168,67,0.5) 12px, transparent 12px) bottom right,
+        linear-gradient(45deg,  rgba(212,168,67,0.5) 12px, transparent 12px) bottom left,
+        linear-gradient(160deg, #381f0d 0%, #1a0e05 70%, #120a03 100%);
+    background-repeat: no-repeat;
+    background-size: 18px 18px, 18px 18px, 18px 18px, 18px 18px, 100% 100%;
+}
+
+/* Float animation applied to feature panels */
+.float-card {
+    animation: float-card 5s ease-in-out infinite;
+}
+.float-card:nth-child(2) { animation-delay: 1.2s; }
+.float-card:nth-child(3) { animation-delay: 2.4s; }
+.float-card:nth-child(4) { animation-delay: 0.6s; }
+
+/* ─────────────────────────────────────────────────────────────
+   GLASS PANEL (Legacy alias — now uses parchment style)
+───────────────────────────────────────────────────────────── */
+.glass-panel {
+    position: relative;
+    background:
+        linear-gradient(135deg, rgba(212,168,67,0.30) 10px, transparent 10px) top left,
+        linear-gradient(225deg, rgba(212,168,67,0.30) 10px, transparent 10px) top right,
+        linear-gradient(315deg, rgba(212,168,67,0.30) 10px, transparent 10px) bottom right,
+        linear-gradient(45deg,  rgba(212,168,67,0.30) 10px, transparent 10px) bottom left,
+        linear-gradient(160deg, #2c1a0b 0%, #1a0e05 70%);
+    background-repeat: no-repeat;
+    background-size: 16px 16px, 16px 16px, 16px 16px, 16px 16px, 100% 100%;
+    border: 1px solid rgba(212,168,67,0.25);
+    box-shadow:
+        inset 0 1px 0 rgba(212,168,67,0.12),
+        0 6px 24px rgba(0,0,0,0.70),
+        0 2px 8px rgba(0,0,0,0.85);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.glass-panel:hover {
+    border-color: rgba(212,168,67,0.48);
+    box-shadow:
+        inset 0 1px 0 rgba(212,168,67,0.18),
+        0 10px 36px rgba(0,0,0,0.80),
+        0 0 24px rgba(212,168,67,0.08);
+    background:
+        linear-gradient(135deg, rgba(212,168,67,0.45) 10px, transparent 10px) top left,
+        linear-gradient(225deg, rgba(212,168,67,0.45) 10px, transparent 10px) top right,
+        linear-gradient(315deg, rgba(212,168,67,0.45) 10px, transparent 10px) bottom right,
+        linear-gradient(45deg,  rgba(212,168,67,0.45) 10px, transparent 10px) bottom left,
+        linear-gradient(160deg, #371e0c 0%, #1a0e05 70%);
+    background-repeat: no-repeat;
+    background-size: 16px 16px, 16px 16px, 16px 16px, 16px 16px, 100% 100%;
+}
+
+.glass-panel,
+.parchment-panel,
+.glass-panel.rounded-lg,
+.glass-panel.rounded-xl,
+.glass-panel.rounded-2xl,
+.glass-panel.rounded-3xl,
+.glass-panel.rounded,
+.parchment-panel.rounded-lg {
+    border-radius: 0 !important;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   GUILD BOARD (Wooden bulletin / notice board)
+───────────────────────────────────────────────────────────── */
+.guild-board {
+    position: relative;
+    background:
+        linear-gradient(180deg,
+            #3d2010 0%,
+            #2c1608 10%,
+            #251408 80%,
+            #3d2010 100%
+        );
+    border: 3px solid #5a3018;
+    border-top: 5px solid #7a4828;
+    border-bottom: 5px solid #1a0c04;
+    box-shadow:
+        inset 0 1px 0 rgba(255,200,100,0.1),
+        inset 2px 0 4px rgba(0,0,0,0.4),
+        inset -2px 0 4px rgba(0,0,0,0.4),
+        inset 0 -2px 8px rgba(0,0,0,0.6),
+        0 8px 30px rgba(0,0,0,0.8);
+}
+
+.guild-board::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+        repeating-linear-gradient(
+            0deg,
+            transparent,
+            transparent 18px,
+            rgba(0,0,0,0.08) 18px,
+            rgba(0,0,0,0.08) 19px
+        );
+    pointer-events: none;
+}
+
+.guild-board-item {
+    position: relative;
+}
+.guild-board-item::before,
+.guild-board-item::after {
+    content: '';
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, #c8a050, #5a3808 60%, #2a1404);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.8), inset 0 1px 0 rgba(255,200,80,0.4);
+    top: 6px;
+    z-index: 3;
+}
+.guild-board-item::before { left: 6px; }
+.guild-board-item::after  { right: 6px; }
+
+/* ─────────────────────────────────────────────────────────────
+   RUNIC STONE BUTTON (Primary action)
+───────────────────────────────────────────────────────────── */
+.rune-btn {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    padding: 0.8rem 2rem;
+    min-height: 48px;
+    font-family: 'Cinzel', Georgia, serif;
+    font-weight: 700;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: var(--gold-pale);
+    background:
+        linear-gradient(135deg, rgba(212,168,67,0.22) 12px, transparent 12px) top left,
+        linear-gradient(225deg, rgba(212,168,67,0.22) 12px, transparent 12px) top right,
+        linear-gradient(315deg, rgba(212,168,67,0.22) 12px, transparent 12px) bottom right,
+        linear-gradient(45deg,  rgba(212,168,67,0.22) 12px, transparent 12px) bottom left,
+        linear-gradient(180deg, #3d2010 0%, #1a0e05 50%, #0f0702 100%);
+    background-repeat: no-repeat;
+    background-size: 18px 18px, 18px 18px, 18px 18px, 18px 18px, 100% 100%;
+    border: 1px solid rgba(212,168,67,0.50);
+    cursor: pointer;
+    animation: breathe-gold 3.5s ease-in-out infinite;
+    transition: color 0.3s ease, border-color 0.3s ease, transform 0.2s ease;
+    overflow: hidden;
+    text-shadow: 0 0 10px rgba(212,168,67,0.5);
+}
+
+.rune-btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(212,168,67,0.12) 0%, transparent 60%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+
+.rune-btn:hover {
+    color: #fff;
+    border-color: rgba(212,168,67,0.95);
+    transform: translateY(-3px);
+    animation: none;
+    box-shadow:
+        0 0 28px rgba(212,168,67,0.65),
+        0 0 56px rgba(212,168,67,0.28),
+        0 0 90px rgba(212,168,67,0.10),
+        inset 0 1px 0 rgba(212,168,67,0.35);
+    text-shadow: 0 0 16px rgba(255,220,100,0.9);
+}
+.rune-btn:hover::before { opacity: 1; }
+
+.rune-btn-crimson {
+    color: #e87070;
+    border-color: rgba(139,26,26,0.55);
+    animation: breathe-crimson 3.5s ease-in-out infinite;
+    background:
+        linear-gradient(135deg, rgba(139,26,26,0.22) 12px, transparent 12px) top left,
+        linear-gradient(225deg, rgba(139,26,26,0.22) 12px, transparent 12px) top right,
+        linear-gradient(315deg, rgba(139,26,26,0.22) 12px, transparent 12px) bottom right,
+        linear-gradient(45deg,  rgba(139,26,26,0.22) 12px, transparent 12px) bottom left,
+        linear-gradient(180deg, #3d1010 0%, #1a0808 50%, #0f0505 100%);
+    background-repeat: no-repeat;
+    background-size: 18px 18px, 18px 18px, 18px 18px, 18px 18px, 100% 100%;
+    text-shadow: 0 0 10px rgba(139,26,26,0.7);
+}
+.rune-btn-crimson:hover {
+    color: #ffaaaa;
+    border-color: rgba(180,40,40,0.9);
+    box-shadow:
+        0 0 28px rgba(180,40,40,0.65),
+        0 0 56px rgba(180,40,40,0.28),
+        inset 0 1px 0 rgba(200,60,60,0.3);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   IRON PLAQUE BUTTON (Secondary / outlined)
+───────────────────────────────────────────────────────────── */
+.iron-plaque-btn {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.8rem 2rem;
+    min-height: 48px;
+    font-family: 'Cinzel', Georgia, serif;
+    font-weight: 600;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--parch-faded);
+    background: transparent;
+    border: 1px solid rgba(201,170,122,0.40);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.iron-plaque-btn:hover {
+    color: var(--gold-pale);
+    border-color: rgba(212,168,67,0.75);
+    background: rgba(212,168,67,0.07);
+    transform: translateY(-2px);
+    box-shadow:
+        0 0 18px rgba(212,168,67,0.22),
+        inset 0 1px 0 rgba(212,168,67,0.18);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   LEGACY btn-glitch (iron button compat)
+───────────────────────────────────────────────────────────── */
+.btn-glitch {
+    position: relative;
+    overflow: hidden;
+    transition: all 0.25s ease;
+    font-family: 'Cinzel', serif;
+    letter-spacing: 0.1em;
+}
+.btn-glitch:hover {
+    box-shadow:
+        0 0 20px rgba(212,168,67,0.38),
+        inset 0 1px 0 rgba(212,168,67,0.22);
+    transform: translateY(-2px);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   WAX SEAL (Decorative stamp element)
+───────────────────────────────────────────────────────────── */
+.wax-seal {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 40% 35%,
+        #a02020 0%,
+        #7a1010 40%,
+        #4a0808 80%,
+        #2a0404 100%
+    );
+    border: 2px solid rgba(180,40,40,0.7);
+    box-shadow:
+        0 3px 12px rgba(0,0,0,0.8),
+        inset 0 1px 0 rgba(220,80,80,0.3),
+        inset 0 -1px 0 rgba(0,0,0,0.5);
+    font-size: 1.4rem;
+    color: #f0b0a0;
+    text-shadow: 0 0 8px rgba(255,100,100,0.5);
+    animation: breathe-crimson 4s ease-in-out infinite;
+}
+
+.wax-seal-gold {
+    background: radial-gradient(circle at 40% 35%,
+        #c8a840 0%,
+        #a87820 40%,
+        #704808 80%,
+        #3a2004 100%
+    );
+    border-color: rgba(212,168,67,0.7);
+    color: #fff8e0;
+    text-shadow: 0 0 8px rgba(255,220,100,0.7);
+    animation: breathe-gold 4s ease-in-out infinite;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   ORNATE DIVIDERS
+───────────────────────────────────────────────────────────── */
+.ornate-hr {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin: 2.5rem 0;
+}
+.ornate-hr::before,
+.ornate-hr::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg,
+        transparent,
+        rgba(212,168,67,0.5) 40%,
+        rgba(212,168,67,0.5) 60%,
+        transparent
+    );
+}
+.ornate-hr-diamond {
+    color: var(--gold);
+    font-size: 0.9rem;
+    text-shadow: 0 0 10px rgba(212,168,67,0.6);
+    flex-shrink: 0;
+}
+
+.section-line {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(212,168,67,0.35), transparent);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   SECTION TAG (Gold left-border label)
+───────────────────────────────────────────────────────────── */
+.section-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.3rem 1rem 0.3rem 0.7rem;
+    background: linear-gradient(90deg, rgba(212,168,67,0.20) 0%, transparent 100%);
+    border-left: 3px solid var(--gold);
+    font-family: 'Cinzel', serif;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: var(--gold);
+    text-shadow: 0 0 12px rgba(212,168,67,0.4);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   TYPOGRAPHY
+───────────────────────────────────────────────────────────── */
+.text-neon,
+.text-ncst-neon { color: var(--gold) !important; }
+
+.text-gold-glow {
+    color: var(--gold);
+    text-shadow:
+        0 0 22px rgba(212,168,67,0.70),
+        0 0 50px rgba(212,168,67,0.30),
+        0 2px 4px rgba(0,0,0,0.95);
+}
+
+.runic-glow {
+    animation: runic-pulse 2.5s ease-in-out infinite;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   PARCHMENT-TONED OVERRIDES
+───────────────────────────────────────────────────────────── */
+.text-gray-400 { color: #a08060 !important; }
+.text-gray-500 { color: #7a6040 !important; }
+.text-gray-600 { color: #5a4030 !important; }
+.opacity-50    { opacity: 0.65; }
+
+/* ─────────────────────────────────────────────────────────────
+   NAV LINK UNDERLINE (enchanted hover)
+───────────────────────────────────────────────────────────── */
+.nav-link {
+    position: relative;
+    color: var(--parch-faded);
+    transition: color 0.3s ease;
+}
+.nav-link::after {
+    content: '';
+    position: absolute;
+    left: 0; bottom: -3px;
+    width: 0; height: 1px;
+    background: linear-gradient(90deg, var(--gold), var(--crimson));
+    transition: width 0.35s ease;
+    box-shadow: 0 0 6px rgba(212,168,67,0.5);
+}
+.nav-link:hover { color: var(--gold-pale); }
+.nav-link:hover::after { width: 100%; }
+
+/* ─────────────────────────────────────────────────────────────
+   TECH / RUNE BORDER (section frame)
+───────────────────────────────────────────────────────────── */
+.tech-border { position: relative; }
+.tech-border::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    border: 1px solid transparent;
+    border-top-color: var(--gold);
+    border-bottom-color: var(--gold);
+    transform: scaleX(0);
+    transition: transform 0.4s ease;
+    pointer-events: none;
+}
+.tech-border:hover::before { transform: scaleX(1); }
+
+/* ─────────────────────────────────────────────────────────────
+   FORM INPUTS (Aged parchment inputs)
+───────────────────────────────────────────────────────────── */
+input[type="email"],
+input[type="password"],
+input[type="text"],
+input[type="number"],
+textarea,
+select {
+    border-radius: 0 !important;
+    background-color: rgba(15, 7, 2, 0.80) !important;
+    color: #d4b896 !important;
+    border-color: rgba(212,168,67,0.25) !important;
+    font-family: 'Crimson Text', Georgia, serif !important;
+    font-size: 1rem !important;
+    min-height: 44px;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    outline: none !important;
+    border-color: rgba(212,168,67,0.65) !important;
+    box-shadow:
+        0 0 0 2px rgba(212,168,67,0.15),
+        0 0 16px rgba(212,168,67,0.12) !important;
+}
+
+input::placeholder,
+textarea::placeholder {
+    color: rgba(160,128,88,0.50) !important;
+    font-style: italic;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   LOGO
+───────────────────────────────────────────────────────────── */
+.logo-container { position: relative; }
+.logo-image {
+    object-fit: contain;
+    filter: drop-shadow(0 0 5px rgba(212,168,67,0.35)) sepia(0.1);
+    opacity: 0.95;
+    transition: all 0.4s ease;
+}
+.logo-container:hover .logo-image {
+    opacity: 1;
+    filter:
+        drop-shadow(0 0 14px rgba(212,168,67,0.75))
+        drop-shadow(0 0 28px rgba(212,168,67,0.35));
+}
+
+/* ─────────────────────────────────────────────────────────────
+   ADMIN TAB BUTTONS
+───────────────────────────────────────────────────────────── */
+.tab-btn {
+    color: #a08060;
+    background: rgba(20, 10, 3, 0.7);
+    border: 1px solid rgba(212,168,67,0.18);
+    border-radius: 0 !important;
+    cursor: pointer;
+    transition: all 0.28s ease;
+    font-family: 'Cinzel', serif;
+    letter-spacing: 0.08em;
+}
+.tab-btn:hover {
+    color: var(--gold);
+    border-color: rgba(212,168,67,0.45);
+    background: rgba(212,168,67,0.08);
+}
+.tab-btn.active {
+    color: var(--gold);
+    background: rgba(212,168,67,0.13);
+    border-color: rgba(212,168,67,0.55);
+    box-shadow: inset 0 1px 0 rgba(212,168,67,0.18);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   PROGRESS & XP BARS
+───────────────────────────────────────────────────────────── */
+.h-2.rounded-full,
+.h-3.rounded-full,
+.h-1.rounded-full {
+    border-radius: 1px !important;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   STAT COUNTER PANELS (runic stones)
+───────────────────────────────────────────────────────────── */
+.rune-counter {
+    position: relative;
+    text-align: center;
+    padding: 1.5rem 1rem;
+    background:
+        linear-gradient(135deg, rgba(212,168,67,0.3) 10px, transparent 10px) top left,
+        linear-gradient(225deg, rgba(212,168,67,0.3) 10px, transparent 10px) top right,
+        linear-gradient(315deg, rgba(212,168,67,0.3) 10px, transparent 10px) bottom right,
+        linear-gradient(45deg,  rgba(212,168,67,0.3) 10px, transparent 10px) bottom left,
+        linear-gradient(180deg, #2c1a0b, #1a0e05);
+    background-repeat: no-repeat;
+    background-size: 16px 16px, 16px 16px, 16px 16px, 16px 16px, 100% 100%;
+    border: 1px solid rgba(212,168,67,0.28);
+    animation: float-card 6s ease-in-out infinite;
+}
+.rune-counter-number {
+    font-family: 'Cinzel', serif;
+    font-size: 2.5rem;
+    font-weight: 900;
+    color: var(--gold);
+    text-shadow:
+        0 0 20px rgba(212,168,67,0.6),
+        0 0 40px rgba(212,168,67,0.2);
+    line-height: 1;
+    animation: runic-pulse 3s ease-in-out infinite;
+}
+.rune-counter-label {
+    font-family: 'Cinzel', serif;
+    font-size: 0.62rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--parch-faded);
+    margin-top: 0.5rem;
+    opacity: 0.8;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   HERO ART FRAME
+───────────────────────────────────────────────────────────── */
+.hero-art-frame {
+    position: relative;
+    background: linear-gradient(160deg, #3d2010 0%, #1a0e05 100%);
+    box-shadow:
+        inset 0 0 60px rgba(0,0,0,0.7),
+        0 0 40px rgba(212,168,67,0.14),
+        0 20px 60px rgba(0,0,0,0.85);
+    border: 2px solid rgba(212,168,67,0.40);
+}
+.hero-art-frame::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+        linear-gradient(60deg, rgba(139,26,26,0.12), transparent 40%),
+        linear-gradient(120deg, transparent 30%, rgba(29,106,94,0.10), transparent 70%),
+        linear-gradient(180deg, rgba(212,168,67,0.06), transparent);
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   KEYFRAME ANIMATIONS
+───────────────────────────────────────────────────────────── */
+
+@keyframes float-card {
+    0%, 100% { transform: translateY(0px); }
+    50%       { transform: translateY(-7px); }
+}
+
+@keyframes breathe-gold {
+    0%, 100% {
+        box-shadow:
+            0 0 10px rgba(212,168,67,0.25),
+            0 0 20px rgba(212,168,67,0.10),
+            inset 0 1px 0 rgba(212,168,67,0.18);
+    }
+    50% {
+        box-shadow:
+            0 0 22px rgba(212,168,67,0.60),
+            0 0 44px rgba(212,168,67,0.28),
+            0 0 66px rgba(212,168,67,0.10),
+            inset 0 1px 0 rgba(212,168,67,0.28);
+    }
+}
+
+@keyframes breathe-crimson {
+    0%, 100% {
+        box-shadow:
+            0 0 8px rgba(139,26,26,0.25),
+            0 0 18px rgba(139,26,26,0.10);
+    }
+    50% {
+        box-shadow:
+            0 0 20px rgba(180,40,40,0.60),
+            0 0 38px rgba(180,40,40,0.26),
+            0 0 60px rgba(180,40,40,0.10);
+    }
+}
+
+@keyframes runic-pulse {
+    0%, 100% {
+        text-shadow:
+            0 0 8px rgba(212,168,67,0.50),
+            0 0 16px rgba(212,168,67,0.20);
+    }
+    50% {
+        text-shadow:
+            0 0 18px rgba(212,168,67,1.0),
+            0 0 36px rgba(212,168,67,0.55),
+            0 0 60px rgba(212,168,67,0.25);
+    }
+}
+
+@keyframes ember-flicker {
+    0%, 100%  { opacity: 1;    filter: brightness(1); }
+    20%       { opacity: 0.88; filter: brightness(1.2); }
+    40%       { opacity: 1;    filter: brightness(0.95); }
+    60%       { opacity: 0.92; filter: brightness(1.15); }
+    80%       { opacity: 1;    filter: brightness(1); }
+}
+
+@keyframes fadeInLeft {
+    from { opacity: 0; transform: translateX(-32px); }
+    to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes fadeInRight {
+    from { opacity: 0; transform: translateX(32px); }
+    to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes slideDown {
+    from { opacity: 0; transform: translateY(-12px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50%       { transform: translateY(-10px); }
+}
+
+.animate-fadeInLeft  { animation: fadeInLeft  0.85s ease-out both; }
+.animate-fadeInRight { animation: fadeInRight 0.85s ease-out both; }
+.animate-fadeInUp    { animation: fadeInUp    0.75s ease-out both; }
+.animate-slideDown   { animation: slideDown   0.4s ease-out both; }
+
+/* ─────────────────────────────────────────────────────────────
+   MOBILE MENU — Solid background to prevent transparency bleed
+───────────────────────────────────────────────────────────── */
+#mobile-menu {
+    background-color: rgba(26, 14, 5, 0.97);
+    backdrop-filter: none;
+}
+
+/* Auth notification dialog: balanced copy for mobile and desktop */
+.auth-notification {
+    width: min(92vw, 620px);
+    padding: 0.75rem 0.9rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+}
+
+.auth-notification-inner {
+    width: 100%;
+}
+
+.auth-notification-icon {
+    font-size: 1.1rem;
+    flex-shrink: 0;
+}
+
+.auth-notification-copy {
+    display: grid;
+    gap: 0.2rem;
+    line-height: 1.35;
+}
+
+.auth-notification-title {
+    margin: 0;
+    font-size: 0.82rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    font-weight: 700;
+}
+
+.auth-notification-message {
+    margin: 0;
+    font-size: 0.94rem;
+    font-weight: 600;
+    color: #f2f2f2;
+    text-wrap: balance;
+}
+
+@media (min-width: 768px) {
+    .auth-notification {
+        width: min(72vw, 680px);
+        padding: 0.85rem 1rem;
+    }
+
+    .auth-notification-title {
+        font-size: 0.84rem;
+    }
+
+    .auth-notification-message {
+        font-size: 0.98rem;
+    }
+}
+
+@media (max-width: 420px) {
+    .auth-notification {
+        width: calc(100vw - 1.25rem);
+        padding: 0.7rem 0.8rem;
+        border-radius: 0.7rem;
+    }
+
+    .auth-notification-title {
+        font-size: 0.78rem;
+    }
+
+    .auth-notification-message {
+        font-size: 0.9rem;
+    }
+}
+
+.animate-bounce      { animation: bounce 3s ease-in-out infinite; }
+.animate-ember       { animation: ember-flicker 3s ease-in-out infinite; }
+
+/* ─────────────────────────────────────────────────────────────
+   TOUCH TARGETS
+───────────────────────────────────────────────────────────── */
+button, a[role="button"] {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   RESPONSIVE
+───────────────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+    .animate-fadeInLeft,
+    .animate-fadeInRight {
+        animation: none;
+        opacity: 1;
+    }
+}
+
+@media (max-width: 640px) {
+    body { font-size: 0.95rem; }
+    .glass-panel, .parchment-panel { padding: 1rem; }
+    h2, h3 { font-size: 1.5rem; }
+    button, input[type="button"], input[type="submit"] {
+        min-height: 44px;
+        padding: 0.75rem 1rem;
+    }
+    section { padding-left: 1rem; padding-right: 1rem; }
+    .grid { gap: 1rem; }
+    input, select, textarea { font-size: 16px !important; min-height: 44px; }
+    .rune-counter-number { font-size: 2rem; }
+}
+
+@media (min-width: 640px) and (max-width: 1024px) {
+    .max-w-6xl { padding-left: 1.5rem; padding-right: 1.5rem; }
+    .grid { gap: 1.5rem; }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   PROFESSIONAL CONTENT PAGES
+───────────────────────────────────────────────────────────── */
+.corp-page {
+    min-height: 100vh;
+}
+
+.corp-shell {
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+.corp-hero {
+    border: 1px solid rgba(100, 255, 218, 0.16);
+    background: linear-gradient(135deg, rgba(20, 12, 6, 0.92), rgba(14, 9, 5, 0.96));
+    box-shadow: 0 24px 40px rgba(0, 0, 0, 0.45);
+    padding: 1.25rem;
+}
+
+.corp-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    border: 1px solid rgba(212, 168, 67, 0.45);
+    color: var(--gold-pale);
+    background: rgba(212, 168, 67, 0.08);
+    padding: 0.25rem 0.6rem;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.corp-title {
+    font-family: 'Cinzel', serif;
+    color: #fff;
+    font-size: clamp(1.6rem, 3.8vw, 2.8rem);
+    line-height: 1.1;
+    margin-top: 0.7rem;
+}
+
+.corp-subtitle {
+    margin-top: 0.8rem;
+    color: #b8b8b8;
+    max-width: 70ch;
+}
+
+.corp-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+
+.corp-meta-chip {
+    border: 1px solid rgba(100, 255, 218, 0.22);
+    color: #a4fff1;
+    background: rgba(19, 35, 31, 0.48);
+    padding: 0.28rem 0.65rem;
+    font-size: 0.74rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+.corp-layout {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.corp-card {
+    border: 1px solid rgba(100, 255, 218, 0.15);
+    background: rgba(14, 10, 7, 0.8);
+    padding: 1rem;
+}
+
+.corp-card h3 {
+    font-family: 'Cinzel', serif;
+    color: var(--gold-pale);
+    font-size: 1.05rem;
+    margin-bottom: 0.5rem;
+}
+
+.corp-card p,
+.corp-card li {
+    color: #c3c3c3;
+    font-size: 0.95rem;
+    line-height: 1.55;
+}
+
+.corp-card ul {
+    margin: 0;
+    padding-left: 1.1rem;
+}
+
+.corp-grid-2,
+.corp-grid-3 {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.9rem;
+}
+
+.corp-footer {
+    margin-top: 1.25rem;
+    border-top: 1px solid rgba(100, 255, 218, 0.16);
+    padding-top: 1rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.65rem;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.corp-footer small {
+    color: #8f8f8f;
+}
+
+@media (min-width: 768px) {
+    .corp-hero {
+        padding: 1.7rem;
+    }
+
+    .corp-layout {
+        gap: 1.1rem;
+    }
+
+    .corp-grid-2 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .corp-grid-3 {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .corp-card {
+        padding: 1.1rem;
+    }
+}
+

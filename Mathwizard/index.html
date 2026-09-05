@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Math Wizard - 3D Mobile Game for Calculus Learning</title>
+    <link rel="icon" href="assets/img/logo.png" type="image/x-icon">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="assets/js/tailwind-config.js"></script>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <script src="assets/js/main.js" defer></script>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Cinzel+Decorative:wght@400;700;900&family=Crimson+Text:ital,wght@0,400;0,600;0,700;1,400&family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="antialiased selection:bg-ncst-neon selection:text-ncst-dark">
+
+    <div class="fixed inset-0 pointer-events-none z-0">
+        <div class="absolute inset-0 bg-tech-grid"></div>
+        <div class="absolute top-0 right-0 w-[500px] h-[500px] bg-ncst-blue rounded-full filter blur-[120px] opacity-40"></div>
+        <div class="absolute bottom-0 left-0 w-[500px] h-[500px] bg-ncst-neon rounded-full filter blur-[120px] opacity-10"></div>
+    </div>
+
+    <nav class="fixed top-0 w-full z-50 bg-ncst-dark/95 border-b border-ncst-neon/20" style="box-shadow: 0 2px 20px rgba(0,0,0,0.8), 0 1px 0 rgba(201,168,76,0.1);">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 sm:h-20 flex justify-between items-center">
+            <div class="flex items-center gap-2 sm:gap-3 group cursor-pointer">
+                <a href="index.html" class="flex items-center gap-2 sm:gap-3 logo-container">
+                    <img src="assets/img/logo.png" alt="Math Wizard Logo" class="w-8 sm:w-10 h-8 sm:h-10 logo-image transition-all duration-500 group-hover:drop-shadow-[0_0_8px_#C9A84C]">
+                    <div>
+                        <h1 class="font-magic text-lg sm:text-xl text-white tracking-widest">Math<span class="text-ncst-gold">Wizard</span></h1>
+                        <p class="text-[0.5rem] sm:text-[0.6rem] uppercase tracking-[0.2em] text-ncst-neon font-bold">The Era Of Mages</p>
+                    </div>
+                </a>
+            </div>
+            
+            <div class="hidden md:flex items-center gap-6 lg:gap-10">
+                <a href="#features" class="text-xs lg:text-sm uppercase tracking-widest hover:text-ncst-neon transition-colors relative group">
+                    <span class="text-ncst-neon mr-1 font-bold">01.</span> Features
+                </a>
+                <a href="#gameplay" class="text-xs lg:text-sm uppercase tracking-widest hover:text-ncst-neon transition-colors relative group">
+                    <span class="text-ncst-neon mr-1 font-bold">02.</span> Gameplay
+                </a>
+                <a href="#about" class="text-xs lg:text-sm uppercase tracking-widest hover:text-ncst-neon transition-colors relative group">
+                    <span class="text-ncst-neon mr-1 font-bold">03.</span> About
+                </a>
+                <a href="#contact" class="text-xs lg:text-sm uppercase tracking-widest hover:text-ncst-neon transition-colors relative group">
+                    <span class="text-ncst-neon mr-1 font-bold">04.</span> Contact
+                </a>
+            </div>
+
+            <a href="#download" class="hidden md:flex iron-plaque-btn text-xs lg:text-sm">
+                DOWNLOAD <i class="fa-solid fa-download ml-2"></i>
+            </a>
+            <div id="desktop-auth-slot" class="hidden md:flex items-center gap-2">
+                <a id="desktop-signin-btn" href="auth.html" class="hidden md:flex rune-btn text-xs lg:text-sm">
+                SIGN IN <i class="fa-solid fa-arrow-right"></i>
+                </a>
+            </div>
+            <button class="md:hidden text-ncst-neon text-xl sm:text-2xl menu-toggle"><i class="fa-solid fa-bars-staggered"></i></button>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="hidden fixed top-16 sm:top-20 left-0 right-0 bg-ncst-dark/95 border-b border-ncst-neon/20 md:hidden z-40 py-4 sm:py-6 px-4 sm:px-6 space-y-3 sm:space-y-4 animate-slideDown" style="background-color: rgba(26, 14, 5, 0.97);">
+        <a href="#features" class="block text-xs sm:text-sm uppercase tracking-widest hover:text-ncst-neon transition-colors py-2">
+            <span class="text-ncst-neon mr-1 font-bold">01.</span> Features
+        </a>
+        <a href="#gameplay" class="block text-xs sm:text-sm uppercase tracking-widest hover:text-ncst-neon transition-colors py-2">
+            <span class="text-ncst-neon mr-1 font-bold">02.</span> Gameplay
+        </a>
+        <a href="#about" class="block text-xs sm:text-sm uppercase tracking-widest hover:text-ncst-neon transition-colors py-2">
+            <span class="text-ncst-neon mr-1 font-bold">03.</span> About
+        </a>
+        <a href="#contact" class="block text-xs sm:text-sm uppercase tracking-widest hover:text-ncst-neon transition-colors py-2">
+            <span class="text-ncst-neon mr-1 font-bold">04.</span> Contact
+        </a>
+        <hr class="border-white/10 my-2">
+        <a href="#download" class="block px-4 sm:px-5 py-2 min-h-[44px] flex items-center justify-center border border-ncst-gold text-ncst-gold text-xs sm:text-sm font-bold tracking-widest hover:bg-ncst-gold/10 transition-colors">
+            DOWNLOAD <i class="fa-solid fa-download ml-2"></i>
+        </a>
+        <a id="mobile-signin-btn" href="auth.html" class="block px-4 sm:px-5 py-2 min-h-[44px] flex items-center justify-center bg-ncst-neon text-ncst-dark text-xs sm:text-sm font-bold tracking-widest hover:bg-ncst-gold transition-colors rounded-lg">
+            SIGN IN <i class="fa-solid fa-arrow-right ml-2"></i>
+        </a>
+        <div id="mobile-auth-slot" class="hidden"></div>
+    </div>
+
+    <div class="absolute inset-0 pointer-events-none"></div>
+    <main class="relative z-10">
+        <!-- Hero Section -->
+        <section class="min-h-screen flex items-center pt-16 sm:pt-20 px-4 sm:px-6 lg:px-0">
+            <div class="max-w-7xl mx-auto w-full grid lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+                <div class="lg:col-span-7 space-y-6 sm:space-y-8 animate-fadeInLeft">
+                    <div class="inline-block">
+                        <span class="text-ncst-neon font-tech text-xs sm:text-sm tracking-widest mb-2 block">OFFICIAL GAME PORTAL</span>
+                        <h2 class="font-magic text-4xl sm:text-6xl md:text-7xl lg:text-8xl text-white leading-none">
+                            Download <br>
+                            <span class="text-ncst-gold text-gold-glow">Math Wizard.</span>
+                        </h2>
+                    </div>
+                    
+                    <p class="text-base sm:text-lg lg:text-xl text-gray-400 leading-relaxed max-w-2xl border-l-2 border-ncst-neon/50 pl-4 sm:pl-6">
+                        <strong class="text-white">Math Wizard</strong> is a 3D mobile educational game for learning Integral and Differential Calculus. Solve guided question sets, visualize concepts, and advance through structured levels designed for engineering students.
+                    </p>
+
+                    <div class="flex flex-col sm:flex-row gap-4 sm:gap-5 pt-4">
+                        <button class="rune-btn scroll-btn" data-target="download">
+                            <i class="fa-solid fa-download"></i> <span class="hidden sm:inline">DOWNLOAD NOW</span><span class="sm:hidden">DOWNLOAD</span>
+                        </button>
+                        <button class="iron-plaque-btn scroll-btn" data-target="gameplay">
+                            <i class="fa-solid fa-shield-halved"></i> <span class="hidden sm:inline">HOW THE GAME WORKS</span><span class="sm:hidden">HOW IT WORKS</span>
+                        </button>
+                    </div>
+
+                    <div class="flex flex-wrap items-center gap-4 sm:gap-8 pt-8 text-xs font-tech text-gray-500 uppercase tracking-widest">
+                        <div class="flex items-center gap-2 hover:text-ncst-neon transition-colors cursor-pointer">
+                            <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span> <span class="hidden sm:inline">Server Online</span><span class="sm:hidden">Online</span>
+                        </div>
+                        <div class="flex items-center gap-2"><i class="fa-solid fa-cube text-ncst-neon"></i> <span class="hidden sm:inline">3D Mobile Learning Game</span><span class="sm:hidden">3D Game</span></div>
+                        <div class="flex items-center gap-2"><i class="fa-solid fa-tag text-ncst-gold"></i> Ver 1.0.4</div>
+                        <div class="hidden md:flex items-center gap-2"><i class="fa-solid fa-graduation-cap text-ncst-blue"></i> Learn While Playing</div>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-5 relative hidden lg:block animate-fadeInRight">
+                    <div class="hero-art-frame relative w-full aspect-[9/16] max-w-sm mx-auto p-2 transition-all duration-500">
+                        <div class="w-full h-full overflow-hidden relative group art-slot">
+                            <img src="https://via.placeholder.com/400x711/1a0e05/d4a843?text=Math+Wizard+%E2%80%94+Enter+the+Academy" alt="Math Wizard Preview" class="w-full h-full object-cover opacity-70 group-hover:opacity-95 transition-opacity duration-500">
+                            <div class="absolute inset-0 flex flex-col items-end justify-end p-4 z-10">
+                                <div class="font-magic text-xl sm:text-2xl text-ncst-neon tracking-widest runic-glow">Math Wizard</div>
+                                <div class="text-xs text-ncst-gold mt-1 tracking-wider font-flavor italic">Solve. Learn. Progress.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section id="features" class="py-16 sm:py-24 px-4 sm:px-6 bg-ncst-blue/20 border-y border-ncst-neon/10">
+            <div class="max-w-7xl mx-auto">
+                <div class="mb-12 sm:mb-16">
+                    <div class="section-tag mb-4"><i class="fa-solid fa-scroll mr-2"></i>01. Core Features</div>
+                    <h2 class="font-magic text-4xl sm:text-5xl text-white mt-2 mb-3 sm:mb-4 text-gold-glow">Game Mechanics</h2>
+                    <p class="text-sm sm:text-base text-gray-400 max-w-2xl font-flavor italic">Built for students who learn better by doing: every mechanic ties math mastery to in-game progress.</p>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+                    <div class="group parchment-panel float-card p-6 sm:p-8">
+                        <div class="text-3xl sm:text-4xl mb-4 text-ncst-gold group-hover:scale-110 transition-transform duration-300 animate-ember">
+                            <i class="fa-solid fa-chart-line"></i>
+                        </div>
+                        <h3 class="font-heading text-base sm:text-lg font-bold text-ncst-neon mb-2 uppercase tracking-wider">Question-Based Progress</h3>
+                        <p class="text-xs sm:text-sm font-flavor italic">Students answer calculus problems to unlock the next stage and improve mastery.</p>
+                    </div>
+
+                    <div class="group parchment-panel float-card p-6 sm:p-8">
+                        <div class="text-3xl sm:text-4xl mb-4 text-ncst-gold group-hover:scale-110 transition-transform duration-300 animate-ember">
+                            <i class="fa-solid fa-water"></i>
+                        </div>
+                        <h3 class="font-heading text-base sm:text-lg font-bold text-ncst-neon mb-2 uppercase tracking-wider">Integral and Differential Focus</h3>
+                        <p class="text-xs sm:text-sm font-flavor italic">Content is centered on core engineering calculus topics with incremental difficulty.</p>
+                    </div>
+
+                    <div class="group parchment-panel float-card p-6 sm:p-8">
+                        <div class="text-3xl sm:text-4xl mb-4 text-ncst-gold group-hover:scale-110 transition-transform duration-300 animate-ember">
+                            <i class="fa-solid fa-person-hiking"></i>
+                        </div>
+                        <h3 class="font-heading text-base sm:text-lg font-bold text-ncst-neon mb-2 uppercase tracking-wider">Visual Learning Support</h3>
+                        <p class="text-xs sm:text-sm font-flavor italic">Graphical presentation helps learners understand abstract formulas and solution flow.</p>
+                    </div>
+
+                    <div class="group parchment-panel float-card p-6 sm:p-8">
+                        <div class="text-3xl sm:text-4xl mb-4 text-ncst-gold group-hover:scale-110 transition-transform duration-300 animate-ember">
+                            <i class="fa-solid fa-wand-magic-sparkles"></i>
+                        </div>
+                        <h3 class="font-heading text-base sm:text-lg font-bold text-ncst-neon mb-2 uppercase tracking-wider">Gamified Motivation</h3>
+                        <p class="text-xs sm:text-sm font-flavor italic">Rewards, stage goals, and progress feedback keep students engaged in practice.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Gameplay Section -->
+        <section id="gameplay" class="py-16 sm:py-24 px-4 sm:px-6">
+            <div class="max-w-7xl mx-auto">
+                <div class="mb-12 sm:mb-16">
+                    <div class="section-tag mb-4"><i class="fa-solid fa-diagram-project mr-2"></i>02. Learning Flow</div>
+                    <h2 class="font-magic text-4xl sm:text-5xl text-white mt-2 text-gold-glow">How You Progress</h2>
+                </div>
+                <div class="guild-board p-6 sm:p-8">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8">
+                    <div class="group guild-board-item relative aspect-video border border-ncst-neon/30 overflow-hidden transition-all duration-300 hover:border-ncst-gold">
+                        <img src="https://via.placeholder.com/800x450/1a0e05/d4a843?text=Login+and+Account+Module" alt="Login and account module" class="absolute inset-0 w-full h-full object-cover opacity-40 group-hover:opacity-65 transition-opacity duration-500" style="filter:sepia(0.3) contrast(1.1);">
+                        <div class="absolute inset-0 flex flex-col items-center justify-center gap-3 sm:gap-4 z-10">
+                            <i class="fa-solid fa-gamepad text-4xl sm:text-5xl text-ncst-gold/70 group-hover:text-ncst-gold transition-colors animate-ember"></i>
+                            <div class="text-center">
+                                <div class="font-heading font-bold text-white text-sm sm:text-base mb-1">Login and Setup</div>
+                                <div class="text-xs font-flavor italic" style="color:#a08060;">Access account, profile, and game mode</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="group guild-board-item relative aspect-video border border-ncst-neon/30 overflow-hidden transition-all duration-300 hover:border-ncst-gold">
+                        <img src="https://via.placeholder.com/800x450/1a0e05/d4a843?text=Math+Generation+and+Validation" alt="Math generation and validation" class="absolute inset-0 w-full h-full object-cover opacity-40 group-hover:opacity-65 transition-opacity duration-500" style="filter:sepia(0.3) contrast(1.1);">
+                        <div class="absolute inset-0 flex flex-col items-center justify-center gap-4 z-10">
+                            <i class="fa-solid fa-book-open text-5xl text-ncst-gold/70 group-hover:text-ncst-gold transition-colors animate-ember"></i>
+                            <div class="text-center">
+                                <div class="font-heading font-bold text-white mb-1">Solve and Validate</div>
+                                <div class="text-xs font-flavor italic" style="color:#a08060;">Math module checks each answer</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="group guild-board-item relative aspect-video border border-ncst-neon/30 overflow-hidden transition-all duration-300 hover:border-ncst-gold">
+                        <img src="https://via.placeholder.com/800x450/1a0e05/d4a843?text=Authority+and+Fairness+System" alt="Authority and fairness system" class="absolute inset-0 w-full h-full object-cover opacity-40 group-hover:opacity-65 transition-opacity duration-500" style="filter:sepia(0.3) contrast(1.1);">
+                        <div class="absolute inset-0 flex flex-col items-center justify-center gap-4 z-10">
+                            <i class="fa-solid fa-trophy text-5xl text-ncst-gold/70 group-hover:text-ncst-gold transition-colors animate-ember"></i>
+                            <div class="text-center">
+                                <div class="font-heading font-bold text-white mb-1">System Authority</div>
+                                <div class="text-xs font-flavor italic" style="color:#a08060;">Local/Network checks keep results fair</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="group guild-board-item relative aspect-video border border-ncst-neon/30 overflow-hidden transition-all duration-300 hover:border-ncst-gold">
+                        <img src="https://via.placeholder.com/800x450/1a0e05/d4a843?text=Progress+Tracking+and+Retention" alt="Progress tracking" class="absolute inset-0 w-full h-full object-cover opacity-40 group-hover:opacity-65 transition-opacity duration-500" style="filter:sepia(0.3) contrast(1.1);">
+                        <div class="absolute inset-0 flex flex-col items-center justify-center gap-4 z-10">
+                            <i class="fa-solid fa-chart-line text-5xl text-ncst-gold/70 group-hover:text-ncst-gold transition-colors animate-ember"></i>
+                            <div class="text-center">
+                                <div class="font-heading font-bold text-white mb-1">Track Improvement</div>
+                                <div class="text-xs font-flavor italic" style="color:#a08060;">Follow accuracy, confidence, and progress</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section id="about" class="py-16 sm:py-24 px-4 sm:px-6 bg-ncst-blue/10 border-y border-ncst-neon/10">
+            <div class="max-w-7xl mx-auto">
+                <div class="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+                    <div>
+                        <div class="section-tag mb-4"><i class="fa-solid fa-landmark mr-2"></i>03. Project Overview</div>
+                        <h2 class="font-magic text-4xl sm:text-5xl text-white mt-2 mb-4 sm:mb-6 text-gold-glow">Designed For Modern Learners</h2>
+                        <div class="space-y-3 sm:space-y-4 text-sm sm:text-base text-gray-400">
+                            <p>Math Wizard is a 3D mobile educational platform focused on making advanced math concepts clearer, more engaging, and easier to practice.</p>
+                            <p><strong class="text-white">Problem Addressed:</strong> Many learners find calculus abstract, difficult to visualize, and challenging to apply in practice.</p>
+                            <p><strong class="text-white">Proposed Solution:</strong> Combine structured problem-solving, visual learning support, and interactive progression in one mobile experience.</p>
+                            <p class="pt-2"><strong class="text-ncst-neon">Expected Outcome:</strong> Improved motivation, stronger conceptual understanding, and better long-term learning retention.</p>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-3 sm:gap-4">
+                        <div class="rune-counter">
+                            <div class="rune-counter-number">3D</div>
+                            <div class="rune-counter-label">Mobile Experience</div>
+                        </div>
+                        <div class="rune-counter">
+                            <div class="rune-counter-number">2</div>
+                            <div class="rune-counter-label">Calculus Domains</div>
+                        </div>
+                        <div class="rune-counter">
+                            <div class="rune-counter-number">24/7</div>
+                            <div class="rune-counter-label">Flexible Learning</div>
+                        </div>
+                        <div class="rune-counter">
+                            <div class="rune-counter-number">100%</div>
+                            <div class="rune-counter-label">Interactive Practice</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Download Section -->
+        <section id="download" class="py-16 sm:py-24 px-4 sm:px-6">
+            <div class="max-w-4xl mx-auto text-center">
+                <div class="section-tag mx-auto inline-flex mb-4"><i class="fa-solid fa-map mr-2"></i>04. Expedition Board</div>
+                <h2 class="font-magic text-4xl sm:text-5xl text-white mt-2 mb-4 sm:mb-6 text-gold-glow">Download Math Wizard</h2>
+                <p class="text-sm sm:text-lg text-gray-400 mb-8 sm:mb-12">Download the latest build and experience a structured, game-based approach to mastering calculus fundamentals.</p>
+                
+                <div class="max-w-md mx-auto">
+                    <a href="https://drive.google.com/drive/folders/1qp9kDz6D4DrQjPY17G5ZW_NG5NhQJrA8?usp=drive_link" class="group bounty-notice flex flex-col items-center gap-4 hover:border-ncst-gold transition-all duration-300">
+                        <i class="fa-brands fa-android text-4xl sm:text-5xl text-ncst-gold mb-2"></i>
+                        <h3 class="font-heading text-base sm:text-lg font-bold text-white mb-1">Android</h3>
+                        <p class="text-xs sm:text-sm font-flavor italic mb-2" style="color:#a08060;">Download For Android</p>
+                        <button class="rune-btn w-full">CLAIM ON ANDROID</button>
+                    </a>
+                </div>
+
+                <div class="mt-8 sm:mt-12 p-4 sm:p-6 border border-ncst-neon/30" style="background:rgba(212,168,67,0.04);">
+                    <p class="text-xs sm:text-sm text-gray-400">
+                        <i class="fa-solid fa-circle-info text-ncst-neon mr-2"></i>
+                        Current build includes account access, calculus challenge flow, and learning progress tracking.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="py-16 sm:py-24 px-4 sm:px-6 bg-ncst-blue/20 border-t border-ncst-neon/10">
+            <div class="max-w-4xl mx-auto text-center">
+                <div class="section-tag mx-auto inline-flex mb-4"><i class="fa-solid fa-fire mr-2"></i>05. Heralds' Post</div>
+                <h2 class="font-magic text-4xl sm:text-5xl text-white mt-2 mb-4 sm:mb-6 text-gold-glow">Join Our Community</h2>
+                <p class="text-sm sm:text-lg text-gray-400 mb-8 sm:mb-12">Need installation help, gameplay support, or project information? Contact us through the channels below.</p>
+                
+                <div class="flex flex-wrap justify-center gap-3 sm:gap-6 mb-8 sm:mb-12">
+                    <a href="mailto:info@mathwizard.ncst.edu" class="iron-plaque-btn">
+                        <i class="fa-solid fa-envelope"></i> <span class="hidden sm:inline">Send a Raven</span>
+                    </a>
+                    <a href="https://github.com/Sedoia/Mathwizard" class="iron-plaque-btn">
+                        <i class="fa-brands fa-github"></i> <span class="hidden sm:inline">GitHub</span>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <footer class="py-8 sm:py-12 px-4 sm:px-6 text-center text-xs sm:text-sm text-gray-600 font-magic tracking-widest border-t border-ncst-neon/15 bg-ncst-dark">
+            <div class="max-w-7xl mx-auto mb-6 sm:mb-8">
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8 text-left mb-6 sm:mb-8">
+                    <div>
+                        <h4 class="text-white font-bold mb-3 text-xs sm:text-sm uppercase tracking-widest">About</h4>
+                        <ul class="space-y-2 text-gray-400 text-xs">
+                            <li><a href="pages/documentation.html" class="hover:text-ncst-neon transition-colors">Documentation</a></li>
+                            <li><a href="pages/press-kit.html" class="hover:text-ncst-neon transition-colors">Press Kit</a></li>
+                            <li><a href="pages/roadmap.html" class="hover:text-ncst-neon transition-colors">Roadmap</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="text-white font-bold mb-3 text-xs sm:text-sm uppercase tracking-widest">Legal</h4>
+                        <ul class="space-y-2 text-gray-400 text-xs">
+                            <li><a href="pages/privacy-policy.html" class="hover:text-ncst-neon transition-colors">Privacy Policy</a></li>
+                            <li><a href="pages/terms-of-service.html" class="hover:text-ncst-neon transition-colors">Terms of Service</a></li>
+                            <li><a href="pages/license.html" class="hover:text-ncst-neon transition-colors">License</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="text-white font-bold mb-3 text-xs sm:text-sm uppercase tracking-widest">Community</h4>
+                        <ul class="space-y-2 text-gray-400 text-xs">
+                            <li><a href="pages/discord-server.html" class="hover:text-ncst-neon transition-colors">Discord Server</a></li>
+                            <li><a href="pages/forum.html" class="hover:text-ncst-neon transition-colors">Forum</a></li>
+                            <li><a href="pages/contribute.html" class="hover:text-ncst-neon transition-colors">Contribute</a></li>
+                            <li><a href="admin.html" class="hover:text-ncst-gold transition-colors"><i class="fa-solid fa-shield-halved mr-1"></i>Admin Panel</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-ncst-neon/10 pt-6 sm:pt-8">
+                <p class="text-xs sm:text-sm">&copy; 2026 MATH WIZARD. ALL RIGHTS RESERVED.</p>
+            </div>
+        </footer>
+    </main>
+</body>
+</html>
