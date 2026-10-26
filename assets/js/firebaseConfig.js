@@ -9,7 +9,7 @@
     }
 
     const firebaseConfig = {
-        apiKey: "AIzaSyAL-DlXXksCEyclom4mNYSASFcNTV7ld3U",
+        apiKey: "AIzaSyBsms6nJDzXwenw5W8uQENnCOw_PCJdHzU",
         authDomain: "math-wizard-1afd3.firebaseapp.com",
         projectId: "math-wizard-1afd3",
         storageBucket: "math-wizard-1afd3.firebasestorage.app",
