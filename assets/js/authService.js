@@ -459,7 +459,14 @@ class AuthService {
     async requestPasswordReset(email) {
         await this._firebaseReady;
         try {
-            await window.firebaseAuth.sendPasswordResetEmail((email || '').trim().toLowerCase());
+            const resetUrl = 'https://mathwizard-test.netlify.app/reset';
+            await window.firebaseAuth.sendPasswordResetEmail(
+                (email || '').trim().toLowerCase(),
+                {
+                    url: resetUrl,
+                    handleCodeInApp: false
+                }
+            );
             return true;
         } catch (error) {
             throw new Error(this.mapFirebaseError(error));
