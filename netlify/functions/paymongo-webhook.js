@@ -84,7 +84,7 @@ function buildExpectedSignatures(rawBody, webhookSecret, timestamp) {
 
 function signatureLooksValid(rawBody, headerValue, webhookSecret) {
   if (!webhookSecret) {
-    return true;
+    return false;
   }
 
   const parsed = parseSignatureHeader(headerValue);
