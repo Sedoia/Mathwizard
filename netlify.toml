@@ -9,6 +9,11 @@
   to = "/reset.html"
   status = 200
 
+[[redirects]]
+  from = "/__/auth/action"
+  to = "/reset.html"
+  status = 200
+
 [[headers]]
   for = "/*"
   [headers.values]

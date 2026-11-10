@@ -296,7 +296,7 @@
             <p class="font-heading text-white text-lg">${formatCredits(offer.credits)}</p>
             <p class="text-xs text-gray-300">Instantly delivered after confirmation</p>
           </div>
-          <img src="../assets/img/currency-icon.png" alt="Currency icon" class="w-10 h-10 object-contain">
+          <img src="../assets/img/ICON_PremiumCurrency.png" alt="Premium currency" class="w-10 h-10 object-contain">
         </div>
         <div class="mt-4 flex items-center justify-between">
           <p class="text-ncst-gold font-bold text-xl">${formatPeso(offer.amountPhp)}</p>
