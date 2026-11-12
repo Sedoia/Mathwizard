@@ -1050,6 +1050,204 @@ select {
 }
 
 /* ─────────────────────────────────────────────────────────────
+   SPELLBOOK TYPE & COMPOSITION
+   A distinct academy voice: Uncial Antiqua for spell titles and
+   Cormorant Garamond for the longer, more mathematical reading.
+───────────────────────────────────────────────────────────── */
+:root {
+    --type-display: 'Uncial Antiqua', Georgia, serif;
+    --type-body: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+    --rail: min(72rem, calc(100% - 2rem));
+}
+
+body {
+    font-family: var(--type-body) !important;
+    font-size: 1.08rem;
+    letter-spacing: 0.008em;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.font-magic {
+    font-family: var(--type-display) !important;
+    letter-spacing: 0.015em;
+}
+
+.logo-container .font-magic,
+header .font-magic,
+nav .font-magic {
+    font-family: var(--type-display) !important;
+    letter-spacing: 0.04em;
+}
+
+.font-flavor {
+    font-family: var(--type-body) !important;
+    font-style: italic;
+    letter-spacing: 0.01em;
+}
+
+.font-heading {
+    font-family: var(--type-body) !important;
+    letter-spacing: 0.04em;
+}
+
+/* The landing page uses a measured editorial rail instead of a
+   collection of identical full-width bands. */
+body:has(#desktop-auth-slot) > main {
+    position: relative;
+}
+
+body:has(#desktop-auth-slot) > main > section {
+    position: relative;
+    isolation: isolate;
+}
+
+body:has(#desktop-auth-slot) > main > section > div {
+    width: var(--rail);
+}
+
+body:has(#desktop-auth-slot) > main > section > div::before {
+    position: absolute;
+    z-index: -1;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    width: 1px;
+    background: linear-gradient(
+        180deg,
+        transparent,
+        rgba(141, 120, 181, 0.2) 16%,
+        rgba(216, 177, 90, 0.2) 84%,
+        transparent
+    );
+    content: '';
+    pointer-events: none;
+}
+
+body:has(#desktop-auth-slot) > main > section:first-child {
+    min-height: min(52rem, 100vh);
+}
+
+body:has(#desktop-auth-slot) > main > section:first-child > div {
+    border-left: 1px solid rgba(216, 177, 90, 0.25);
+    padding-left: clamp(1.25rem, 4vw, 4rem);
+}
+
+body:has(#desktop-auth-slot) > main > section:first-child h2 {
+    max-width: 10ch;
+    font-size: clamp(3.1rem, 8vw, 7.2rem);
+    line-height: 0.98;
+}
+
+body:has(#desktop-auth-slot) > main > section:first-child p {
+    max-width: 52ch;
+}
+
+body:has(#desktop-auth-slot) > main > section:not(:first-child) {
+    padding-block: clamp(4rem, 8vw, 7rem);
+}
+
+body:has(#desktop-auth-slot) > main > section:not(:first-child) > div {
+    padding-inline: clamp(1rem, 3vw, 2rem);
+}
+
+body:has(#desktop-auth-slot) > main > section h2 {
+    text-wrap: balance;
+}
+
+body:has(#desktop-auth-slot) > main > section .parchment-panel,
+body:has(#desktop-auth-slot) > main > section .glass-panel {
+    position: relative;
+    overflow: hidden;
+}
+
+body:has(#desktop-auth-slot) > main > section .parchment-panel::after,
+body:has(#desktop-auth-slot) > main > section .glass-panel::after {
+    position: absolute;
+    right: 1rem;
+    bottom: 0.8rem;
+    color: rgba(216, 177, 90, 0.2);
+    content: '∴';
+    font-family: var(--type-display);
+    font-size: 1.4rem;
+    pointer-events: none;
+}
+
+#features .parchment-panel:nth-child(2),
+#gameplay .parchment-panel:nth-child(2) {
+    transform: translateY(1.5rem);
+}
+
+#features .parchment-panel:nth-child(3),
+#gameplay .parchment-panel:nth-child(3) {
+    transform: translateY(-0.75rem);
+}
+
+#features .parchment-panel h3,
+#gameplay .parchment-panel h3 {
+    letter-spacing: 0.02em;
+    text-transform: none;
+}
+
+/* Secondary pages share the same bookplate-like title rail while
+   retaining their existing IDs, forms, and data-driven controls. */
+body.corp-page > main,
+body:has(#login-form) > main,
+body:has(#reset-title) > main,
+body:has(#admin-name) > main,
+body:has(#identity-form) > main {
+    width: var(--rail);
+}
+
+body.corp-page .corp-hero {
+    position: relative;
+    border-left: 3px solid var(--gold);
+    border-radius: 0 var(--radius) var(--radius) 0;
+}
+
+body.corp-page .corp-title {
+    font-size: clamp(2rem, 5vw, 4rem);
+    line-height: 1.02;
+}
+
+body.corp-page .corp-card {
+    border-top: 2px solid rgba(216, 177, 90, 0.35);
+}
+
+@media (max-width: 767px) {
+    body:has(#desktop-auth-slot) > main > section:first-child > div {
+        padding-left: 1rem;
+    }
+
+    body:has(#desktop-auth-slot) > main > section:first-child h2 {
+        font-size: clamp(2.7rem, 13vw, 4.7rem);
+    }
+
+    body:has(#desktop-auth-slot) > main > section > div::before {
+        left: 0;
+    }
+
+    #features .parchment-panel:nth-child(2),
+    #gameplay .parchment-panel:nth-child(2),
+    #features .parchment-panel:nth-child(3),
+    #gameplay .parchment-panel:nth-child(3) {
+        transform: none;
+    }
+
+    body.corp-page > main,
+    body:has(#login-form) > main,
+    body:has(#reset-title) > main,
+    body:has(#admin-name) > main,
+    body:has(#identity-form) > main {
+        width: min(100%, calc(100% - 1rem));
+    }
+}
+
+/* ─────────────────────────────────────────────────────────────
    VISUAL COMPOSITION PASS
    Shared layout polish without changing functional markup.
 ───────────────────────────────────────────────────────────── */
