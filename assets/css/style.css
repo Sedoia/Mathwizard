@@ -1785,3 +1785,98 @@ nav .rune-btn,
 #mobile-menu .rune-btn {
     color: #17101e !important;
 }
+
+/* ─────────────────────────────────────────────────────────────
+   COLOR BALANCE
+   Four deliberate value levels keep the dark palette readable:
+   night foundation, aubergine sections, violet panels, and a
+   restrained brass notice for the one practical status message.
+───────────────────────────────────────────────────────────── */
+:root {
+    --bg:          #100c18;
+    --surface:     #281e36;
+    --surface-soft:#21182d;
+    --surface-deep:#171020;
+    --gold:        #d8b15a;
+    --gold-pale:   #f0d99b;
+    --text:        #f3ead8;
+    --text-muted:  #c6baca;
+    --amethyst:    #8d78b5;
+    --amethyst-soft: rgba(141, 120, 181, 0.18);
+}
+
+body {
+    background-image:
+        radial-gradient(circle at 12% 10%, rgba(216, 177, 90, 0.1), transparent 24rem),
+        radial-gradient(circle at 88% 38%, rgba(141, 120, 181, 0.18), transparent 30rem),
+        linear-gradient(180deg, #100c18 0%, #171020 52%, #100c18 100%) !important;
+}
+
+main > section:first-child {
+    background:
+        linear-gradient(90deg, rgba(16, 12, 24, 0.98), rgba(29, 19, 38, 0.88)) !important;
+}
+
+section#features,
+section#about {
+    background: var(--surface-soft) !important;
+    border-color: rgba(141, 120, 181, 0.2) !important;
+}
+
+section#gameplay,
+section#download {
+    background: rgba(16, 12, 24, 0.42) !important;
+}
+
+.parchment-panel,
+.glass-panel,
+.guild-board,
+.hero-art-frame,
+.corp-hero,
+.corp-card {
+    background: var(--surface) !important;
+    border-color: rgba(141, 120, 181, 0.28);
+}
+
+.parchment-panel:hover,
+.glass-panel:hover {
+    border-color: var(--border-hover);
+}
+
+.guild-board-item {
+    background: rgba(16, 12, 24, 0.22) !important;
+    border-color: rgba(141, 120, 181, 0.22) !important;
+}
+
+section#download .bounty-notice {
+    background: var(--surface) !important;
+    border-color: rgba(216, 177, 90, 0.34);
+}
+
+section#download > div > div[style*="background"] {
+    background: rgba(216, 177, 90, 0.11) !important;
+    border-color: rgba(216, 177, 90, 0.3) !important;
+}
+
+section#download > div > div[style*="background"] p {
+    color: #dfd1b7 !important;
+}
+
+#features .parchment-panel > div:first-child {
+    background: var(--amethyst-soft);
+    border-color: rgba(216, 177, 90, 0.42);
+}
+
+.section-tag {
+    color: var(--gold-pale) !important;
+}
+
+footer.bg-ncst-dark {
+    background: #0a0710 !important;
+}
+
+@media (max-width: 640px) {
+    main > section:first-child {
+        background: linear-gradient(180deg, #100c18 0%, #1d1327 100%) !important;
+    }
+}
