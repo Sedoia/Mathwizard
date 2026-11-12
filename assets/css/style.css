@@ -143,13 +143,12 @@ a { text-decoration: none; }
    Stone-Masonry Grid Background
 ───────────────────────────────────────────────────────────── */
 .bg-tech-grid {
-    background-image:
-        linear-gradient(rgba(212,168,67,0.04) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(212,168,67,0.04) 1px, transparent 1px),
-        linear-gradient(rgba(80,40,10,0.025) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(80,40,10,0.025) 1px, transparent 1px);
-    background-size: 80px 60px, 80px 60px, 20px 20px, 20px 20px;
-    mask-image: radial-gradient(ellipse at center, black 0%, transparent 80%);
+    background-image: none;
+    opacity: 0.03;
+}
+
+[class*="blur-"].filter {
+    opacity: 0.03 !important;
 }
 
 /* ─────────────────────────────────────────────────────────────
@@ -157,105 +156,34 @@ a { text-decoration: none; }
 ───────────────────────────────────────────────────────────── */
 .parchment-panel {
     position: relative;
-    background:
-        linear-gradient(135deg, rgba(212,168,67,0.4) 12px, transparent 12px) top left,
-        linear-gradient(225deg, rgba(212,168,67,0.4) 12px, transparent 12px) top right,
-        linear-gradient(315deg, rgba(212,168,67,0.4) 12px, transparent 12px) bottom right,
-        linear-gradient(45deg,  rgba(212,168,67,0.4) 12px, transparent 12px) bottom left,
-        linear-gradient(160deg, #2c1a0b 0%, #1a0e05 70%, #120a03 100%);
-    background-repeat: no-repeat;
-    background-size:
-        18px 18px, 18px 18px, 18px 18px, 18px 18px,
-        100% 100%;
-    border: 1px solid rgba(212,168,67,0.28);
-    box-shadow:
-        inset 0 1px 0 rgba(212,168,67,0.14),
-        inset 0 -2px 6px rgba(0,0,0,0.6),
-        0 8px 32px rgba(0,0,0,0.75),
-        0 2px 8px rgba(0,0,0,0.9);
-    transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.parchment-panel::before {
-    content: '\25C6';
-    position: absolute;
-    top: 3px; left: 6px;
-    color: rgba(212,168,67,0.55);
-    font-size: 7px;
-    pointer-events: none;
-    z-index: 2;
-    line-height: 1;
-}
-.parchment-panel::after {
-    content: '\25C6';
-    position: absolute;
-    bottom: 3px; right: 6px;
-    color: rgba(212,168,67,0.55);
-    font-size: 7px;
-    pointer-events: none;
-    z-index: 2;
-    line-height: 1;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: none;
+    transition: border-color 0.2s ease;
 }
 
 .parchment-panel:hover {
-    border-color: rgba(212,168,67,0.55);
-    box-shadow:
-        inset 0 1px 0 rgba(212,168,67,0.22),
-        inset 0 -2px 6px rgba(0,0,0,0.6),
-        0 12px 40px rgba(0,0,0,0.85),
-        0 0 30px rgba(212,168,67,0.10);
-    background:
-        linear-gradient(135deg, rgba(212,168,67,0.5) 12px, transparent 12px) top left,
-        linear-gradient(225deg, rgba(212,168,67,0.5) 12px, transparent 12px) top right,
-        linear-gradient(315deg, rgba(212,168,67,0.5) 12px, transparent 12px) bottom right,
-        linear-gradient(45deg,  rgba(212,168,67,0.5) 12px, transparent 12px) bottom left,
-        linear-gradient(160deg, #381f0d 0%, #1a0e05 70%, #120a03 100%);
-    background-repeat: no-repeat;
-    background-size: 18px 18px, 18px 18px, 18px 18px, 18px 18px, 100% 100%;
+    border-color: var(--border-hover);
 }
 
-/* Float animation applied to feature panels */
 .float-card {
-    animation: float-card 5s ease-in-out infinite;
+    animation: none;
 }
-.float-card:nth-child(2) { animation-delay: 1.2s; }
-.float-card:nth-child(3) { animation-delay: 2.4s; }
-.float-card:nth-child(4) { animation-delay: 0.6s; }
 
 /* ─────────────────────────────────────────────────────────────
    GLASS PANEL (Legacy alias — now uses parchment style)
 ───────────────────────────────────────────────────────────── */
 .glass-panel {
     position: relative;
-    background:
-        linear-gradient(135deg, rgba(212,168,67,0.30) 10px, transparent 10px) top left,
-        linear-gradient(225deg, rgba(212,168,67,0.30) 10px, transparent 10px) top right,
-        linear-gradient(315deg, rgba(212,168,67,0.30) 10px, transparent 10px) bottom right,
-        linear-gradient(45deg,  rgba(212,168,67,0.30) 10px, transparent 10px) bottom left,
-        linear-gradient(160deg, #2c1a0b 0%, #1a0e05 70%);
-    background-repeat: no-repeat;
-    background-size: 16px 16px, 16px 16px, 16px 16px, 16px 16px, 100% 100%;
-    border: 1px solid rgba(212,168,67,0.25);
-    box-shadow:
-        inset 0 1px 0 rgba(212,168,67,0.12),
-        0 6px 24px rgba(0,0,0,0.70),
-        0 2px 8px rgba(0,0,0,0.85);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: none;
+    transition: border-color 0.2s ease;
 }
 .glass-panel:hover {
-    border-color: rgba(212,168,67,0.48);
-    box-shadow:
-        inset 0 1px 0 rgba(212,168,67,0.18),
-        0 10px 36px rgba(0,0,0,0.80),
-        0 0 24px rgba(212,168,67,0.08);
-    background:
-        linear-gradient(135deg, rgba(212,168,67,0.45) 10px, transparent 10px) top left,
-        linear-gradient(225deg, rgba(212,168,67,0.45) 10px, transparent 10px) top right,
-        linear-gradient(315deg, rgba(212,168,67,0.45) 10px, transparent 10px) bottom right,
-        linear-gradient(45deg,  rgba(212,168,67,0.45) 10px, transparent 10px) bottom left,
-        linear-gradient(160deg, #371e0c 0%, #1a0e05 70%);
-    background-repeat: no-repeat;
-    background-size: 16px 16px, 16px 16px, 16px 16px, 16px 16px, 100% 100%;
+    border-color: var(--border-hover);
 }
 
 .glass-panel,
@@ -266,7 +194,7 @@ a { text-decoration: none; }
 .glass-panel.rounded-3xl,
 .glass-panel.rounded,
 .parchment-panel.rounded-lg {
-    border-radius: 0 !important;
+    border-radius: var(--radius) !important;
 }
 
 /* ─────────────────────────────────────────────────────────────
@@ -274,62 +202,21 @@ a { text-decoration: none; }
 ───────────────────────────────────────────────────────────── */
 .guild-board {
     position: relative;
-    background:
-        linear-gradient(180deg,
-            #3d2010 0%,
-            #2c1608 10%,
-            #251408 80%,
-            #3d2010 100%
-        );
-    border: 3px solid #5a3018;
-    border-top: 5px solid #7a4828;
-    border-bottom: 5px solid #1a0c04;
-    box-shadow:
-        inset 0 1px 0 rgba(255,200,100,0.1),
-        inset 2px 0 4px rgba(0,0,0,0.4),
-        inset -2px 0 4px rgba(0,0,0,0.4),
-        inset 0 -2px 8px rgba(0,0,0,0.6),
-        0 8px 30px rgba(0,0,0,0.8);
-}
-
-.guild-board::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background:
-        repeating-linear-gradient(
-            0deg,
-            transparent,
-            transparent 18px,
-            rgba(0,0,0,0.08) 18px,
-            rgba(0,0,0,0.08) 19px
-        );
-    pointer-events: none;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: none;
 }
 
 .guild-board-item {
     position: relative;
+    background: var(--surface);
 }
-.guild-board-item::before,
-.guild-board-item::after {
-    content: '';
-    position: absolute;
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: radial-gradient(circle at 35% 30%, #c8a050, #5a3808 60%, #2a1404);
-    box-shadow: 0 1px 3px rgba(0,0,0,0.8), inset 0 1px 0 rgba(255,200,80,0.4);
-    top: 6px;
-    z-index: 3;
-}
-.guild-board-item::before { left: 6px; }
-.guild-board-item::after  { right: 6px; }
 
 /* ─────────────────────────────────────────────────────────────
    RUNIC STONE BUTTON (Primary action)
 ───────────────────────────────────────────────────────────── */
 .rune-btn {
-    position: relative;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -341,75 +228,33 @@ a { text-decoration: none; }
     font-size: 0.78rem;
     text-transform: uppercase;
     letter-spacing: 0.18em;
-    color: var(--gold-pale);
-    background:
-        linear-gradient(135deg, rgba(212,168,67,0.22) 12px, transparent 12px) top left,
-        linear-gradient(225deg, rgba(212,168,67,0.22) 12px, transparent 12px) top right,
-        linear-gradient(315deg, rgba(212,168,67,0.22) 12px, transparent 12px) bottom right,
-        linear-gradient(45deg,  rgba(212,168,67,0.22) 12px, transparent 12px) bottom left,
-        linear-gradient(180deg, #3d2010 0%, #1a0e05 50%, #0f0702 100%);
-    background-repeat: no-repeat;
-    background-size: 18px 18px, 18px 18px, 18px 18px, 18px 18px, 100% 100%;
-    border: 1px solid rgba(212,168,67,0.50);
+    color: var(--bg);
+    background: var(--gold);
+    border: 1px solid var(--gold);
+    border-radius: var(--radius);
     cursor: pointer;
-    animation: breathe-gold 3.5s ease-in-out infinite;
-    transition: color 0.3s ease, border-color 0.3s ease, transform 0.2s ease;
-    overflow: hidden;
-    text-shadow: 0 0 10px rgba(212,168,67,0.5);
-}
-
-.rune-btn::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(180deg, rgba(212,168,67,0.12) 0%, transparent 60%);
-    opacity: 0;
-    transition: opacity 0.3s ease;
-    pointer-events: none;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
 }
 
 .rune-btn:hover {
-    color: #fff;
-    border-color: rgba(212,168,67,0.95);
-    transform: translateY(-3px);
-    animation: none;
-    box-shadow:
-        0 0 28px rgba(212,168,67,0.65),
-        0 0 56px rgba(212,168,67,0.28),
-        0 0 90px rgba(212,168,67,0.10),
-        inset 0 1px 0 rgba(212,168,67,0.35);
-    text-shadow: 0 0 16px rgba(255,220,100,0.9);
+    background: var(--gold-pale);
+    border-color: var(--gold-pale);
 }
-.rune-btn:hover::before { opacity: 1; }
 
 .rune-btn-crimson {
-    color: #e87070;
+    color: var(--bg);
+    background: var(--crimson);
     border-color: rgba(139,26,26,0.55);
-    animation: breathe-crimson 3.5s ease-in-out infinite;
-    background:
-        linear-gradient(135deg, rgba(139,26,26,0.22) 12px, transparent 12px) top left,
-        linear-gradient(225deg, rgba(139,26,26,0.22) 12px, transparent 12px) top right,
-        linear-gradient(315deg, rgba(139,26,26,0.22) 12px, transparent 12px) bottom right,
-        linear-gradient(45deg,  rgba(139,26,26,0.22) 12px, transparent 12px) bottom left,
-        linear-gradient(180deg, #3d1010 0%, #1a0808 50%, #0f0505 100%);
-    background-repeat: no-repeat;
-    background-size: 18px 18px, 18px 18px, 18px 18px, 18px 18px, 100% 100%;
-    text-shadow: 0 0 10px rgba(139,26,26,0.7);
 }
 .rune-btn-crimson:hover {
-    color: #ffaaaa;
-    border-color: rgba(180,40,40,0.9);
-    box-shadow:
-        0 0 28px rgba(180,40,40,0.65),
-        0 0 56px rgba(180,40,40,0.28),
-        inset 0 1px 0 rgba(200,60,60,0.3);
+    background: #a52a2a;
+    border-color: #a52a2a;
 }
 
 /* ─────────────────────────────────────────────────────────────
    IRON PLAQUE BUTTON (Secondary / outlined)
 ───────────────────────────────────────────────────────────── */
 .iron-plaque-btn {
-    position: relative;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -423,19 +268,16 @@ a { text-decoration: none; }
     letter-spacing: 0.14em;
     color: var(--parch-faded);
     background: transparent;
-    border: 1px solid rgba(201,170,122,0.40);
+    border: 1px solid var(--border-hover);
+    border-radius: var(--radius);
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: color 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
 }
 
 .iron-plaque-btn:hover {
     color: var(--gold-pale);
-    border-color: rgba(212,168,67,0.75);
+    border-color: var(--gold);
     background: rgba(212,168,67,0.07);
-    transform: translateY(-2px);
-    box-shadow:
-        0 0 18px rgba(212,168,67,0.22),
-        inset 0 1px 0 rgba(212,168,67,0.18);
 }
 
 /* ─────────────────────────────────────────────────────────────
@@ -478,8 +320,8 @@ a { text-decoration: none; }
         inset 0 -1px 0 rgba(0,0,0,0.5);
     font-size: 1.4rem;
     color: #f0b0a0;
-    text-shadow: 0 0 8px rgba(255,100,100,0.5);
-    animation: breathe-crimson 4s ease-in-out infinite;
+    text-shadow: none;
+    animation: none;
 }
 
 .wax-seal-gold {
@@ -491,8 +333,8 @@ a { text-decoration: none; }
     );
     border-color: rgba(212,168,67,0.7);
     color: #fff8e0;
-    text-shadow: 0 0 8px rgba(255,220,100,0.7);
-    animation: breathe-gold 4s ease-in-out infinite;
+    text-shadow: none;
+    animation: none;
 }
 
 /* ─────────────────────────────────────────────────────────────
@@ -520,7 +362,7 @@ a { text-decoration: none; }
 .ornate-hr-diamond {
     color: var(--gold);
     font-size: 0.9rem;
-    text-shadow: 0 0 10px rgba(212,168,67,0.6);
+    text-shadow: none;
     flex-shrink: 0;
 }
 
@@ -535,17 +377,14 @@ a { text-decoration: none; }
 .section-tag {
     display: inline-flex;
     align-items: center;
-    gap: 0.6rem;
-    padding: 0.3rem 1rem 0.3rem 0.7rem;
-    background: linear-gradient(90deg, rgba(212,168,67,0.20) 0%, transparent 100%);
-    border-left: 3px solid var(--gold);
+    gap: 0.4rem;
+    padding: 0.3rem 0;
     font-family: 'Cinzel', serif;
     font-size: 0.7rem;
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.2em;
     color: var(--gold);
-    text-shadow: 0 0 12px rgba(212,168,67,0.4);
 }
 
 /* ─────────────────────────────────────────────────────────────
@@ -556,14 +395,12 @@ a { text-decoration: none; }
 
 .text-gold-glow {
     color: var(--gold);
-    text-shadow:
-        0 0 22px rgba(212,168,67,0.70),
-        0 0 50px rgba(212,168,67,0.30),
-        0 2px 4px rgba(0,0,0,0.95);
+    text-shadow: none;
 }
 
 .runic-glow {
-    animation: runic-pulse 2.5s ease-in-out infinite;
+    animation: none;
+    text-shadow: none;
 }
 
 /* ─────────────────────────────────────────────────────────────
@@ -621,7 +458,7 @@ input[type="text"],
 input[type="number"],
 textarea,
 select {
-    border-radius: 0 !important;
+    border-radius: var(--radius) !important;
     background-color: rgba(15, 7, 2, 0.80) !important;
     color: #d4b896 !important;
     border-color: rgba(212,168,67,0.25) !important;
@@ -634,11 +471,17 @@ select {
 input:focus,
 select:focus,
 textarea:focus {
-    outline: none !important;
     border-color: rgba(212,168,67,0.65) !important;
-    box-shadow:
-        0 0 0 2px rgba(212,168,67,0.15),
-        0 0 16px rgba(212,168,67,0.12) !important;
+    box-shadow: none !important;
+}
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+    outline: 2px solid var(--gold) !important;
+    outline-offset: 2px;
 }
 
 input::placeholder,
@@ -671,7 +514,7 @@ textarea::placeholder {
     color: #a08060;
     background: rgba(20, 10, 3, 0.7);
     border: 1px solid rgba(212,168,67,0.18);
-    border-radius: 0 !important;
+    border-radius: var(--radius) !important;
     cursor: pointer;
     transition: all 0.28s ease;
     font-family: 'Cinzel', serif;
@@ -705,27 +548,17 @@ textarea::placeholder {
     position: relative;
     text-align: center;
     padding: 1.5rem 1rem;
-    background:
-        linear-gradient(135deg, rgba(212,168,67,0.3) 10px, transparent 10px) top left,
-        linear-gradient(225deg, rgba(212,168,67,0.3) 10px, transparent 10px) top right,
-        linear-gradient(315deg, rgba(212,168,67,0.3) 10px, transparent 10px) bottom right,
-        linear-gradient(45deg,  rgba(212,168,67,0.3) 10px, transparent 10px) bottom left,
-        linear-gradient(180deg, #2c1a0b, #1a0e05);
-    background-repeat: no-repeat;
-    background-size: 16px 16px, 16px 16px, 16px 16px, 16px 16px, 100% 100%;
-    border: 1px solid rgba(212,168,67,0.28);
-    animation: float-card 6s ease-in-out infinite;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
 }
 .rune-counter-number {
     font-family: 'Cinzel', serif;
     font-size: 2.5rem;
     font-weight: 900;
     color: var(--gold);
-    text-shadow:
-        0 0 20px rgba(212,168,67,0.6),
-        0 0 40px rgba(212,168,67,0.2);
+    text-shadow: none;
     line-height: 1;
-    animation: runic-pulse 3s ease-in-out infinite;
 }
 .rune-counter-label {
     font-family: 'Cinzel', serif;
@@ -742,23 +575,10 @@ textarea::placeholder {
 ───────────────────────────────────────────────────────────── */
 .hero-art-frame {
     position: relative;
-    background: linear-gradient(160deg, #3d2010 0%, #1a0e05 100%);
-    box-shadow:
-        inset 0 0 60px rgba(0,0,0,0.7),
-        0 0 40px rgba(212,168,67,0.14),
-        0 20px 60px rgba(0,0,0,0.85);
-    border: 2px solid rgba(212,168,67,0.40);
-}
-.hero-art-frame::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background:
-        linear-gradient(60deg, rgba(139,26,26,0.12), transparent 40%),
-        linear-gradient(120deg, transparent 30%, rgba(29,106,94,0.10), transparent 70%),
-        linear-gradient(180deg, rgba(212,168,67,0.06), transparent);
-    pointer-events: none;
-    z-index: 1;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: none;
 }
 
 /* ─────────────────────────────────────────────────────────────
@@ -913,7 +733,7 @@ textarea::placeholder {
     .auth-notification {
         width: calc(100vw - 1.25rem);
         padding: 0.7rem 0.8rem;
-        border-radius: 0.7rem;
+        border-radius: var(--radius);
     }
 
     .auth-notification-title {
@@ -925,8 +745,19 @@ textarea::placeholder {
     }
 }
 
-.animate-bounce      { animation: bounce 3s ease-in-out infinite; }
-.animate-ember       { animation: ember-flicker 3s ease-in-out infinite; }
+.animate-bounce      { animation: none; }
+.animate-ember       { animation: none; }
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
+    }
+}
 
 /* ─────────────────────────────────────────────────────────────
    TOUCH TARGETS
@@ -981,9 +812,10 @@ button, a[role="button"] {
 }
 
 .corp-hero {
-    border: 1px solid rgba(100, 255, 218, 0.16);
-    background: linear-gradient(135deg, rgba(20, 12, 6, 0.92), rgba(14, 9, 5, 0.96));
-    box-shadow: 0 24px 40px rgba(0, 0, 0, 0.45);
+    border: 1px solid var(--border);
+    background: var(--surface);
+    border-radius: var(--radius);
+    box-shadow: none;
     padding: 1.25rem;
 }
 
@@ -1023,9 +855,10 @@ button, a[role="button"] {
 }
 
 .corp-meta-chip {
-    border: 1px solid rgba(100, 255, 218, 0.22);
-    color: #a4fff1;
-    background: rgba(19, 35, 31, 0.48);
+    border: 1px solid var(--border);
+    color: var(--text);
+    background: transparent;
+    border-radius: var(--radius);
     padding: 0.28rem 0.65rem;
     font-size: 0.74rem;
     letter-spacing: 0.05em;
@@ -1040,8 +873,9 @@ button, a[role="button"] {
 }
 
 .corp-card {
-    border: 1px solid rgba(100, 255, 218, 0.15);
-    background: rgba(14, 10, 7, 0.8);
+    border: 1px solid var(--border);
+    background: var(--surface);
+    border-radius: var(--radius);
     padding: 1rem;
 }
 
@@ -1054,7 +888,7 @@ button, a[role="button"] {
 
 .corp-card p,
 .corp-card li {
-    color: #c3c3c3;
+    color: var(--text-muted);
     font-size: 0.95rem;
     line-height: 1.55;
 }
@@ -1073,7 +907,7 @@ button, a[role="button"] {
 
 .corp-footer {
     margin-top: 1.25rem;
-    border-top: 1px solid rgba(100, 255, 218, 0.16);
+    border-top: 1px solid var(--border);
     padding-top: 1rem;
     display: flex;
     flex-wrap: wrap;
@@ -1083,7 +917,7 @@ button, a[role="button"] {
 }
 
 .corp-footer small {
-    color: #8f8f8f;
+    color: var(--text-muted);
 }
 
 @media (min-width: 768px) {
