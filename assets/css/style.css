@@ -3,29 +3,29 @@
    "Adventurer's Guild" High Fantasy Theme
    ================================================================
    Palette:
-     Twilight Ink       #17131f
-     Grimoire Plum      #241c2f
-     Ink Violet         #352744
+     Ivory Parchment    #f7f3eb
+     Spellbook White    #fffdf8
+     Ink Plum           #2a2131
      Signal Crimson     #a64552
-     Antique Brass      #d8b06a
-     Warm Parchment     #eee7dc
-     Faded Lilac        #b9aec3
+     White Gold         #b88a3b
+     Soft Brass         #c6a45e
+     Slate Plum         #5e5565
      Forest Sage        #5f927d
      Arcane Teal        #4b8f89
-     Smoked Violet      #403451
+     Smoked Violet      #4a4052
    ================================================================ */
 
 /* ─────────────────────────────────────────────────────────────
    CSS Custom Properties
 ───────────────────────────────────────────────────────────── */
 :root {
-    --bg:          #17131f;
-    --surface:     #241c2f;
-    --border:      rgba(216, 176, 106, 0.22);
-    --border-hover:rgba(216, 176, 106, 0.68);
-    --gold:        #d8b06a;
-    --text:        #e3dcd2;
-    --text-muted:  #c0b5c6;
+    --bg:          #f7f3eb;
+    --surface:     #fffdf8;
+    --border:      rgba(74, 64, 82, 0.2);
+    --border-hover:rgba(184, 138, 59, 0.7);
+    --gold:        #8a6424;
+    --text:        #302637;
+    --text-muted:  #5e5565;
     --crimson:     #a64552;
     --sage:        #4d9278;
     --teal:        #3d8f8b;
@@ -39,14 +39,14 @@
     --space-7:     96px;
 
     /* Compatibility aliases retained for existing components. */
-    --gold-pale:   #f1d59a;
-    --parchment:   #eee7dc;
+    --gold-pale:   #c6a45e;
+    --parchment:   #fffdf8;
     --parch-faded: var(--text);
     --dungeon:     var(--bg);
-    --mahogany:    #2d2340;
-    --timber:      #352744;
-    --stone:       #403451;
-    --glow-gold:   rgba(216, 176, 106, 0.35);
+    --mahogany:    #eee8dc;
+    --timber:      #e7dfd1;
+    --stone:       #d9d0c3;
+    --glow-gold:   rgba(184, 138, 59, 0.22);
     --glow-crim:   rgba(166, 69, 82, 0.35);
     --shadow-deep: rgba(3, 8, 18, 0.72);
 }
@@ -62,9 +62,9 @@ body {
     background-color: var(--dungeon);
     background-image:
         linear-gradient(
-            rgba(23, 19, 31, 0.94) 0%,
-            rgba(36, 28, 47, 0.96) 60%,
-            rgba(14, 11, 20, 0.98) 100%
+            rgba(247, 243, 235, 0.98) 0%,
+            rgba(255, 253, 248, 0.98) 60%,
+            rgba(238, 232, 220, 0.98) 100%
         );
     background-attachment: fixed;
     background-size: cover;
@@ -143,13 +143,13 @@ a { text-decoration: none; }
 ::-webkit-scrollbar { width: 12px; }
 
 ::-webkit-scrollbar-track {
-    background: #0e0b14;
+    background: #eee8dc;
     border-left: 1px solid var(--border);
     box-shadow: none;
 }
 
 ::-webkit-scrollbar-thumb {
-    background: #4a3b59;
+    background: #cfc3b1;
     border: 1px solid var(--border);
     border-radius: var(--radius);
     box-shadow: none;
@@ -481,7 +481,7 @@ input[type="number"],
 textarea,
 select {
     border-radius: var(--radius) !important;
-    background-color: rgba(14, 11, 20, 0.72) !important;
+    background-color: rgba(255, 253, 248, 0.9) !important;
     color: var(--text) !important;
     border-color: var(--border) !important;
     font-family: 'Crimson Text', Georgia, serif !important;
@@ -508,7 +508,7 @@ textarea:focus-visible {
 
 input::placeholder,
 textarea::placeholder {
-    color: rgba(192, 181, 198, 0.75) !important;
+    color: rgba(94, 85, 101, 0.72) !important;
     font-style: italic;
 }
 
@@ -965,26 +965,26 @@ button, a[role="button"] {
 }
 
 /* ─────────────────────────────────────────────────────────────
-   TWILIGHT GRIMOIRE PASS
-   A quiet fantasy palette with antique brass and ink-plum surfaces.
+   MOONLIT PARCHMENT PASS
+   Ivory space, ink-plum type, and white-gold wayfinding.
 ───────────────────────────────────────────────────────────── */
 nav,
 #mobile-menu {
-    background-color: rgba(23, 19, 31, 0.96) !important;
+    background-color: rgba(247, 243, 235, 0.97) !important;
     border-color: var(--border) !important;
 }
 
 nav {
-    box-shadow: 0 8px 24px rgba(9, 6, 14, 0.28) !important;
+    box-shadow: 0 8px 24px rgba(42, 33, 49, 0.1) !important;
 }
 
 #mobile-menu {
-    box-shadow: 0 12px 24px rgba(9, 6, 14, 0.3);
+    box-shadow: 0 12px 24px rgba(42, 33, 49, 0.12);
 }
 
 .text-white,
 .corp-title {
-    color: var(--parchment) !important;
+    color: var(--text) !important;
 }
 
 .text-ncst-gold,
@@ -1021,11 +1021,11 @@ nav {
 
 .hover\:bg-ncst-gold:hover,
 .hover\:bg-ncst-neon:hover {
-    background-color: var(--gold-pale) !important;
+    background-color: #a97931 !important;
 }
 
 .bg-tech-grid {
-    opacity: 0.015;
+    opacity: 0.02;
 }
 
 .logo-image {
@@ -1043,8 +1043,8 @@ nav {
 
 .corp-badge {
     border-color: var(--border-hover);
-    color: var(--gold-pale);
-    background: rgba(216, 176, 106, 0.08);
+    color: var(--gold);
+    background: rgba(184, 138, 59, 0.08);
 }
 
 .corp-card h3,
@@ -1058,7 +1058,7 @@ nav {
 
 .tab-btn {
     color: var(--text-muted);
-    background: rgba(14, 11, 20, 0.48);
+    background: rgba(255, 253, 248, 0.75);
     border-color: var(--border);
 }
 
@@ -1066,12 +1066,60 @@ nav {
 .tab-btn.active {
     color: var(--gold);
     border-color: var(--border-hover);
-    background: rgba(216, 176, 106, 0.1);
+    background: rgba(184, 138, 59, 0.1);
     box-shadow: none;
 }
 
 .section-line {
     background: var(--border);
+}
+
+.rune-btn {
+    color: var(--parchment);
+    background: var(--text);
+    border-color: var(--text);
+}
+
+.rune-btn:hover {
+    color: var(--text);
+    background: var(--gold-pale);
+    border-color: var(--gold-pale);
+}
+
+.iron-plaque-btn {
+    color: var(--text);
+    border-color: var(--border-hover);
+}
+
+.iron-plaque-btn:hover {
+    color: var(--text);
+    background: rgba(184, 138, 59, 0.1);
+}
+
+.parchment-panel,
+.glass-panel,
+.guild-board,
+.guild-board-item,
+.hero-art-frame,
+.corp-hero,
+.corp-card {
+    background: var(--surface);
+}
+
+input[type="email"],
+input[type="password"],
+input[type="text"],
+input[type="number"],
+textarea,
+select {
+    color: var(--text) !important;
+    border-color: var(--border) !important;
+}
+
+.text-gray-400,
+.text-gray-500,
+.text-gray-600 {
+    color: var(--text-muted) !important;
 }
 
 @media (prefers-reduced-motion: reduce) {
