@@ -2404,6 +2404,347 @@ textarea:focus-visible {
 }
 
 /* ─────────────────────────────────────────────────────────────
+   TITLE CARD / ACADEMY ATLAS
+   The homepage is composed like a fantasy game title card:
+   one oversized typographic spell, one quiet caption rail,
+   then an asymmetric atlas of the learning world.
+───────────────────────────────────────────────────────────── */
+:root {
+    --type-display: 'Bodoni Moda', 'Bodoni 72', Didot, Georgia, serif;
+    --type-body: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+    --type-ui: 'DM Sans', 'Segoe UI', sans-serif;
+    --title-ink: #100b08;
+    --title-plum: #24121b;
+    --title-wine: #7a273b;
+    --title-gold: #d3a342;
+    --title-cream: #f7f0e2;
+}
+
+body {
+    font-family: var(--type-body) !important;
+    background:
+        radial-gradient(circle at 72% 8%, rgba(122, 39, 59, 0.18), transparent 28rem),
+        linear-gradient(145deg, #100b08 0%, #17101a 48%, #0c0a10 100%) !important;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.font-magic {
+    font-family: var(--type-display) !important;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+}
+
+.logo-container .font-magic,
+header .font-magic,
+nav .font-magic {
+    font-family: 'Bodoni Moda', Didot, Georgia, serif !important;
+    font-weight: 600;
+    letter-spacing: 0.015em;
+}
+
+.font-heading,
+label,
+button,
+.section-tag,
+.corp-badge,
+.corp-meta-chip {
+    font-family: var(--type-ui) !important;
+    letter-spacing: 0.08em;
+}
+
+.font-flavor {
+    font-family: var(--type-body) !important;
+    font-style: italic;
+}
+
+/* The title is the memorable element. It spans the hero instead of
+   competing with a generic right-hand illustration column. */
+body:has(#desktop-auth-slot) > main > section:first-child {
+    min-height: min(52rem, 100vh);
+    overflow: hidden;
+    align-items: flex-end;
+    padding-bottom: clamp(4rem, 9vw, 8rem);
+    background:
+        linear-gradient(180deg, rgba(16, 11, 8, 0.64), rgba(16, 11, 8, 0.9)),
+        radial-gradient(circle at 86% 30%, rgba(211, 163, 66, 0.13), transparent 24rem),
+        linear-gradient(105deg, #100b08 0%, #24121b 60%, #110c12 100%) !important;
+}
+
+body:has(#desktop-auth-slot) > main > section:first-child::before {
+    position: absolute;
+    top: 10%;
+    right: 7%;
+    width: min(32vw, 25rem);
+    height: min(32vw, 25rem);
+    border: 1px solid rgba(211, 163, 66, 0.24);
+    border-radius: 50%;
+    box-shadow:
+        0 0 0 1.5rem rgba(211, 163, 66, 0.03),
+        0 0 0 3rem rgba(211, 163, 66, 0.02);
+    content: '';
+    pointer-events: none;
+}
+
+body:has(#desktop-auth-slot) > main > section:first-child::after {
+    position: absolute;
+    top: 25%;
+    right: 17%;
+    color: rgba(211, 163, 66, 0.32);
+    content: '∫  ∂  ∑';
+    font-family: var(--type-body);
+    font-size: clamp(1.2rem, 2vw, 2rem);
+    letter-spacing: 0.8em;
+    transform: rotate(-18deg);
+    pointer-events: none;
+}
+
+body:has(#desktop-auth-slot) > main > section:first-child > div {
+    position: relative;
+    z-index: 1;
+    display: block;
+    width: min(88rem, calc(100% - 2rem));
+    padding-left: clamp(1rem, 3vw, 3rem);
+    border-left: 1px solid rgba(211, 163, 66, 0.4);
+}
+
+body:has(#desktop-auth-slot) > main > section:first-child > div > div:first-child {
+    width: 100%;
+}
+
+body:has(#desktop-auth-slot) > main > section:first-child > div > div:first-child > div:first-child {
+    display: block;
+    width: 100%;
+}
+
+body:has(#desktop-auth-slot) > main > section:first-child h2 {
+    max-width: none;
+    margin-left: -0.05em;
+    color: var(--title-cream) !important;
+    font-size: clamp(4.5rem, 14vw, 12.5rem);
+    line-height: 0.78;
+    letter-spacing: -0.065em;
+    text-transform: uppercase;
+    text-wrap: nowrap;
+}
+
+body:has(#desktop-auth-slot) > main > section:first-child h2 span {
+    display: block;
+    color: var(--title-gold) !important;
+    text-shadow: 0 0 22px rgba(211, 163, 66, 0.2);
+}
+
+body:has(#desktop-auth-slot) > main > section:first-child p.border-l-2 {
+    max-width: 42rem;
+    margin-top: clamp(2rem, 5vw, 4rem);
+    margin-left: clamp(0rem, 9vw, 9rem);
+    border-left-color: var(--title-wine) !important;
+    color: #d6c9c4 !important;
+}
+
+body:has(#desktop-auth-slot) > main > section:first-child .flex.flex-col {
+    margin-left: clamp(0rem, 9vw, 9rem);
+}
+
+body:has(#desktop-auth-slot) > main > section:first-child .flex.flex-wrap {
+    margin-left: clamp(0rem, 9vw, 9rem);
+    padding-top: 2rem;
+}
+
+body:has(#desktop-auth-slot) > main > section:first-child > div > div:last-child {
+    display: none;
+}
+
+body:has(#desktop-auth-slot) > main > section:not(:first-child) {
+    position: relative;
+    padding-block: clamp(5rem, 11vw, 10rem);
+}
+
+body:has(#desktop-auth-slot) > main > section:not(:first-child) > div {
+    width: min(78rem, calc(100% - 2rem));
+}
+
+section#features {
+    background: #17101a !important;
+}
+
+section#features > div {
+    display: grid;
+    grid-template-columns: minmax(12rem, 0.7fr) minmax(0, 1.8fr);
+    align-items: start;
+    gap: clamp(2rem, 7vw, 7rem);
+}
+
+section#features > div > div:first-child {
+    position: sticky;
+    top: 8rem;
+}
+
+section#features > div > div:last-child {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1px;
+    background: rgba(211, 163, 66, 0.24);
+}
+
+#features .parchment-panel {
+    min-height: 15rem;
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: #1d1420 !important;
+    box-shadow: none;
+}
+
+#features .parchment-panel:nth-child(2n) {
+    transform: translateY(3rem);
+    background: #24121b !important;
+}
+
+#features .parchment-panel:nth-child(3) {
+    transform: translateY(-1rem);
+}
+
+#features .parchment-panel:nth-child(4) {
+    transform: translateY(2rem);
+}
+
+#features .parchment-panel h3 {
+    min-height: auto;
+    color: var(--title-cream) !important;
+}
+
+#gameplay {
+    background:
+        linear-gradient(90deg, #0d0a11 0 50%, #18101a 50% 100%) !important;
+}
+
+#gameplay > div {
+    display: grid;
+    grid-template-columns: minmax(12rem, 0.72fr) minmax(0, 1.7fr);
+    align-items: start;
+    gap: clamp(2rem, 8vw, 8rem);
+}
+
+#gameplay > div > div:first-child {
+    position: sticky;
+    top: 8rem;
+}
+
+#gameplay .guild-board {
+    width: 100%;
+    margin-left: 0;
+    border: 0;
+    border-top: 1px solid rgba(211, 163, 66, 0.52);
+    border-radius: 0;
+    background: transparent !important;
+}
+
+#gameplay .guild-board-item {
+    min-height: 7rem;
+    border-bottom: 1px solid rgba(211, 163, 66, 0.2);
+    padding-block: 1.8rem;
+}
+
+#gameplay .guild-board-item > span {
+    color: var(--title-wine) !important;
+}
+
+#about .max-w-3xl {
+    max-width: 58rem;
+    margin-left: auto;
+    border-left-color: var(--title-gold);
+}
+
+#download > div {
+    max-width: 64rem;
+    margin-inline: auto;
+}
+
+@media (max-width: 767px) {
+    body:has(#desktop-auth-slot) > main > section:first-child {
+        min-height: auto;
+        align-items: center;
+        padding-top: 8rem;
+        padding-bottom: 4rem;
+    }
+
+    body:has(#desktop-auth-slot) > main > section:first-child::before {
+        top: 13%;
+        right: -25%;
+        width: 18rem;
+        height: 18rem;
+    }
+
+    body:has(#desktop-auth-slot) > main > section:first-child > div {
+        width: calc(100% - 2rem);
+        padding-left: 1rem;
+    }
+
+    body:has(#desktop-auth-slot) > main > section:first-child h2 {
+        font-size: clamp(3.2rem, 17vw, 6rem);
+        line-height: 0.84;
+        text-wrap: wrap;
+    }
+
+    body:has(#desktop-auth-slot) > main > section:first-child p.border-l-2,
+    body:has(#desktop-auth-slot) > main > section:first-child .flex.flex-col,
+    body:has(#desktop-auth-slot) > main > section:first-child .flex.flex-wrap {
+        margin-left: 0;
+    }
+
+    section#features > div,
+    #gameplay > div {
+        display: block;
+    }
+
+    section#features > div > div:first-child,
+    #gameplay > div > div:first-child {
+        position: static;
+    }
+
+    section#features > div > div:last-child {
+        grid-template-columns: 1fr;
+        margin-top: 2rem;
+    }
+
+    #features .parchment-panel:nth-child(n) {
+        transform: none;
+    }
+
+    #features .parchment-panel {
+        min-height: auto;
+    }
+
+    #gameplay {
+        background: #0d0a11 !important;
+    }
+}
+
+/* Final homepage containment pass: keep the atlas inside the viewport
+   even when earlier page-family rules add an editorial offset. */
+body:has(#desktop-auth-slot) > main > section:first-child h2 {
+    width: 100% !important;
+    max-width: none !important;
+}
+
+body:has(#desktop-auth-slot) #gameplay .guild-board {
+    width: min(100%, 58rem) !important;
+    max-width: 100%;
+    margin-left: 0 !important;
+    transform: none !important;
+}
+
+@media (max-width: 767px) {
+    body:has(#desktop-auth-slot) > main > section:first-child h2 {
+        width: 100% !important;
+    }
+}
+
+/* ─────────────────────────────────────────────────────────────
    MOONLIT ARCANA
    A celestial guild-map composition: ink, wine, old gold, and
    deliberate asymmetry replace the previous parchment treatment.
