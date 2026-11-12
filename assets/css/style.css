@@ -2402,3 +2402,364 @@ textarea:focus-visible {
         padding-inline: 0.75rem;
     }
 }
+
+/* ─────────────────────────────────────────────────────────────
+   MOONLIT ARCANA
+   A celestial guild-map composition: ink, wine, old gold, and
+   deliberate asymmetry replace the previous parchment treatment.
+   Functional markup, IDs, forms, and data hooks remain untouched.
+───────────────────────────────────────────────────────────── */
+:root {
+    --bg: #0a0d18;
+    --surface: #12182a;
+    --surface-soft: #171d31;
+    --surface-deep: #080b14;
+    --border: rgba(198, 157, 74, 0.26);
+    --border-hover: rgba(232, 198, 116, 0.82);
+    --gold: #c69d4a;
+    --gold-pale: #f0d48a;
+    --text: #f1eadb;
+    --text-muted: #c1bdc5;
+    --amethyst: #7d78b0;
+    --wine: #8d3f52;
+    --type-display: 'MedievalSharp', Georgia, serif;
+    --type-body: 'Crimson Pro', Georgia, 'Times New Roman', serif;
+    --type-ui: 'Alegreya Sans SC', 'Trebuchet MS', sans-serif;
+}
+
+html {
+    background: var(--bg);
+}
+
+body {
+    background-color: var(--bg) !important;
+    background-image:
+        radial-gradient(circle at 82% 7%, rgba(125, 120, 176, 0.16), transparent 25rem),
+        radial-gradient(circle at 8% 68%, rgba(141, 63, 82, 0.12), transparent 28rem),
+        linear-gradient(135deg, #0a0d18 0%, #111629 54%, #090b14 100%) !important;
+    color: var(--text) !important;
+    font-family: var(--type-body) !important;
+    font-size: 1.08rem;
+    letter-spacing: 0.006em;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.font-magic {
+    font-family: var(--type-display) !important;
+    font-weight: 400;
+    letter-spacing: 0.01em;
+}
+
+.logo-container .font-magic,
+header .font-magic,
+nav .font-magic {
+    font-family: 'MedievalSharp', Georgia, serif !important;
+    font-weight: 400;
+    letter-spacing: 0.035em;
+}
+
+.font-heading,
+label,
+button,
+.section-tag,
+.corp-badge,
+.corp-meta-chip {
+    font-family: var(--type-ui) !important;
+    letter-spacing: 0.04em;
+}
+
+.font-flavor {
+    font-family: var(--type-body) !important;
+    font-style: italic;
+}
+
+nav,
+#mobile-menu {
+    background: rgba(8, 11, 20, 0.94) !important;
+    border-color: rgba(198, 157, 74, 0.3) !important;
+    box-shadow: 0 14px 32px rgba(2, 4, 10, 0.42) !important;
+}
+
+nav a:not(.rune-btn):not(.iron-plaque-btn),
+#mobile-menu a {
+    color: #d3ccd1 !important;
+}
+
+nav a:not(.rune-btn):not(.iron-plaque-btn):hover,
+#mobile-menu a:hover {
+    color: var(--gold-pale) !important;
+}
+
+.text-white,
+.corp-title,
+section h2,
+section h3 {
+    color: var(--text) !important;
+}
+
+.text-gray-400,
+.text-gray-500,
+.text-gray-600,
+.parchment-panel p,
+.guild-board-item p,
+.corp-subtitle {
+    color: var(--text-muted) !important;
+}
+
+.text-ncst-gold,
+.text-ncst-neon,
+.text-neon,
+.text-gold-glow,
+.section-tag,
+.rune-counter-number {
+    color: var(--gold-pale) !important;
+}
+
+.parchment-panel,
+.glass-panel,
+.guild-board,
+.guild-board-item,
+.hero-art-frame,
+.corp-hero,
+.corp-card {
+    background: rgba(18, 24, 42, 0.92) !important;
+    border-color: rgba(125, 120, 176, 0.3);
+    box-shadow: 0 18px 42px rgba(2, 4, 10, 0.28);
+}
+
+.parchment-panel:hover,
+.glass-panel:hover {
+    border-color: var(--border-hover);
+}
+
+.rune-btn {
+    color: #11121a !important;
+    background: var(--gold) !important;
+    border-color: var(--gold) !important;
+    box-shadow: 5px 5px 0 rgba(141, 63, 82, 0.36);
+}
+
+.rune-btn:hover {
+    color: #11121a !important;
+    background: var(--gold-pale) !important;
+    border-color: var(--gold-pale) !important;
+    box-shadow: 2px 2px 0 rgba(141, 63, 82, 0.4);
+}
+
+.iron-plaque-btn {
+    color: var(--text) !important;
+    border-color: rgba(198, 157, 74, 0.66) !important;
+    background: rgba(10, 13, 24, 0.28) !important;
+}
+
+.iron-plaque-btn:hover {
+    color: var(--gold-pale) !important;
+    border-color: var(--gold-pale) !important;
+    background: rgba(141, 63, 82, 0.18) !important;
+}
+
+input[type="email"],
+input[type="password"],
+input[type="text"],
+input[type="number"],
+textarea,
+select {
+    color: var(--text) !important;
+    background: #0b0f1d !important;
+    border-color: rgba(125, 120, 176, 0.42) !important;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+    border-color: var(--gold) !important;
+}
+
+/* Home becomes a navigable celestial chart rather than a stack of
+   identical sections. */
+body:has(#desktop-auth-slot) > main > section {
+    position: relative;
+    isolation: isolate;
+}
+
+body:has(#desktop-auth-slot) > main > section:first-child {
+    min-height: min(54rem, 100vh);
+    overflow: clip;
+    background:
+        linear-gradient(90deg, rgba(10, 13, 24, 0.98) 0%, rgba(10, 13, 24, 0.86) 55%, rgba(23, 29, 49, 0.6) 100%) !important;
+}
+
+body:has(#desktop-auth-slot) > main > section:first-child > div {
+    width: min(76rem, calc(100% - 2rem));
+    border-left: 1px solid rgba(198, 157, 74, 0.46);
+    padding-left: clamp(1.25rem, 5vw, 5rem);
+}
+
+body:has(#desktop-auth-slot) > main > section:first-child h2 {
+    max-width: 8ch;
+    font-size: clamp(3.2rem, 8.5vw, 7.8rem);
+    line-height: 0.94;
+    text-shadow: 0 10px 24px rgba(2, 4, 10, 0.44);
+}
+
+body:has(#desktop-auth-slot) > main > section:first-child p {
+    max-width: 48ch;
+}
+
+body:has(#desktop-auth-slot) > main > section:not(:first-child) {
+    padding-block: clamp(4rem, 9vw, 8rem);
+}
+
+body:has(#desktop-auth-slot) > main > section:not(:first-child) > div {
+    width: min(76rem, calc(100% - 2rem));
+    padding-inline: clamp(1rem, 3vw, 2rem);
+}
+
+section#features,
+section#about {
+    background:
+        linear-gradient(105deg, rgba(18, 24, 42, 0.94), rgba(11, 15, 29, 0.82)) !important;
+    border-color: rgba(125, 120, 176, 0.24) !important;
+}
+
+section#gameplay,
+section#download {
+    background: rgba(8, 11, 20, 0.42) !important;
+}
+
+#features .parchment-panel {
+    border-top: 2px solid rgba(125, 120, 176, 0.56);
+    border-right: 0;
+    border-bottom: 0;
+    border-left: 1px solid rgba(125, 120, 176, 0.3);
+}
+
+#features .parchment-panel:nth-child(2n) {
+    border-top-color: var(--gold);
+    border-left-color: rgba(198, 157, 74, 0.4);
+}
+
+#features .parchment-panel h3 {
+    min-height: 2.8em;
+}
+
+#gameplay .guild-board {
+    width: min(100%, 58rem);
+    margin-left: clamp(0rem, 8vw, 7rem);
+    border-left: 3px solid var(--wine);
+}
+
+#gameplay .guild-board-item {
+    padding-block: 1.35rem;
+}
+
+#gameplay .guild-board-item:nth-child(2n) {
+    background: rgba(125, 120, 176, 0.06) !important;
+}
+
+#about .max-w-3xl {
+    max-width: 54rem;
+    margin-left: clamp(0rem, 9vw, 8rem);
+    border-left: 2px solid var(--gold);
+    padding-left: clamp(1.1rem, 3vw, 2.5rem);
+}
+
+#download > div {
+    max-width: 62rem;
+    text-align: left;
+}
+
+#download > div > .section-tag,
+#download > div > h2,
+#download > div > p,
+#download > div > .max-w-md {
+    margin-left: 0;
+}
+
+#contact {
+    max-width: 48rem;
+}
+
+body.corp-page > main {
+    width: min(76rem, calc(100% - 2rem));
+    margin-inline: auto;
+}
+
+body.corp-page .corp-hero {
+    border-left: 4px solid var(--wine);
+    border-radius: 0 var(--radius) var(--radius) 0;
+    background:
+        linear-gradient(115deg, rgba(23, 29, 49, 0.98), rgba(18, 24, 42, 0.86)) !important;
+}
+
+body.corp-page .corp-title {
+    max-width: 18ch;
+    font-size: clamp(2.1rem, 5vw, 4.3rem);
+    line-height: 1;
+}
+
+body.corp-page .corp-card {
+    border-top: 2px solid rgba(125, 120, 176, 0.48);
+}
+
+body.corp-page .corp-card:nth-child(2n) {
+    border-top-color: var(--gold);
+}
+
+#forgot-password-modal {
+    background: rgba(3, 5, 12, 0.82) !important;
+    backdrop-filter: blur(7px);
+}
+
+#forgot-password-modal > .parchment-panel {
+    background:
+        linear-gradient(145deg, rgba(23, 29, 49, 0.99), rgba(12, 17, 30, 0.99)) !important;
+    border-color: rgba(198, 157, 74, 0.62);
+}
+
+#forgot-password-modal h3,
+#forgot-password-modal label {
+    color: var(--gold-pale) !important;
+}
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+    outline: 2px solid var(--gold-pale) !important;
+    outline-offset: 3px;
+}
+
+@media (max-width: 767px) {
+    body:has(#desktop-auth-slot) > main > section:first-child > div {
+        width: calc(100% - 2rem);
+        padding-left: 1rem;
+    }
+
+    body:has(#desktop-auth-slot) > main > section:first-child h2 {
+        font-size: clamp(2.8rem, 14vw, 5rem);
+    }
+
+    #gameplay .guild-board,
+    #about .max-w-3xl {
+        margin-left: 0;
+    }
+
+    #download > div {
+        text-align: center;
+    }
+
+    #download > div > .section-tag,
+    #download > div > h2,
+    #download > div > p,
+    #download > div > .max-w-md {
+        margin-right: auto;
+        margin-left: auto;
+    }
+}
