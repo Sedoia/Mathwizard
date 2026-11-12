@@ -71,8 +71,34 @@ body {
     background-size: cover;
     color: var(--parch-faded);
     font-family: 'Crimson Text', Georgia, 'Times New Roman', serif;
-    font-size: 1.05rem;
+    font-size: 1rem;
+    line-height: 1.55;
     overflow-x: hidden;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: 'Cinzel', Georgia, serif;
+    line-height: 1.2;
+}
+
+.font-magic {
+    font-family: 'Cinzel', Georgia, serif !important;
+}
+
+.logo-container .font-magic,
+header .font-magic,
+nav .font-magic {
+    font-family: 'Cinzel Decorative', Georgia, serif !important;
+}
+
+.font-flavor {
+    font-family: 'Crimson Text', Georgia, 'Times New Roman', serif !important;
+    font-style: italic;
 }
 
 /* Profile page performance tuning */
