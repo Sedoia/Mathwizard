@@ -20,20 +20,36 @@
    CSS Custom Properties
 ───────────────────────────────────────────────────────────── */
 :root {
-    --gold:       #d4a843;
-    --gold-pale:  #f0d98a;
-    --parchment:  #e2c990;
-    --parch-faded:#c9aa7a;
-    --crimson:    #8b1a1a;
-    --dungeon:    #1a0e05;
-    --mahogany:   #2c1a0b;
-    --timber:     #3d2010;
-    --sage:       #2d6a4f;
-    --teal:       #1d6a5e;
-    --stone:      #3a2a1e;
-    --glow-gold:  rgba(212, 168, 67, 0.65);
-    --glow-crim:  rgba(139, 26, 26, 0.65);
-    --shadow-deep:rgba(0, 0, 0, 0.85);
+    --bg:          #150c05;
+    --surface:     #1f1309;
+    --border:      rgba(212, 168, 67, 0.18);
+    --border-hover:rgba(212, 168, 67, 0.45);
+    --gold:        #d4a843;
+    --text:        #c9aa7a;
+    --text-muted:  #b89a72;
+    --crimson:     #8b1a1a;
+    --sage:        #2d6a4f;
+    --teal:        #1d6a5e;
+    --radius:      3px;
+    --space-1:     4px;
+    --space-2:     8px;
+    --space-3:     16px;
+    --space-4:     24px;
+    --space-5:     40px;
+    --space-6:     64px;
+    --space-7:     96px;
+
+    /* Compatibility aliases retained for existing components. */
+    --gold-pale:   #f0d98a;
+    --parchment:   #e2c990;
+    --parch-faded: var(--text);
+    --dungeon:     var(--bg);
+    --mahogany:    #2c1a0b;
+    --timber:      #3d2010;
+    --stone:       #3a2a1e;
+    --glow-gold:   rgba(212, 168, 67, 0.65);
+    --glow-crim:   rgba(139, 26, 26, 0.65);
+    --shadow-deep: rgba(0, 0, 0, 0.85);
 }
 
 /* ─────────────────────────────────────────────────────────────
@@ -553,9 +569,9 @@ a { text-decoration: none; }
 /* ─────────────────────────────────────────────────────────────
    PARCHMENT-TONED OVERRIDES
 ───────────────────────────────────────────────────────────── */
-.text-gray-400 { color: #a08060 !important; }
-.text-gray-500 { color: #7a6040 !important; }
-.text-gray-600 { color: #5a4030 !important; }
+.text-gray-400,
+.text-gray-500,
+.text-gray-600 { color: var(--text-muted) !important; }
 .opacity-50    { opacity: 0.65; }
 
 /* ─────────────────────────────────────────────────────────────
@@ -1091,4 +1107,3 @@ button, a[role="button"] {
         padding: 1.1rem;
     }
 }
-
