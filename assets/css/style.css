@@ -2745,6 +2745,399 @@ body:has(#desktop-auth-slot) #gameplay .guild-board {
 }
 
 /* ─────────────────────────────────────────────────────────────
+   BALANCED ACADEMY
+   A quieter, more usable fantasy system. The fantasy identity
+   comes from the ink / parchment / brass palette and the content,
+   not oversized type or ornamental effects.
+───────────────────────────────────────────────────────────── */
+:root {
+    --academy-ink: #12131a;
+    --academy-ink-soft: #1a1b25;
+    --academy-panel: #20212b;
+    --academy-panel-raised: #262631;
+    --academy-line: rgba(224, 204, 164, 0.18);
+    --academy-line-strong: rgba(224, 204, 164, 0.38);
+    --academy-brass: #c3a064;
+    --academy-parchment: #eee7d9;
+    --academy-muted: #bdb8ae;
+    --academy-wine: #744657;
+    --type-display: 'Crimson Pro', Georgia, serif;
+    --type-body: 'DM Sans', 'Segoe UI', sans-serif;
+    --type-ui: 'DM Sans', 'Segoe UI', sans-serif;
+}
+
+html {
+    background: var(--academy-ink);
+}
+
+body {
+    background: var(--academy-ink) !important;
+    color: var(--academy-parchment) !important;
+    font-family: var(--type-body) !important;
+    font-size: 1rem;
+    letter-spacing: normal;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.font-magic {
+    font-family: var(--type-display) !important;
+    font-weight: 600;
+    letter-spacing: -0.015em;
+}
+
+.logo-container .font-magic,
+header .font-magic,
+nav .font-magic {
+    font-family: var(--type-display) !important;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+}
+
+.font-heading,
+label,
+button,
+.section-tag,
+.corp-badge,
+.corp-meta-chip {
+    font-family: var(--type-ui) !important;
+    letter-spacing: 0.02em;
+}
+
+.font-flavor {
+    font-family: var(--type-body) !important;
+    font-style: normal;
+    letter-spacing: normal;
+}
+
+body:has(#desktop-auth-slot) > main > section {
+    width: 100%;
+    background: var(--academy-ink) !important;
+}
+
+body:has(#desktop-auth-slot) > main > section > div {
+    width: min(72rem, calc(100% - 2rem)) !important;
+    max-width: 72rem !important;
+    padding-inline: 0 !important;
+    border-left: 0 !important;
+}
+
+body:has(#desktop-auth-slot) > main > section:first-child {
+    min-height: 0;
+    padding-top: clamp(8rem, 12vw, 11rem);
+    padding-bottom: clamp(5rem, 9vw, 8rem);
+    background:
+        radial-gradient(circle at 78% 28%, rgba(116, 70, 87, 0.15), transparent 25rem),
+        var(--academy-ink) !important;
+}
+
+body:has(#desktop-auth-slot) > main > section:first-child::before,
+body:has(#desktop-auth-slot) > main > section:first-child::after {
+    display: none;
+}
+
+body:has(#desktop-auth-slot) > main > section:first-child > div {
+    display: grid;
+    grid-template-columns: minmax(0, 1.12fr) minmax(17rem, 0.68fr);
+    align-items: center;
+    gap: clamp(3rem, 8vw, 8rem);
+}
+
+body:has(#desktop-auth-slot) > main > section:first-child > div > div {
+    grid-column: auto !important;
+    grid-row: auto !important;
+    width: auto !important;
+}
+
+body:has(#desktop-auth-slot) > main > section:first-child > div > div:first-child {
+    width: auto;
+}
+
+body:has(#desktop-auth-slot) > main > section:first-child h2 {
+    max-width: 10ch !important;
+    margin: 0 !important;
+    color: var(--academy-parchment) !important;
+    font-size: clamp(3.35rem, 6.3vw, 6.2rem) !important;
+    line-height: 0.92;
+    letter-spacing: -0.035em;
+    text-transform: none;
+    text-wrap: balance;
+}
+
+body:has(#desktop-auth-slot) > main > section:first-child h2 span {
+    display: inline;
+    color: var(--academy-brass) !important;
+    text-shadow: none;
+}
+
+body:has(#desktop-auth-slot) > main > section:first-child p.border-l-2 {
+    max-width: 38rem;
+    margin: 1.75rem 0 0 !important;
+    padding-left: 1rem;
+    border-left: 2px solid var(--academy-wine) !important;
+    color: var(--academy-muted) !important;
+    line-height: 1.7;
+}
+
+body:has(#desktop-auth-slot) > main > section:first-child .flex.flex-col {
+    margin: 2rem 0 0 !important;
+}
+
+body:has(#desktop-auth-slot) > main > section:first-child .flex.flex-wrap {
+    margin: 1.5rem 0 0 !important;
+    padding-top: 0;
+    color: var(--academy-muted) !important;
+}
+
+body:has(#desktop-auth-slot) > main > section:first-child > div > div:last-child {
+    display: block;
+}
+
+body:has(#desktop-auth-slot) .hero-art-frame {
+    max-width: none;
+    padding: 0;
+    border: 1px solid var(--academy-line-strong);
+    background: var(--academy-panel);
+    box-shadow: none;
+}
+
+body:has(#desktop-auth-slot) .hero-art-frame::before,
+body:has(#desktop-auth-slot) .hero-art-frame::after {
+    display: none;
+}
+
+body:has(#desktop-auth-slot) .hero-art-frame .art-slot {
+    min-height: 28rem;
+    border: 0 !important;
+    background:
+        linear-gradient(160deg, rgba(116, 70, 87, 0.28), transparent 48%),
+        var(--academy-panel) !important;
+}
+
+body:has(#desktop-auth-slot) .hero-art-frame .art-slot::before {
+    position: absolute;
+    top: 18%;
+    left: 18%;
+    width: 64%;
+    height: 64%;
+    border: 1px solid var(--academy-line-strong);
+    border-radius: 50%;
+    content: '';
+}
+
+body:has(#desktop-auth-slot) .hero-art-frame .art-slot::after {
+    position: absolute;
+    top: 30%;
+    left: 30%;
+    width: 40%;
+    height: 40%;
+    border: 1px solid rgba(195, 160, 100, 0.28);
+    border-radius: 50%;
+    content: '';
+}
+
+body:has(#desktop-auth-slot) .hero-art-frame .art-slot > div {
+    position: relative;
+    z-index: 1;
+    margin-top: auto;
+    width: 100%;
+    border-top: 1px solid var(--academy-line);
+    background: rgba(18, 19, 26, 0.75);
+}
+
+body:has(#desktop-auth-slot) > main > section:not(:first-child) {
+    padding-block: clamp(4.5rem, 8vw, 7rem);
+}
+
+body:has(#desktop-auth-slot) > main > section:not(:first-child) > div {
+    width: min(72rem, calc(100% - 2rem)) !important;
+}
+
+section#features {
+    border-top: 1px solid var(--academy-line);
+    border-bottom: 1px solid var(--academy-line);
+    background: var(--academy-ink-soft) !important;
+}
+
+section#features > div {
+    display: block;
+}
+
+section#features > div > div:first-child,
+#gameplay > div > div:first-child {
+    position: static;
+    max-width: 38rem;
+}
+
+section#features > div > div:last-child {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1rem;
+    margin-top: 2.5rem;
+    background: transparent;
+}
+
+#features .parchment-panel,
+#features .parchment-panel:nth-child(n) {
+    min-height: 0;
+    transform: none;
+    border: 1px solid var(--academy-line) !important;
+    border-top: 2px solid var(--academy-brass) !important;
+    border-radius: 2px !important;
+    background: var(--academy-panel) !important;
+    box-shadow: none !important;
+}
+
+#features .parchment-panel h3 {
+    color: var(--academy-parchment) !important;
+    line-height: 1.25;
+}
+
+#features .parchment-panel p,
+#gameplay .guild-board-item p {
+    color: var(--academy-muted) !important;
+    line-height: 1.6;
+}
+
+#gameplay {
+    background: var(--academy-ink) !important;
+}
+
+#gameplay > div {
+    display: grid;
+    grid-template-columns: minmax(13rem, 0.65fr) minmax(0, 1.35fr);
+    align-items: start;
+    gap: clamp(2.5rem, 8vw, 7rem);
+}
+
+#gameplay .guild-board {
+    width: 100% !important;
+    margin: 0 !important;
+    border: 1px solid var(--academy-line) !important;
+    border-top: 2px solid var(--academy-brass) !important;
+    border-radius: 2px;
+    background: var(--academy-panel) !important;
+}
+
+#gameplay .guild-board-item {
+    min-height: 0;
+    padding-block: 1.4rem;
+    border-bottom-color: var(--academy-line) !important;
+}
+
+#gameplay .guild-board-item:last-child {
+    border-bottom: 0;
+}
+
+#gameplay .guild-board-item > span {
+    min-width: 2.4rem;
+    color: var(--academy-brass) !important;
+    font-family: var(--type-display) !important;
+    font-size: 1.4rem;
+}
+
+#about {
+    border-top: 1px solid var(--academy-line);
+    background: var(--academy-ink-soft) !important;
+}
+
+#about .max-w-3xl {
+    max-width: 48rem;
+    margin-left: 0;
+    border-left: 2px solid var(--academy-wine);
+    padding-left: 1.25rem;
+}
+
+#download {
+    background: var(--academy-ink) !important;
+}
+
+#download > div {
+    max-width: 62rem;
+    text-align: left;
+}
+
+#download > div > .section-tag,
+#download > div > h2,
+#download > div > p,
+#download > div > .max-w-md {
+    margin-left: 0;
+}
+
+#contact {
+    max-width: none;
+    border-top-color: var(--academy-line) !important;
+}
+
+body:has(#desktop-auth-slot) footer {
+    background: #0e0f14 !important;
+    border-top-color: var(--academy-line) !important;
+}
+
+@media (max-width: 900px) {
+    body:has(#desktop-auth-slot) > main > section:first-child > div {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+    }
+
+    body:has(#desktop-auth-slot) > main > section:first-child > div > div {
+        width: 100% !important;
+    }
+
+    body:has(#desktop-auth-slot) .hero-art-frame {
+        max-width: 22rem;
+        width: 100%;
+    }
+
+    body:has(#desktop-auth-slot) .hero-art-frame .art-slot {
+        min-height: 20rem;
+    }
+
+    section#features > div > div:last-child {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 767px) {
+    body:has(#desktop-auth-slot) > main > section:first-child {
+        padding-top: 7rem;
+    }
+
+    body:has(#desktop-auth-slot) > main > section:first-child h2 {
+        max-width: 12ch !important;
+        font-size: clamp(3.1rem, 15vw, 4.5rem) !important;
+    }
+
+    body:has(#desktop-auth-slot) .hero-art-frame {
+        max-width: none;
+    }
+
+    section#features > div > div:last-child {
+        grid-template-columns: 1fr;
+    }
+
+    #gameplay > div {
+        display: block;
+    }
+
+    #gameplay .guild-board {
+        margin-top: 2rem !important;
+    }
+
+    #about .max-w-3xl {
+        padding-left: 1rem;
+    }
+
+    #download > div {
+        text-align: left;
+    }
+}
+
+/* ─────────────────────────────────────────────────────────────
    MOONLIT ARCANA
    A celestial guild-map composition: ink, wine, old gold, and
    deliberate asymmetry replace the previous parchment treatment.
