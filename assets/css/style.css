@@ -962,7 +962,7 @@ section h2.text-gold-glow::after {
     box-shadow: 0 10px 24px rgba(42, 33, 49, 0.08);
 }
 
-.parchment-panel > div:first-child {
+#features .parchment-panel > div:first-child {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -972,6 +972,49 @@ section h2.text-gold-glow::after {
     border: 1px solid rgba(184, 138, 59, 0.38);
     color: var(--gold) !important;
     font-size: 1.15rem;
+}
+
+#login-form .parchment-panel > div:first-child,
+#signup-form .parchment-panel > div:first-child {
+    display: block;
+    width: auto;
+    height: auto;
+    margin-bottom: 2rem;
+    border: 0;
+}
+
+#login-form .parchment-panel .text-center,
+#signup-form .parchment-panel .text-center {
+    text-align: center;
+}
+
+#login-form .parchment-panel h2,
+#signup-form .parchment-panel h2 {
+    display: block;
+    width: auto;
+    margin-bottom: 0.5rem;
+}
+
+#login-form .parchment-panel .text-center p,
+#signup-form .parchment-panel .text-center p {
+    display: block;
+    width: auto;
+    margin: 0;
+}
+
+#features .parchment-panel {
+    display: flex;
+    flex-direction: column;
+}
+
+#features .parchment-panel h3 {
+    min-height: 3.5rem;
+    display: flex;
+    align-items: flex-start;
+}
+
+#features .parchment-panel p {
+    flex: 1;
 }
 
 .parchment-panel p,
@@ -994,6 +1037,7 @@ section h2.text-gold-glow::after {
 .guild-board-item > span {
     color: var(--gold) !important;
     font-size: 1.4rem;
+    line-height: 1.1;
 }
 
 section#about .max-w-3xl {
