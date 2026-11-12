@@ -3,29 +3,29 @@
    "Adventurer's Guild" High Fantasy Theme
    ================================================================
    Palette:
-     Observatory Ink    #0b1220
-     Blue Slate         #121c2d
-     Archive Blue       #1d2c43
+     Twilight Ink       #17131f
+     Grimoire Plum      #241c2f
+     Ink Violet         #352744
      Signal Crimson     #a64552
-     Burnished Copper   #d98b5f
-     Moonstone          #e8edf5
-     Quiet Blue         #a9b5c7
-     Forest Sage        #4d9278
-     Arcane Teal        #3d8f8b
-     Smoked Slate       #26364d
+     Antique Brass      #d8b06a
+     Warm Parchment     #eee7dc
+     Faded Lilac        #b9aec3
+     Forest Sage        #5f927d
+     Arcane Teal        #4b8f89
+     Smoked Violet      #403451
    ================================================================ */
 
 /* ─────────────────────────────────────────────────────────────
    CSS Custom Properties
 ───────────────────────────────────────────────────────────── */
 :root {
-    --bg:          #0b1220;
-    --surface:     #121c2d;
-    --border:      rgba(169, 191, 216, 0.22);
-    --border-hover:rgba(217, 139, 95, 0.72);
-    --gold:        #d98b5f;
-    --text:        #d7dfeb;
-    --text-muted:  #a9b5c7;
+    --bg:          #17131f;
+    --surface:     #241c2f;
+    --border:      rgba(216, 176, 106, 0.22);
+    --border-hover:rgba(216, 176, 106, 0.68);
+    --gold:        #d8b06a;
+    --text:        #e3dcd2;
+    --text-muted:  #c0b5c6;
     --crimson:     #a64552;
     --sage:        #4d9278;
     --teal:        #3d8f8b;
@@ -39,14 +39,14 @@
     --space-7:     96px;
 
     /* Compatibility aliases retained for existing components. */
-    --gold-pale:   #f0c1a3;
-    --parchment:   #e8edf5;
+    --gold-pale:   #f1d59a;
+    --parchment:   #eee7dc;
     --parch-faded: var(--text);
     --dungeon:     var(--bg);
-    --mahogany:    #18263b;
-    --timber:      #1d2c43;
-    --stone:       #26364d;
-    --glow-gold:   rgba(217, 139, 95, 0.35);
+    --mahogany:    #2d2340;
+    --timber:      #352744;
+    --stone:       #403451;
+    --glow-gold:   rgba(216, 176, 106, 0.35);
     --glow-crim:   rgba(166, 69, 82, 0.35);
     --shadow-deep: rgba(3, 8, 18, 0.72);
 }
@@ -62,9 +62,9 @@ body {
     background-color: var(--dungeon);
     background-image:
         linear-gradient(
-            rgba(11, 18, 32, 0.94) 0%,
-            rgba(18, 28, 45, 0.96) 60%,
-            rgba(7, 12, 23, 0.98) 100%
+            rgba(23, 19, 31, 0.94) 0%,
+            rgba(36, 28, 47, 0.96) 60%,
+            rgba(14, 11, 20, 0.98) 100%
         );
     background-attachment: fixed;
     background-size: cover;
@@ -143,13 +143,13 @@ a { text-decoration: none; }
 ::-webkit-scrollbar { width: 12px; }
 
 ::-webkit-scrollbar-track {
-    background: #070c17;
+    background: #0e0b14;
     border-left: 1px solid var(--border);
     box-shadow: none;
 }
 
 ::-webkit-scrollbar-thumb {
-    background: #344863;
+    background: #4a3b59;
     border: 1px solid var(--border);
     border-radius: var(--radius);
     box-shadow: none;
@@ -269,8 +269,8 @@ a { text-decoration: none; }
     border-color: rgba(139,26,26,0.55);
 }
 .rune-btn-crimson:hover {
-    background: #c15c68;
-    border-color: #c15c68;
+    background: #bd5b68;
+    border-color: #bd5b68;
 }
 
 /* ─────────────────────────────────────────────────────────────
@@ -481,7 +481,7 @@ input[type="number"],
 textarea,
 select {
     border-radius: var(--radius) !important;
-    background-color: rgba(7, 12, 23, 0.72) !important;
+    background-color: rgba(14, 11, 20, 0.72) !important;
     color: var(--text) !important;
     border-color: var(--border) !important;
     font-family: 'Crimson Text', Georgia, serif !important;
@@ -508,7 +508,7 @@ textarea:focus-visible {
 
 input::placeholder,
 textarea::placeholder {
-    color: rgba(169, 181, 199, 0.7) !important;
+    color: rgba(192, 181, 198, 0.75) !important;
     font-style: italic;
 }
 
@@ -965,21 +965,21 @@ button, a[role="button"] {
 }
 
 /* ─────────────────────────────────────────────────────────────
-   MIDNIGHT OBSERVATORY PASS
-   Palette and quiet surfaces for the second visual system.
+   TWILIGHT GRIMOIRE PASS
+   A quiet fantasy palette with antique brass and ink-plum surfaces.
 ───────────────────────────────────────────────────────────── */
 nav,
 #mobile-menu {
-    background-color: rgba(11, 18, 32, 0.96) !important;
+    background-color: rgba(23, 19, 31, 0.96) !important;
     border-color: var(--border) !important;
 }
 
 nav {
-    box-shadow: 0 8px 24px rgba(3, 8, 18, 0.24) !important;
+    box-shadow: 0 8px 24px rgba(9, 6, 14, 0.28) !important;
 }
 
 #mobile-menu {
-    box-shadow: 0 12px 24px rgba(3, 8, 18, 0.28);
+    box-shadow: 0 12px 24px rgba(9, 6, 14, 0.3);
 }
 
 .text-white,
@@ -1025,7 +1025,7 @@ nav {
 }
 
 .bg-tech-grid {
-    opacity: 0.02;
+    opacity: 0.015;
 }
 
 .logo-image {
@@ -1044,7 +1044,7 @@ nav {
 .corp-badge {
     border-color: var(--border-hover);
     color: var(--gold-pale);
-    background: rgba(217, 139, 95, 0.08);
+    background: rgba(216, 176, 106, 0.08);
 }
 
 .corp-card h3,
@@ -1058,7 +1058,7 @@ nav {
 
 .tab-btn {
     color: var(--text-muted);
-    background: rgba(7, 12, 23, 0.48);
+    background: rgba(14, 11, 20, 0.48);
     border-color: var(--border);
 }
 
@@ -1066,7 +1066,7 @@ nav {
 .tab-btn.active {
     color: var(--gold);
     border-color: var(--border-hover);
-    background: rgba(217, 139, 95, 0.1);
+    background: rgba(216, 176, 106, 0.1);
     box-shadow: none;
 }
 
