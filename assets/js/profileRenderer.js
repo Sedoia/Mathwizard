@@ -114,6 +114,12 @@ class ProfileRenderer {
         // Update name and title
         const nameEl = document.getElementById('player-name') || document.querySelector('.font-magic.text-2xl');
         if (nameEl) nameEl.textContent = data.name;
+
+        const usernameEl = document.getElementById('player-username');
+        if (usernameEl) {
+            const username = data.username || window.authService?.getCurrentUser?.()?.username || '';
+            usernameEl.textContent = username ? `@${String(username).replace(/^@+/, '')}` : '';
+        }
         
         const titleEl = document.getElementById('player-role') || document.querySelector('.text-ncst-neon.text-sm.font-bold');
         if (titleEl) {

@@ -333,7 +333,18 @@
 
   async function loadOffers() {
     const response = await fetch(API_URL, { method: 'GET' });
-    const payload = await response.json();
+    const responseText = await response.text();
+    let payload;
+
+    try {
+      payload = JSON.parse(responseText);
+    } catch (error) {
+      throw new Error(
+        response.status === 404
+          ? 'Top-up offers are unavailable on this local server. Run this project with Netlify Dev or deploy it to Netlify to enable the payment function.'
+          : 'The top-up service returned an invalid response.'
+      );
+    }
 
     if (!response.ok || !payload.ok || !Array.isArray(payload.offers)) {
       throw new Error(payload.error || 'Unable to load offers.');

@@ -130,28 +130,59 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Reveal sections only when motion is enabled. Without JavaScript, content remains visible.
-    const motionQuery = window.matchMedia('(prefers-reduced-motion: no-preference)');
-    if (motionQuery.matches) {
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        };
-
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.remove('opacity-0', 'translate-y-5');
-                    observer.unobserve(entry.target);
-                }
-            });
-        }, observerOptions);
-
-        document.querySelectorAll('section').forEach(section => {
-            section.classList.add('opacity-0', 'translate-y-5', 'transition-all', 'duration-700');
-            observer.observe(section);
+    // Video button placeholder
+    const videoBtn = document.querySelector('.video-btn');
+    if (videoBtn) {
+        videoBtn.addEventListener('click', () => {
+            alert('Trailer coming soon! Subscribe to be notified.');
         });
     }
+
+    // Intersection Observer for animations on scroll
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateY(0)';
+            }
+        });
+    }, observerOptions);
+
+    // Observe all sections for fade-in effect
+    document.querySelectorAll('section').forEach(section => {
+        section.style.opacity = '0';
+        section.style.transform = 'translateY(20px)';
+        section.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+        observer.observe(section);
+    });
+
+    // Add hover effects to glass panels
+    const glassPanels = document.querySelectorAll('.glass-panel');
+    glassPanels.forEach(panel => {
+        panel.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-5px)';
+        });
+        panel.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0)';
+        });
+    });
+
+    // Enhanced button feedback
+    const buttons = document.querySelectorAll('button:not(.menu-toggle)');
+    buttons.forEach(button => {
+        button.addEventListener('click', function() {
+            // Add click feedback
+            this.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                this.style.transform = 'scale(1)';
+            }, 100);
+        });
+    });
 
     // Scroll navbar background on scroll
     const navbar = document.querySelector('nav');
@@ -161,11 +192,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
         
         if (scrollTop > 50) {
-            navbar.style.backgroundColor = 'rgba(21, 12, 5, 0.98)';
-            navbar.style.backdropFilter = 'none';
+            navbar.style.backgroundColor = 'rgba(5, 10, 20, 0.98)';
+            navbar.style.backdropFilter = 'blur(10px)';
         } else {
-            navbar.style.backgroundColor = 'rgba(21, 12, 5, 0.9)';
-            navbar.style.backdropFilter = 'none';
+            navbar.style.backgroundColor = 'rgba(5, 10, 20, 0.9)';
+            navbar.style.backdropFilter = 'blur(8px)';
         }
         
         lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
@@ -196,6 +227,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Console welcome message
-    console.log('%cMath Wizard', 'color: #d4a843; font-size: 24px; font-weight: bold;');
+    console.log('%cMath Wizard', 'color: #64ffda; font-size: 24px; font-weight: bold;');
     console.log('%cMaster Calculus Through Gaming', 'color: #FFD700; font-size: 14px;');
 });

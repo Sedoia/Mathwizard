@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Math Wizard - Sign Up / Login</title>
+    <link rel="shortcut icon" href="assets/img/logo.png" type="image/x-icon">
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="assets/js/tailwind-config.js"></script>
@@ -19,10 +20,10 @@
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Cinzel+Decorative:wght@400;700;900&family=Crimson+Text:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<body class="antialiased selection:bg-ncst-neon selection:text-ncst-dark">
+<body class="auth-page antialiased selection:bg-ncst-neon selection:text-ncst-dark">
 
     <div class="fixed inset-0 pointer-events-none z-0">
         <div class="absolute inset-0 bg-tech-grid"></div>
@@ -54,7 +55,7 @@
             <div id="login-form" class="animate-fadeInLeft">
                 <div class="parchment-panel p-6 sm:p-8">
                     <div class="text-center mb-8">
-                        <div class="mx-auto mb-4 text-3xl text-ncst-gold"><i class="fa-solid fa-hat-wizard"></i></div>
+                        <div class="wax-seal wax-seal-gold mx-auto mb-4"><i class="fa-solid fa-hat-wizard text-xl"></i></div>
                         <h2 class="font-magic text-3xl sm:text-4xl text-ncst-gold text-gold-glow mb-2">Welcome Back</h2>
                         <p class="font-flavor italic text-xs sm:text-sm" style="color:#a08060;">Return to your calculus adventure, adventurer</p>
                     </div>
@@ -102,7 +103,7 @@
             <div id="signup-form" class="hidden animate-fadeInRight">
                 <div class="parchment-panel p-8">
                     <div class="text-center mb-8">
-                        <div class="mx-auto mb-4 text-3xl text-ncst-gold"><i class="fa-solid fa-scroll"></i></div>
+                        <div class="wax-seal mx-auto mb-4"><i class="fa-solid fa-scroll text-xl"></i></div>
                         <h2 class="font-magic text-4xl text-ncst-gold text-gold-glow mb-2">Join the Academy</h2>
                         <p class="font-flavor italic text-sm" style="color:#a08060;">Forge your legend, adventurer</p>
                     </div>
@@ -168,13 +169,6 @@
                 </div>
             </div>
 
-            <!-- Info Box -->
-            <div class="mt-8 sm:mt-10 p-4 sm:p-5 parchment-panel border-l-4 border-ncst-gold">
-                <p class="font-flavor italic text-xs sm:text-sm">
-                    <i class="fa-solid fa-scroll text-ncst-gold mr-2"></i>
-                    Your Guild Charter is required to sync progress across all devices and unlock legendary achievements!
-                </p>
-            </div>
         </div>
     </main>
 
@@ -188,7 +182,7 @@
         <div class="parchment-panel p-6 sm:p-8 max-w-md w-full animate-fadeInLeft">
             <!-- Default State -->
             <div id="forgot-step-email" class="text-center">
-                <div class="mx-auto mb-6 text-3xl text-ncst-gold"><i class="fa-solid fa-key"></i></div>
+                <div class="wax-seal wax-seal-gold mx-auto mb-6"><i class="fa-solid fa-key"></i></div>
                 <h3 class="font-magic text-2xl sm:text-3xl text-ncst-gold text-gold-glow mb-2">Lost Your Spell?</h3>
                 <p class="font-flavor italic text-sm mb-6" style="color:#a08060;">Enter your scroll address and a raven shall deliver a restoration link.</p>
                 

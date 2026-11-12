@@ -160,6 +160,34 @@ class PlayerService {
         };
     }
 
+    syncPlayerIdentity(playerData, currentUser) {
+        if (!playerData || !currentUser) {
+            return { data: playerData, changed: false };
+        }
+
+        const canonicalName = String(currentUser.name || currentUser.username || '').trim();
+        const canonicalUsername = String(currentUser.username || '').trim();
+        const next = { ...playerData };
+        let changed = false;
+
+        if (canonicalName && next.name !== canonicalName) {
+            next.name = canonicalName;
+            changed = true;
+        }
+
+        if (canonicalUsername && next.username !== canonicalUsername) {
+            next.username = canonicalUsername;
+            changed = true;
+        }
+
+        if (currentUser.avatarUrl && next.avatarUrl !== currentUser.avatarUrl) {
+            next.avatarUrl = currentUser.avatarUrl;
+            changed = true;
+        }
+
+        return { data: next, changed };
+    }
+
     async initializePlayer(playerId) {
         try {
             await this._firebaseReady;
@@ -172,7 +200,12 @@ class PlayerService {
                 if (this.shouldResetNewAccountProgress(currentUser, cachedData)) {
                     sessionStorage.removeItem(`player_${playerId}`);
                 } else {
-                    this.currentPlayer = cachedData;
+                    const synced = this.syncPlayerIdentity(cachedData, currentUser);
+                    this.currentPlayer = synced.data;
+                    this.cachePlayer(playerId, this.currentPlayer);
+                    if (synced.changed) {
+                        await this.setPlayerDoc(playerId, synced.data, true);
+                    }
                     this.isInitialized = true;
                     return this.currentPlayer;
                 }
@@ -186,6 +219,12 @@ class PlayerService {
             } else if (this.shouldResetNewAccountProgress(currentUser, playerData)) {
                 playerData = this.buildCleanStarterData(playerId, currentUser);
                 await this.setPlayerDoc(playerId, playerData, false);
+            }
+
+            const synced = this.syncPlayerIdentity(playerData, currentUser);
+            playerData = synced.data;
+            if (synced.changed) {
+                await this.setPlayerDoc(playerId, playerData, true);
             }
 
             this.currentPlayer = playerData;

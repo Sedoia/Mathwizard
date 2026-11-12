@@ -1,6 +1,7 @@
 # OS
 .DS_Store
 Thumbs.db
+Desktop.ini
 
 # Python
 __pycache__/
@@ -11,9 +12,35 @@ venv/
 # Node
 node_modules/
 npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
 
 # Build / cache
 .netlify/
+dist/
+build/
+out/
+coverage/
+.cache/
+.parcel-cache/
+.turbo/
+.eslintcache
+*.tsbuildinfo
+*.log
+*.tmp
+*.temp
+*.bak
+*.swp
+*.swo
+
+# Local editor and assistant tooling
+.vscode/
+.idea/
+.history/
+.agents/
+.github/prompts/
+skills-lock.json
 
 # Secrets / keys
 *.pem
