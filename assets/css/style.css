@@ -3,33 +3,32 @@
    "Adventurer's Guild" High Fantasy Theme
    ================================================================
    Palette:
-     Deep Dungeon       #1a0e05
-     Aged Mahogany      #2c1a0b
-     Scorched Timber    #3d2010
-     Heraldic Crimson   #8b1a1a
-     Burnished Gold     #d4a843
-     Pale Candlelight   #f0d98a
-     Aged Parchment     #e2c990
-     Faded Parchment    #c9aa7a
-     Forest Sage        #2d6a4f
-     Arcane Teal        #1d6a5e
-     Smoked Stone       #3a2a1e
+     Observatory Ink    #0b1220
+     Blue Slate         #121c2d
+     Archive Blue       #1d2c43
+     Signal Crimson     #a64552
+     Burnished Copper   #d98b5f
+     Moonstone          #e8edf5
+     Quiet Blue         #a9b5c7
+     Forest Sage        #4d9278
+     Arcane Teal        #3d8f8b
+     Smoked Slate       #26364d
    ================================================================ */
 
 /* ─────────────────────────────────────────────────────────────
    CSS Custom Properties
 ───────────────────────────────────────────────────────────── */
 :root {
-    --bg:          #150c05;
-    --surface:     #1f1309;
-    --border:      rgba(212, 168, 67, 0.18);
-    --border-hover:rgba(212, 168, 67, 0.45);
-    --gold:        #d4a843;
-    --text:        #c9aa7a;
-    --text-muted:  #b89a72;
-    --crimson:     #8b1a1a;
-    --sage:        #2d6a4f;
-    --teal:        #1d6a5e;
+    --bg:          #0b1220;
+    --surface:     #121c2d;
+    --border:      rgba(169, 191, 216, 0.22);
+    --border-hover:rgba(217, 139, 95, 0.72);
+    --gold:        #d98b5f;
+    --text:        #d7dfeb;
+    --text-muted:  #a9b5c7;
+    --crimson:     #a64552;
+    --sage:        #4d9278;
+    --teal:        #3d8f8b;
     --radius:      3px;
     --space-1:     4px;
     --space-2:     8px;
@@ -40,16 +39,16 @@
     --space-7:     96px;
 
     /* Compatibility aliases retained for existing components. */
-    --gold-pale:   #f0d98a;
-    --parchment:   #e2c990;
+    --gold-pale:   #f0c1a3;
+    --parchment:   #e8edf5;
     --parch-faded: var(--text);
     --dungeon:     var(--bg);
-    --mahogany:    #2c1a0b;
-    --timber:      #3d2010;
-    --stone:       #3a2a1e;
-    --glow-gold:   rgba(212, 168, 67, 0.65);
-    --glow-crim:   rgba(139, 26, 26, 0.65);
-    --shadow-deep: rgba(0, 0, 0, 0.85);
+    --mahogany:    #18263b;
+    --timber:      #1d2c43;
+    --stone:       #26364d;
+    --glow-gold:   rgba(217, 139, 95, 0.35);
+    --glow-crim:   rgba(166, 69, 82, 0.35);
+    --shadow-deep: rgba(3, 8, 18, 0.72);
 }
 
 /* ─────────────────────────────────────────────────────────────
@@ -63,9 +62,9 @@ body {
     background-color: var(--dungeon);
     background-image:
         linear-gradient(
-            rgba(10, 4, 0, 0.88) 0%,
-            rgba(26, 14, 5, 0.92) 60%,
-            rgba(10, 4, 0, 0.96) 100%
+            rgba(11, 18, 32, 0.94) 0%,
+            rgba(18, 28, 45, 0.96) 60%,
+            rgba(7, 12, 23, 0.98) 100%
         );
     background-attachment: fixed;
     background-size: cover;
@@ -144,25 +143,22 @@ a { text-decoration: none; }
 ::-webkit-scrollbar { width: 12px; }
 
 ::-webkit-scrollbar-track {
-    background: #0a0400;
-    border-left: 2px solid #2c1a0b;
-    box-shadow: inset 0 0 4px rgba(0,0,0,0.9);
+    background: #070c17;
+    border-left: 1px solid var(--border);
+    box-shadow: none;
 }
 
 ::-webkit-scrollbar-thumb {
-    background:
-        linear-gradient(180deg, #4a3018 0%, #2a1808 40%, #4a3018 100%);
-    border: 1px solid rgba(212,168,67,0.3);
-    border-radius: 1px;
-    box-shadow:
-        inset 0 1px 0 rgba(212,168,67,0.25),
-        0 0 6px rgba(0,0,0,0.6);
+    background: #344863;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: none;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: linear-gradient(180deg, #6a4828 0%, #3a2808 40%, #6a4828 100%);
-    border-color: rgba(212,168,67,0.6);
-    box-shadow: 0 0 10px rgba(212,168,67,0.3);
+    background: var(--gold);
+    border-color: var(--gold);
+    box-shadow: none;
 }
 
 /* ─────────────────────────────────────────────────────────────
@@ -273,8 +269,8 @@ a { text-decoration: none; }
     border-color: rgba(139,26,26,0.55);
 }
 .rune-btn-crimson:hover {
-    background: #a52a2a;
-    border-color: #a52a2a;
+    background: #c15c68;
+    border-color: #c15c68;
 }
 
 /* ─────────────────────────────────────────────────────────────
@@ -303,7 +299,7 @@ a { text-decoration: none; }
 .iron-plaque-btn:hover {
     color: var(--gold-pale);
     border-color: var(--gold);
-    background: rgba(212,168,67,0.07);
+    background: rgba(217,139,95,0.1);
 }
 
 /* ─────────────────────────────────────────────────────────────
@@ -485,9 +481,9 @@ input[type="number"],
 textarea,
 select {
     border-radius: var(--radius) !important;
-    background-color: rgba(15, 7, 2, 0.80) !important;
-    color: #d4b896 !important;
-    border-color: rgba(212,168,67,0.25) !important;
+    background-color: rgba(7, 12, 23, 0.72) !important;
+    color: var(--text) !important;
+    border-color: var(--border) !important;
     font-family: 'Crimson Text', Georgia, serif !important;
     font-size: 1rem !important;
     min-height: 44px;
@@ -497,7 +493,7 @@ select {
 input:focus,
 select:focus,
 textarea:focus {
-    border-color: rgba(212,168,67,0.65) !important;
+    border-color: var(--gold) !important;
     box-shadow: none !important;
 }
 
@@ -512,7 +508,7 @@ textarea:focus-visible {
 
 input::placeholder,
 textarea::placeholder {
-    color: rgba(160,128,88,0.50) !important;
+    color: rgba(169, 181, 199, 0.7) !important;
     font-style: italic;
 }
 
@@ -965,5 +961,126 @@ button, a[role="button"] {
 
     .corp-card {
         padding: 1.1rem;
+    }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   MIDNIGHT OBSERVATORY PASS
+   Palette and quiet surfaces for the second visual system.
+───────────────────────────────────────────────────────────── */
+nav,
+#mobile-menu {
+    background-color: rgba(11, 18, 32, 0.96) !important;
+    border-color: var(--border) !important;
+}
+
+nav {
+    box-shadow: 0 8px 24px rgba(3, 8, 18, 0.24) !important;
+}
+
+#mobile-menu {
+    box-shadow: 0 12px 24px rgba(3, 8, 18, 0.28);
+}
+
+.text-white,
+.corp-title {
+    color: var(--parchment) !important;
+}
+
+.text-ncst-gold,
+.text-ncst-neon,
+.text-neon,
+.text-gold-glow,
+.section-tag,
+.rune-counter-number {
+    color: var(--gold) !important;
+}
+
+.bg-ncst-dark {
+    background-color: var(--bg) !important;
+}
+
+.bg-ncst-blue,
+.bg-ncst-stone {
+    background-color: var(--surface) !important;
+}
+
+.bg-ncst-neon {
+    background-color: var(--gold) !important;
+}
+
+.border-ncst-neon\/20,
+.border-ncst-neon\/50,
+.border-ncst-gold {
+    border-color: var(--border) !important;
+}
+
+.hover\:text-ncst-neon:hover {
+    color: var(--gold) !important;
+}
+
+.hover\:bg-ncst-gold:hover,
+.hover\:bg-ncst-neon:hover {
+    background-color: var(--gold-pale) !important;
+}
+
+.bg-tech-grid {
+    opacity: 0.02;
+}
+
+.logo-image {
+    filter: grayscale(0.18) saturate(0.78);
+}
+
+.logo-container:hover .logo-image {
+    filter: grayscale(0) saturate(0.95);
+}
+
+.nav-link::after {
+    background: var(--gold);
+    box-shadow: none;
+}
+
+.corp-badge {
+    border-color: var(--border-hover);
+    color: var(--gold-pale);
+    background: rgba(217, 139, 95, 0.08);
+}
+
+.corp-card h3,
+.corp-title {
+    color: var(--parchment);
+}
+
+.corp-subtitle {
+    color: var(--text-muted);
+}
+
+.tab-btn {
+    color: var(--text-muted);
+    background: rgba(7, 12, 23, 0.48);
+    border-color: var(--border);
+}
+
+.tab-btn:hover,
+.tab-btn.active {
+    color: var(--gold);
+    border-color: var(--border-hover);
+    background: rgba(217, 139, 95, 0.1);
+    box-shadow: none;
+}
+
+.section-line {
+    background: var(--border);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
     }
 }
