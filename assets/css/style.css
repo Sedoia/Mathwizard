@@ -782,6 +782,307 @@ textarea::placeholder {
 }
 
 /* ─────────────────────────────────────────────────────────────
+   VISUAL COMPOSITION PASS
+   Shared layout polish without changing functional markup.
+───────────────────────────────────────────────────────────── */
+body {
+    background-image:
+        radial-gradient(circle at 88% 8%, rgba(198, 164, 94, 0.1), transparent 22rem),
+        linear-gradient(180deg, #f7f3eb 0%, #fffdf8 48%, #f0eadf 100%);
+}
+
+nav {
+    min-height: 72px;
+    border-bottom-width: 1px !important;
+}
+
+nav .max-w-7xl {
+    min-height: 72px;
+}
+
+nav .logo-image {
+    width: 2.5rem;
+    height: 2.5rem;
+}
+
+nav a:not(.rune-btn):not(.iron-plaque-btn) {
+    color: var(--text-muted);
+}
+
+nav a:not(.rune-btn):not(.iron-plaque-btn):hover {
+    color: var(--gold);
+}
+
+nav .iron-plaque-btn {
+    min-height: 42px;
+    padding: 0.65rem 1rem;
+    font-size: 0.7rem;
+}
+
+main > section:first-child {
+    position: relative;
+    min-height: min(860px, 100vh);
+    padding-top: 7rem;
+    padding-bottom: 5rem;
+}
+
+main > section:first-child::before {
+    content: '∫  d/dx  ∑';
+    position: absolute;
+    right: 7%;
+    bottom: 8%;
+    color: rgba(138, 100, 36, 0.13);
+    font-family: 'Cinzel', Georgia, serif;
+    font-size: clamp(2rem, 5vw, 4.5rem);
+    letter-spacing: 0.28em;
+    pointer-events: none;
+}
+
+main > section:first-child > div {
+    position: relative;
+    z-index: 1;
+}
+
+main > section:first-child h2 {
+    max-width: 9ch;
+    color: var(--text) !important;
+    font-size: clamp(3.2rem, 7vw, 6.8rem);
+    letter-spacing: -0.035em;
+    line-height: 0.96;
+}
+
+main > section:first-child h2 .text-ncst-gold {
+    color: var(--gold) !important;
+}
+
+main > section:first-child p.border-l-2 {
+    max-width: 38rem;
+    border-left: 2px solid var(--gold) !important;
+    color: var(--text-muted) !important;
+    padding-left: 1.25rem;
+}
+
+main > section:first-child p.border-l-2 strong {
+    color: var(--text) !important;
+}
+
+.hero-art-frame {
+    padding: 0.45rem !important;
+    background: rgba(255, 253, 248, 0.76);
+    border-color: rgba(138, 100, 36, 0.32);
+    box-shadow: 14px 14px 0 rgba(138, 100, 36, 0.08);
+}
+
+.hero-art-frame .art-slot {
+    background:
+        linear-gradient(145deg, rgba(42, 33, 49, 0.96), rgba(74, 64, 82, 0.9)),
+        var(--surface) !important;
+    border-color: rgba(255, 253, 248, 0.2) !important;
+}
+
+.hero-art-frame .art-slot::before {
+    content: '✦';
+    position: absolute;
+    top: 18%;
+    right: 16%;
+    color: rgba(255, 253, 248, 0.72);
+    font-size: 4rem;
+}
+
+.hero-art-frame .art-slot::after {
+    content: '∫  ∂  π';
+    position: absolute;
+    top: 30%;
+    left: 12%;
+    color: rgba(198, 164, 94, 0.7);
+    font-family: 'Cinzel', Georgia, serif;
+    font-size: 1.15rem;
+    letter-spacing: 0.2em;
+}
+
+.hero-art-frame .art-slot > div {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    border-top: 1px solid rgba(255, 253, 248, 0.22);
+    background: rgba(42, 33, 49, 0.48);
+}
+
+section[id] {
+    scroll-margin-top: 5.5rem;
+}
+
+section#features,
+section#about {
+    background: rgba(238, 232, 220, 0.42) !important;
+    border-color: rgba(74, 64, 82, 0.14) !important;
+}
+
+section#features > div,
+section#gameplay > div,
+section#about > div,
+section#download > div {
+    max-width: 74rem;
+}
+
+.section-tag {
+    color: var(--gold) !important;
+    font-size: 0.68rem;
+    letter-spacing: 0.12em;
+}
+
+section h2,
+section h3 {
+    color: var(--text) !important;
+}
+
+section h2.text-gold-glow {
+    color: var(--text) !important;
+    text-shadow: none !important;
+}
+
+section h2.text-gold-glow::after {
+    content: '';
+    display: block;
+    width: 3.5rem;
+    height: 2px;
+    margin-top: 1rem;
+    background: var(--gold);
+}
+
+.parchment-panel {
+    min-height: 100%;
+    padding: 1.5rem !important;
+    border-color: rgba(74, 64, 82, 0.18);
+    box-shadow: 0 8px 20px rgba(42, 33, 49, 0.04);
+}
+
+.parchment-panel:hover {
+    border-color: rgba(138, 100, 36, 0.6);
+    box-shadow: 0 10px 24px rgba(42, 33, 49, 0.08);
+}
+
+.parchment-panel > div:first-child {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    margin-bottom: 1.25rem;
+    border: 1px solid rgba(184, 138, 59, 0.38);
+    color: var(--gold) !important;
+    font-size: 1.15rem;
+}
+
+.parchment-panel p,
+.guild-board-item p {
+    color: var(--text-muted) !important;
+    font-style: normal;
+}
+
+.guild-board {
+    padding: 1.25rem 1.5rem !important;
+    border-color: rgba(74, 64, 82, 0.2);
+    box-shadow: 0 8px 20px rgba(42, 33, 49, 0.04);
+}
+
+.guild-board-item {
+    background: transparent;
+    border-color: rgba(74, 64, 82, 0.14) !important;
+}
+
+.guild-board-item > span {
+    color: var(--gold) !important;
+    font-size: 1.4rem;
+}
+
+section#about .max-w-3xl {
+    padding-left: 1.25rem;
+    border-left: 2px solid var(--gold);
+}
+
+section#download .bounty-notice {
+    display: flex;
+    padding: 1.5rem;
+    border: 1px solid rgba(74, 64, 82, 0.18);
+    background: var(--surface);
+    box-shadow: 0 8px 20px rgba(42, 33, 49, 0.05);
+}
+
+section#download .bounty-notice:hover {
+    border-color: rgba(138, 100, 36, 0.6);
+}
+
+section#download .bounty-notice p {
+    color: var(--text-muted) !important;
+}
+
+section#download > div > div[style*="background"] {
+    border-color: rgba(74, 64, 82, 0.16) !important;
+    background: rgba(238, 232, 220, 0.55) !important;
+}
+
+#contact {
+    border-top-color: rgba(74, 64, 82, 0.18) !important;
+}
+
+footer {
+    background: #2a2131 !important;
+    border-top-color: rgba(198, 164, 94, 0.36) !important;
+}
+
+footer a,
+footer p {
+    color: rgba(255, 253, 248, 0.72) !important;
+}
+
+footer a:hover {
+    color: var(--gold-pale) !important;
+}
+
+@media (max-width: 768px) {
+    main > section:first-child {
+        min-height: auto;
+        padding-top: 8.5rem;
+        padding-bottom: 5rem;
+    }
+
+    main > section:first-child::before {
+        right: 5%;
+        bottom: 4%;
+        font-size: 1.8rem;
+    }
+
+    main > section:first-child h2 {
+        font-size: clamp(3rem, 14vw, 5rem);
+    }
+}
+
+@media (max-width: 640px) {
+    nav,
+    nav .max-w-7xl {
+        min-height: 64px;
+    }
+
+    main > section:first-child {
+        padding-top: 7rem;
+    }
+
+    main > section:first-child p.border-l-2 {
+        padding-left: 1rem;
+    }
+
+    .parchment-panel,
+    .guild-board {
+        padding: 1.25rem !important;
+    }
+
+    section#about .max-w-3xl {
+        padding-left: 1rem;
+    }
+}
+
+/* ─────────────────────────────────────────────────────────────
    TOUCH TARGETS
 ───────────────────────────────────────────────────────────── */
 button, a[role="button"] {
