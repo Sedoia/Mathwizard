@@ -34,6 +34,40 @@
     --glow-gold:  rgba(212, 168, 67, 0.65);
     --glow-crim:  rgba(139, 26, 26, 0.65);
     --shadow-deep:rgba(0, 0, 0, 0.85);
+
+    /* ── Candlelit study tokens (minimal redesign) ───────────── */
+    /* Surfaces */
+    --bg:           #150c05;
+    --surface:      #1f1309;
+    --border:       rgba(212, 168, 67, 0.18);
+    --border-hover: rgba(212, 168, 67, 0.45);
+
+    /* Text (contrast measured on --bg / --surface) */
+    --text:         #c9aa7a;   /* 8.8 / 8.2 */
+    --text-muted:   #b09878;   /* 7.0 / 6.6 */
+    --text-subtle:  #9c8466;   /* 5.4 / 5.1 */
+
+    /* Accent: CTAs, links and focus only */
+    --accent:       #d4a843;
+    --on-accent:    #150c05;   /* 8.7 on --accent */
+    --focus-ring:   2px solid #d4a843;
+
+    /* State colours: error, success, info only */
+    --state-error:   #e87070;  /* 6.4 on --bg */
+    --state-success: #5fb88a;  /* 8.0 on --bg */
+    --state-info:    #4fb3a5;
+
+    /* Shape */
+    --radius: 3px;
+
+    /* Spacing scale (px) */
+    --space-1: 4px;
+    --space-2: 8px;
+    --space-3: 16px;
+    --space-4: 24px;
+    --space-5: 40px;
+    --space-6: 64px;
+    --space-7: 96px;
 }
 
 /* ─────────────────────────────────────────────────────────────
@@ -553,9 +587,9 @@ a { text-decoration: none; }
 /* ─────────────────────────────────────────────────────────────
    PARCHMENT-TONED OVERRIDES
 ───────────────────────────────────────────────────────────── */
-.text-gray-400 { color: #a08060 !important; }
-.text-gray-500 { color: #7a6040 !important; }
-.text-gray-600 { color: #5a4030 !important; }
+.text-gray-400 { color: var(--text-muted) !important; }
+.text-gray-500 { color: var(--text-subtle) !important; }
+.text-gray-600 { color: var(--text-subtle) !important; }
 .opacity-50    { opacity: 0.65; }
 
 /* ─────────────────────────────────────────────────────────────
