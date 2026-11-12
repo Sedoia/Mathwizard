@@ -57,6 +57,15 @@
     --state-success: #5fb88a;  /* 8.0 on --bg */
     --state-info:    #4fb3a5;
 
+    /* Type scale (px): 14 / 16 / 18 / 24 / 32 / 48 / 72 */
+    --text-sm:   0.875rem;
+    --text-base: 1rem;
+    --text-lg:   1.125rem;
+    --text-xl:   1.5rem;
+    --text-2xl:  2rem;
+    --text-3xl:  3rem;
+    --text-hero: 4.5rem;
+
     /* Shape */
     --radius: 3px;
 
@@ -89,7 +98,8 @@ body {
     background-size: cover;
     color: var(--parch-faded);
     font-family: 'Crimson Text', Georgia, 'Times New Roman', serif;
-    font-size: 1.05rem;
+    font-size: var(--text-base);
+    line-height: 1.6;
     overflow-x: hidden;
 }
 
@@ -228,9 +238,9 @@ a { text-decoration: none; }
     min-height: 48px;
     font-family: 'Cinzel', Georgia, serif;
     font-weight: 700;
-    font-size: 0.78rem;
+    font-size: var(--text-sm);
     text-transform: uppercase;
-    letter-spacing: 0.14em;
+    letter-spacing: 0.12em;
     color: var(--on-accent);
     background: var(--accent);
     border: 1px solid var(--accent);
@@ -266,7 +276,7 @@ a { text-decoration: none; }
     min-height: 48px;
     font-family: 'Cinzel', Georgia, serif;
     font-weight: 600;
-    font-size: 0.78rem;
+    font-size: var(--text-sm);
     text-transform: uppercase;
     letter-spacing: 0.12em;
     color: var(--text);
@@ -361,9 +371,9 @@ a { text-decoration: none; }
     background: none;
     border-left: 0;
     font-family: 'Cinzel', serif;
-    font-size: 0.8rem;
+    font-size: var(--text-sm);
     font-weight: 600;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.04em;
     color: var(--accent);
     text-shadow: none;
 }
@@ -529,7 +539,7 @@ textarea::placeholder {
 }
 .rune-counter-number {
     font-family: 'Cinzel', serif;
-    font-size: 2.5rem;
+    font-size: var(--text-2xl);
     font-weight: 700;
     color: var(--gold);
     text-shadow: none;
@@ -538,8 +548,8 @@ textarea::placeholder {
 }
 .rune-counter-label {
     font-family: 'Cinzel', serif;
-    font-size: 0.75rem;
-    letter-spacing: 0.06em;
+    font-size: var(--text-sm);
+    letter-spacing: 0.02em;
     color: var(--text-muted);
     margin-top: 0.5rem;
 }
@@ -742,7 +752,7 @@ button, a[role="button"] {
 }
 
 @media (max-width: 640px) {
-    body { font-size: 0.95rem; }
+    body { font-size: var(--text-base); }
     .glass-panel, .parchment-panel { padding: 1rem; }
     h2, h3 { font-size: 1.5rem; }
     button, input[type="button"], input[type="submit"] {
@@ -804,7 +814,7 @@ button, a[role="button"] {
 .corp-subtitle {
     margin-top: 0.8rem;
     color: var(--text-muted);
-    max-width: 70ch;
+    max-width: 65ch;
 }
 
 .corp-meta {
@@ -929,4 +939,47 @@ summary:focus-visible {
         transition-duration: 0.01ms !important;
         scroll-behavior: auto !important;
     }
+}
+
+
+/* ─────────────────────────────────────────────────────────────
+   TYPOGRAPHY: Cinzel for headings, Crimson Text for body.
+   Cinzel Decorative is kept for the logo wordmark only.
+   !important is needed because Tailwind's CDN styles load after this file.
+───────────────────────────────────────────────────────────── */
+h1, h2, h3, h4, h5, h6 { font-family: 'Cinzel', Georgia, serif; }
+
+.font-magic { font-family: 'Cinzel', Georgia, serif !important; }
+nav h1.font-magic { font-family: 'Cinzel Decorative', 'Cinzel', Georgia, serif !important; }
+
+/* IM Fell English was dropped; captions use the body face in italic */
+.font-flavor {
+    font-family: 'Crimson Text', Georgia, serif !important;
+    font-style: italic;
+}
+
+/* Sentence case for titles and labels, no wide tracking */
+.uppercase {
+    text-transform: none !important;
+    letter-spacing: normal !important;
+}
+h2, h3, h4, h5, h6, label, th { letter-spacing: normal !important; }
+
+/* Tracked uppercase stays for buttons and the logo tagline */
+button.uppercase,
+.rune-btn.uppercase,
+.iron-plaque-btn.uppercase,
+.tab-btn.uppercase,
+.profile-tab.uppercase,
+nav p.uppercase {
+    text-transform: uppercase !important;
+    letter-spacing: 0.12em !important;
+}
+
+/* Readable line length (about 65 characters) */
+main p:not([class*="max-w-"]) { max-width: 65ch; }
+.text-center p:not([class*="max-w-"]),
+p.text-center:not([class*="max-w-"]) {
+    margin-left: auto;
+    margin-right: auto;
 }
