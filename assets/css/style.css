@@ -2015,6 +2015,16 @@ body > main > section.parchment-panel input {
     background: rgba(16, 12, 24, 0.72) !important;
 }
 
+/* Reset-state headings must stay inside the narrow recovery panel. */
+body:has(#reset-title) > main > section.parchment-panel h2 {
+    max-width: 100%;
+    margin-inline: auto;
+    font-size: clamp(2rem, 6vw, 3rem) !important;
+    line-height: 1.12;
+    overflow-wrap: break-word;
+    word-break: normal;
+}
+
 /* Profile and admin: make the operational content feel like one console. */
 .profile-page main,
 body > main:has(#admin-name) {
