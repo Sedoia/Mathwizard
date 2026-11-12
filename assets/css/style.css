@@ -1745,7 +1745,7 @@ select {
         transition-duration: 0.01ms !important;
     }
 }
- 
+
 /* Final palette precedence for the composition utilities above. */
 body {
     background-color: var(--bg) !important;
