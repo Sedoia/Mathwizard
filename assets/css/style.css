@@ -1,6 +1,6 @@
 /* ================================================================
-   MATH WIZARD — GRAND MAGIC ACADEMY
-   "Adventurer's Guild" High Fantasy Theme
+   MATH WIZARD — WHITE GOLD EDITION
+   Calm, editorial learning portal
    ================================================================
    Palette:
      Deep Dungeon       #1a0e05
@@ -20,20 +20,20 @@
    CSS Custom Properties
 ───────────────────────────────────────────────────────────── */
 :root {
-    --gold:       #d4a843;
-    --gold-pale:  #f0d98a;
-    --parchment:  #e2c990;
-    --parch-faded:#c9aa7a;
-    --crimson:    #8b1a1a;
-    --dungeon:    #1a0e05;
-    --mahogany:   #2c1a0b;
-    --timber:     #3d2010;
-    --sage:       #2d6a4f;
-    --teal:       #1d6a5e;
-    --stone:      #3a2a1e;
-    --glow-gold:  rgba(212, 168, 67, 0.65);
-    --glow-crim:  rgba(139, 26, 26, 0.65);
-    --shadow-deep:rgba(0, 0, 0, 0.85);
+    --gold:       #b38728;
+    --gold-pale:  #c59a3d;
+    --parchment:  #fffdf8;
+    --parch-faded:#6b6255;
+    --crimson:    #a0443f;
+    --dungeon:    #fffdf8;
+    --mahogany:   #f4efe4;
+    --timber:     #eee8dc;
+    --sage:       #496b58;
+    --teal:       #397277;
+    --stone:      #e5ded0;
+    --glow-gold:  transparent;
+    --glow-crim:  transparent;
+    --shadow-deep:rgba(41, 35, 25, 0.12);
 }
 
 /* ─────────────────────────────────────────────────────────────
@@ -43,17 +43,16 @@ html {
     scroll-behavior: smooth;
 }
 
+main section[id] {
+    scroll-margin-top: 5rem;
+}
+
 body {
     background-color: var(--dungeon);
-    background-image:
-        linear-gradient(
-            rgba(10, 4, 0, 0.88) 0%,
-            rgba(26, 14, 5, 0.92) 60%,
-            rgba(10, 4, 0, 0.96) 100%
-        );
+    background-image: linear-gradient(180deg, #fffdf8 0%, #faf7f0 100%);
     background-attachment: fixed;
     background-size: cover;
-    color: var(--parch-faded);
+    color: #39352f;
     font-family: 'Crimson Text', Georgia, 'Times New Roman', serif;
     font-size: 1.05rem;
     overflow-x: hidden;
@@ -102,25 +101,22 @@ a { text-decoration: none; }
 ::-webkit-scrollbar { width: 12px; }
 
 ::-webkit-scrollbar-track {
-    background: #0a0400;
-    border-left: 2px solid #2c1a0b;
-    box-shadow: inset 0 0 4px rgba(0,0,0,0.9);
+    background: #f4efe4;
+    border-left: 1px solid #e5ded0;
+    box-shadow: none;
 }
 
 ::-webkit-scrollbar-thumb {
-    background:
-        linear-gradient(180deg, #4a3018 0%, #2a1808 40%, #4a3018 100%);
-    border: 1px solid rgba(212,168,67,0.3);
-    border-radius: 1px;
-    box-shadow:
-        inset 0 1px 0 rgba(212,168,67,0.25),
-        0 0 6px rgba(0,0,0,0.6);
+    background: #c9a65a;
+    border: 1px solid #b38728;
+    border-radius: 8px;
+    box-shadow: none;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: linear-gradient(180deg, #6a4828 0%, #3a2808 40%, #6a4828 100%);
-    border-color: rgba(212,168,67,0.6);
-    box-shadow: 0 0 10px rgba(212,168,67,0.3);
+    background: #b38728;
+    border-color: #9a721c;
+    box-shadow: none;
 }
 
 /* ─────────────────────────────────────────────────────────────
@@ -884,6 +880,270 @@ textarea::placeholder {
         padding: 0.85rem 1rem;
     }
 
+    /* ─────────────────────────────────────────────────────────────
+       WHITE GOLD SYSTEM OVERRIDES
+       Keeps the existing HTML and JavaScript contracts intact while
+       replacing the legacy fantasy treatment with a quiet editorial UI.
+    ───────────────────────────────────────────────────────────── */
+    body {
+        color: #39352f;
+        letter-spacing: 0.01em;
+    }
+
+    body::before {
+        content: '';
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: -1;
+        background: linear-gradient(135deg, rgba(179, 135, 40, 0.035), transparent 38%);
+    }
+
+    .fixed.inset-0.pointer-events-none.z-0 > div:not(.bg-tech-grid) {
+        display: none !important;
+    }
+
+    .bg-tech-grid {
+        opacity: 0.45;
+        mask-image: none;
+        background-size: 72px 72px;
+    }
+
+    nav,
+    nav[style] {
+        background: rgba(255, 253, 248, 0.96) !important;
+        border-color: #e5ded0 !important;
+        box-shadow: 0 1px 12px rgba(66, 54, 35, 0.08) !important;
+        backdrop-filter: blur(12px);
+    }
+
+    #mobile-menu {
+        background: rgba(255, 253, 248, 0.98) !important;
+        border-color: #e5ded0 !important;
+    }
+
+    body .text-white,
+    body .hover\:text-white:hover {
+        color: #292621 !important;
+    }
+
+    .drop-shadow-lg,
+    [class*="drop-shadow-"] {
+        filter: none !important;
+    }
+
+    .animate-ember,
+    .animate-bounce {
+        animation: none !important;
+    }
+
+    .text-gray-300 { color: #6b6255 !important; }
+    .text-gray-400 { color: #71695d !important; }
+    .text-gray-500 { color: #8a8173 !important; }
+    .text-gray-600 { color: #5c554b !important; }
+
+    .bg-ncst-dark,
+    .bg-ncst-dark\/40,
+    .bg-ncst-dark\/50,
+    .bg-ncst-dark\/60 {
+        background-color: #f7f3eb !important;
+    }
+
+    .bg-ncst-blue\/10,
+    .bg-ncst-blue\/20 {
+        background-color: #f7f3eb !important;
+    }
+
+    .bg-ncst-neon\/10,
+    .bg-ncst-neon\/20 {
+        background-color: #fbf5e8 !important;
+    }
+
+    .parchment-panel,
+    .glass-panel,
+    .corp-hero,
+    .corp-card {
+        background: #ffffff !important;
+        border: 1px solid #e5ded0 !important;
+        border-radius: 14px !important;
+        box-shadow: 0 10px 28px rgba(66, 54, 35, 0.07) !important;
+    }
+
+    .parchment-panel::before,
+    .parchment-panel::after,
+    .guild-board::before,
+    .guild-board-item::before,
+    .guild-board-item::after {
+        display: none;
+    }
+
+    .parchment-panel:hover,
+    .glass-panel:hover {
+        border-color: #c9a65a !important;
+        box-shadow: 0 14px 32px rgba(66, 54, 35, 0.1) !important;
+        background: #ffffff !important;
+    }
+
+    .guild-board {
+        background: #f4efe4;
+        border: 1px solid #e5ded0;
+        box-shadow: 0 10px 28px rgba(66, 54, 35, 0.07);
+    }
+
+    .hero-art-frame {
+        background: #f4efe4;
+        border: 1px solid #c9a65a;
+        border-radius: 18px;
+        box-shadow: 0 18px 36px rgba(66, 54, 35, 0.1);
+        padding: 0.45rem !important;
+    }
+
+    .hero-art-frame::before {
+        background: linear-gradient(145deg, rgba(255,255,255,0.5), transparent 55%);
+    }
+
+    .hero-art-frame .art-slot {
+        background: #fffdf8;
+        border-radius: 13px;
+    }
+
+    .hero-art-frame img {
+        opacity: 0.12 !important;
+        filter: sepia(0.15) saturate(0.65) !important;
+    }
+
+    .hero-art-frame .font-magic {
+        color: #292621 !important;
+        text-shadow: none !important;
+    }
+
+    .guild-board-item {
+        background: #fffdf8;
+        border-color: #e5ded0 !important;
+        border-radius: 12px;
+    }
+
+    .guild-board-item img {
+        opacity: 0.08 !important;
+        filter: sepia(0.15) saturate(0.6) !important;
+    }
+
+    .guild-board-item .font-heading {
+        color: #292621 !important;
+    }
+
+    .guild-board-item .text-xs {
+        color: #71695d !important;
+    }
+
+    .rune-btn,
+    .iron-plaque-btn {
+        border-radius: 8px;
+        animation: none !important;
+        text-shadow: none !important;
+        box-shadow: none !important;
+    }
+
+    .rune-btn {
+        color: #ffffff;
+        background: #b38728;
+        border: 1px solid #a4771d;
+    }
+
+    .rune-btn:hover {
+        color: #ffffff;
+        background: #9f741e;
+        border-color: #8e6818;
+        transform: translateY(-1px);
+        box-shadow: 0 5px 12px rgba(126, 91, 20, 0.18) !important;
+    }
+
+    .iron-plaque-btn {
+        color: #625944;
+        background: #ffffff;
+        border-color: #c9a65a;
+    }
+
+    .iron-plaque-btn:hover {
+        color: #7d5e18;
+        background: #fffaf0;
+        border-color: #b38728;
+        transform: translateY(-1px);
+        box-shadow: 0 5px 12px rgba(126, 91, 20, 0.1) !important;
+    }
+
+    .text-gold-glow,
+    .runic-glow,
+    .section-tag,
+    .ornate-hr-diamond {
+        text-shadow: none !important;
+    }
+
+    .text-gold-glow { color: #9a721c !important; }
+    .section-tag {
+        background: #fbf5e8;
+        border-left-color: #b38728;
+    }
+
+    .logo-image,
+    .logo-container:hover .logo-image {
+        filter: none;
+    }
+
+    input[type="email"],
+    input[type="password"],
+    input[type="text"],
+    input[type="number"],
+    textarea,
+    select {
+        background: #fffdfa !important;
+        color: #292621 !important;
+        border: 1px solid #d8cdbb !important;
+        border-radius: 8px !important;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+        border-color: #b38728 !important;
+        box-shadow: 0 0 0 3px rgba(179, 135, 40, 0.14) !important;
+    }
+
+    input::placeholder,
+    textarea::placeholder {
+        color: #9a9183 !important;
+    }
+
+    .wax-seal,
+    .wax-seal-gold {
+        box-shadow: none !important;
+        background: #f7edcf !important;
+        border-color: #c9a65a !important;
+        color: #9a721c !important;
+    }
+
+    .corp-title,
+    .corp-card h3 {
+        color: #292621;
+    }
+
+    .corp-subtitle,
+    .corp-card p,
+    .corp-card li {
+        color: #625b50;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+            animation-duration: 0.01ms !important;
+            animation-iteration-count: 1 !important;
+            scroll-behavior: auto !important;
+            transition-duration: 0.01ms !important;
+        }
+    }
+
     .auth-notification-title {
         font-size: 0.84rem;
     }
@@ -1092,3 +1352,343 @@ button, a[role="button"] {
     }
 }
 
+/* Final light-theme corrections for legacy components. */
+.rune-counter {
+    background: #ffffff !important;
+    border: 1px solid #e5ded0 !important;
+    border-radius: 12px !important;
+    box-shadow: 0 8px 22px rgba(66, 54, 35, 0.07) !important;
+    animation: none !important;
+}
+
+.rune-counter-number {
+    color: #a97916 !important;
+    text-shadow: none !important;
+    animation: none !important;
+}
+
+.rune-counter-label {
+    color: #756a5a !important;
+    opacity: 1 !important;
+}
+
+.guild-board-item {
+    background: #fffdf8 !important;
+    border-color: #e5ded0 !important;
+    box-shadow: 0 8px 22px rgba(66, 54, 35, 0.06) !important;
+}
+
+.auth-page main,
+body:has(#login-form) > main {
+    align-items: flex-start !important;
+    padding-top: 8.5rem !important;
+    padding-bottom: 4rem !important;
+}
+
+.auth-page footer,
+body:has(#login-form) > footer {
+    background: #f4efe4 !important;
+    border-color: #e5ded0 !important;
+}
+
+.about-page .bg-img-scroll,
+.about-page .bg-img-beam-small,
+.about-page .bg-img-plank-2 {
+    background: #ffffff !important;
+    border: 1px solid #e5ded0 !important;
+    border-radius: 14px !important;
+    box-shadow: 0 10px 28px rgba(66, 54, 35, 0.07) !important;
+}
+
+.about-page .section-tag {
+    color: #8f6918 !important;
+    background: #fffaf0 !important;
+    border-color: #c9a65a !important;
+}
+
+.about-page .about-copy {
+    color: #4f4a42 !important;
+}
+
+.about-page .about-copy .text-ncst-neon {
+    color: #8f6918 !important;
+}
+
+.about-page .about-supporting-copy {
+    color: #4f4a42 !important;
+    background: #f7f3eb !important;
+    border: 1px solid #dfd1b8 !important;
+}
+
+.about-page .bg-img-plank-2 .text-white,
+.about-page .bg-img-plank-2 .text-gray-200,
+.about-page .bg-img-scroll .text-white,
+.about-page .bg-img-scroll .text-gray-300 {
+    color: #292621 !important;
+}
+
+/* Use the homepage logo lockup as the shared brand standard. */
+nav .logo-container {
+    gap: 0.5rem !important;
+}
+
+nav a:has(> img.logo-image) {
+    gap: 0.5rem !important;
+}
+
+nav img.logo-image {
+    width: 2rem !important;
+    height: 2rem !important;
+}
+
+nav h1 {
+    font-family: 'Cinzel Decorative', Georgia, serif !important;
+    font-size: 1.125rem !important;
+    line-height: 1.5556 !important;
+    letter-spacing: 0.1em !important;
+}
+
+nav p {
+    font-size: 0.5rem !important;
+    line-height: 1.5 !important;
+    letter-spacing: 0.2em !important;
+}
+
+nav > div:first-child {
+    height: 4rem !important;
+}
+
+@media (min-width: 640px) {
+    nav .logo-container {
+        gap: 0.75rem !important;
+    }
+
+    nav a:has(> img.logo-image) {
+        gap: 0.75rem !important;
+    }
+
+    nav img.logo-image {
+        width: 2.5rem !important;
+        height: 2.5rem !important;
+    }
+
+    nav h1 {
+        font-size: 1.25rem !important;
+        line-height: 1.4 !important;
+    }
+
+    nav p {
+        font-size: 0.6rem !important;
+        line-height: 1.5 !important;
+    }
+
+    nav > div:first-child {
+        height: 5rem !important;
+    }
+}
+
+/* Keep late-loaded utility styles from reintroducing white-on-white headings. */
+body h1.text-white,
+body h2.text-white,
+body h3.text-white,
+body p.text-white {
+    color: #292621 !important;
+}
+
+/* Global final layer: these tokens must apply on every viewport. */
+body {
+    background-color: #fffdf8 !important;
+    background-image: linear-gradient(180deg, #fffdf8 0%, #faf7f0 100%) !important;
+    color: #39352f !important;
+}
+
+nav,
+nav[style] {
+    background: rgba(255, 253, 248, 0.96) !important;
+    border-color: #e5ded0 !important;
+    box-shadow: 0 1px 12px rgba(66, 54, 35, 0.08) !important;
+}
+
+.parchment-panel,
+.glass-panel,
+.corp-hero,
+.corp-card {
+    background: #ffffff !important;
+    border: 1px solid #e5ded0 !important;
+    border-radius: 14px !important;
+    box-shadow: 0 10px 28px rgba(66, 54, 35, 0.07) !important;
+}
+
+.hero-art-frame {
+    background: #f4efe4 !important;
+    border: 1px solid #c9a65a !important;
+    border-radius: 18px !important;
+    box-shadow: 0 18px 36px rgba(66, 54, 35, 0.1) !important;
+}
+
+.hero-art-frame::before {
+    background: linear-gradient(145deg, rgba(255,255,255,0.5), transparent 55%) !important;
+}
+
+.hero-art-frame .art-slot {
+    background: #fffdf8 !important;
+    border-radius: 13px;
+}
+
+.hero-art-frame img,
+.guild-board-item img {
+    opacity: 0.08 !important;
+    filter: sepia(0.15) saturate(0.65) !important;
+}
+
+.hero-art-frame .font-magic,
+.guild-board-item .font-heading {
+    color: #292621 !important;
+    text-shadow: none !important;
+}
+
+.guild-board {
+    background: #f4efe4 !important;
+    border: 1px solid #e5ded0 !important;
+    border-radius: 14px !important;
+    box-shadow: 0 10px 28px rgba(66, 54, 35, 0.07) !important;
+}
+
+.guild-board-item {
+    background: #fffdf8 !important;
+    border-color: #e5ded0 !important;
+    border-radius: 12px;
+}
+
+.tab-btn {
+    color: #756a5a !important;
+    background: #f7f3eb !important;
+    border-color: #dfd1b8 !important;
+    border-radius: 8px !important;
+    box-shadow: none !important;
+}
+
+.tab-btn:hover,
+.tab-btn.active {
+    color: #8f6918 !important;
+    background: #fffaf0 !important;
+    border-color: #c9a65a !important;
+    box-shadow: none !important;
+}
+
+.corp-title,
+.corp-card h3 {
+    color: #292621 !important;
+}
+
+.corp-subtitle,
+.corp-card p,
+.corp-card li,
+.corp-footer small {
+    color: #625b50 !important;
+}
+
+.corp-meta-chip {
+    color: #496b58 !important;
+    background: #eef4ef !important;
+    border-color: #b7cdbb !important;
+}
+
+body .text-white,
+body .hover\:text-white:hover {
+    color: #292621 !important;
+}
+
+.text-gold-glow,
+.runic-glow,
+.section-tag,
+.ornate-hr-diamond {
+    text-shadow: none !important;
+}
+
+.text-gold-glow {
+    color: #9a721c !important;
+}
+
+.drop-shadow-lg,
+[class*="drop-shadow-"] {
+    filter: none !important;
+}
+
+.animate-ember,
+.animate-bounce {
+    animation: none !important;
+}
+
+input[type="email"],
+input[type="password"],
+input[type="text"],
+input[type="number"],
+textarea,
+select {
+    background: #fffdfa !important;
+    color: #292621 !important;
+    border-color: #d8cdbb !important;
+    border-radius: 8px !important;
+}
+
+/* Consistent page gutters and vertical rhythm across standalone screens. */
+.corp-page main,
+body > main {
+    box-sizing: border-box;
+}
+
+.corp-page main {
+    padding-top: 7.5rem !important;
+    padding-bottom: 4rem !important;
+}
+
+.corp-shell {
+    width: min(100%, 1100px);
+    padding-inline: 0.25rem;
+}
+
+.corp-hero {
+    margin-bottom: 1.25rem;
+    padding: clamp(1.25rem, 3vw, 2rem) !important;
+}
+
+.corp-layout {
+    margin-top: 0 !important;
+}
+
+body > main > .max-w-7xl,
+body > main > .max-w-6xl {
+    width: min(100%, 1152px);
+    margin-inline: auto;
+}
+
+.profile-page main {
+    padding-top: 7.5rem !important;
+}
+
+#player-username {
+    color: #8a8173 !important;
+    letter-spacing: 0.08em;
+}
+
+@media (max-width: 640px) {
+    .corp-page main {
+        padding-top: 6.25rem !important;
+        padding-inline: 1rem !important;
+    }
+
+    .corp-shell {
+        padding-inline: 0;
+    }
+
+    .profile-page main {
+        padding-top: 6.25rem !important;
+        padding-inline: 1rem !important;
+    }
+
+    body > main > .max-w-7xl,
+    body > main > .max-w-6xl {
+        width: 100%;
+    }
+}
