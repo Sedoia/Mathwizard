@@ -237,7 +237,7 @@ class ProfileRenderer {
 
         const goldEl = document.getElementById('player-gold');
         if (goldEl) {
-            goldEl.textContent = Number(currency.gold || 0).toLocaleString();
+            goldEl.textContent = Number(currency.aether ?? currency.gold ?? 0).toLocaleString();
         }
 
         const crystalsEl = document.getElementById('player-crystals');
@@ -590,6 +590,7 @@ class ProfileRenderer {
 
         const purchases = this.playerData.purchaseHistory || (window.authService?.getCurrentUser?.()?.purchaseHistory || []);
         const totalSpent = purchases.reduce((sum, p) => sum + Number(p.amount || p.price || 0), 0);
+        const totalAether = purchases.reduce((sum, p) => sum + Number(p.aether || p.credits || 0), 0);
 
         const purchasesHtml = purchases.length
             ? purchases.map((purchase) => `
@@ -597,6 +598,7 @@ class ProfileRenderer {
                     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
                         <div>
                             <p class="font-bold text-white">${this.escapeHtml(purchase.itemName || purchase.name || 'Purchase')}</p>
+                            <p class="text-xs text-ncst-neon">${Number(purchase.aether || purchase.credits || 0).toLocaleString()} Aether</p>
                             <p class="text-xs text-gray-400">${this.escapeHtml(purchase.date ? new Date(purchase.date).toLocaleString() : 'Recent purchase')}</p>
                         </div>
                         <div class="text-right">
@@ -615,7 +617,8 @@ class ProfileRenderer {
                         <i class="fa-solid fa-receipt text-ncst-gold mr-2"></i>Purchase History
                     </h3>
                     <div class="text-sm text-gray-400">
-                        Total Spent: <span class="text-ncst-gold font-bold">PHP ${totalSpent.toFixed(2)}</span>
+                        <span>Total Aether: <span class="text-ncst-gold font-bold">${totalAether.toLocaleString()}</span></span>
+                        <span>Total Spent: <span class="text-ncst-gold font-bold">PHP ${totalSpent.toFixed(2)}</span></span>
                     </div>
                 </div>
                 <div class="space-y-4">${purchasesHtml}</div>

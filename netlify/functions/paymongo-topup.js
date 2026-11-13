@@ -195,13 +195,13 @@ exports.handler = async (event) => {
             {
               currency: 'PHP',
               amount: amountCentavos,
-              description: `${offer.credits} Math Wizard credits`,
-              name: `${offer.credits} Credits`,
+              description: `${offer.credits} Math Wizard Aether`,
+              name: `${offer.credits} Aether`,
               quantity: 1
             }
           ],
           payment_method_types: [paymentMethod],
-          description: `Top-Up: ${offer.credits} credits`,
+          description: `Top-Up: ${offer.credits} Aether`,
           success_url: `${baseUrl}/pages/top-up.html?status=success`,
           cancel_url: `${baseUrl}/pages/top-up.html?status=cancelled`,
           metadata: {

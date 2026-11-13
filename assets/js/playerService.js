@@ -60,6 +60,7 @@ class PlayerService {
             },
             currency: {
                 gold: 500,
+                aether: 500,
                 crystals: 50,
                 energy: {
                     current: 100,
@@ -67,8 +68,8 @@ class PlayerService {
                 }
             },
             dailyChallenges: [
-                { id: 'dc_1', name: 'Derivative Duel', progress: 0, max: 5, reward: '250 Gold', icon: 'fa-flash' },
-                { id: 'dc_2', name: 'Integration Challenge', progress: 0, max: 3, reward: '300 Gold', icon: 'fa-cube' },
+                { id: 'dc_1', name: 'Derivative Duel', progress: 0, max: 5, reward: '250 Aether', icon: 'fa-flash' },
+                { id: 'dc_2', name: 'Integration Challenge', progress: 0, max: 3, reward: '300 Aether', icon: 'fa-cube' },
                 { id: 'dc_3', name: 'Perfect Score', progress: 0, max: 1, reward: '100 Crystals', icon: 'fa-crown' }
             ],
             activeQuests: [
@@ -150,6 +151,7 @@ class PlayerService {
             currency: {
                 ...starter.currency,
                 gold: Number(currentUser?.gold || starter.currency.gold),
+                aether: Number(currentUser?.aether || currentUser?.gold || starter.currency.aether),
                 crystals: Number(currentUser?.crystals || starter.currency.crystals),
                 energy: {
                     ...starter.currency.energy,

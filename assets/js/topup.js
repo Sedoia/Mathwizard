@@ -46,7 +46,7 @@
   }
 
   function formatCredits(value) {
-    return `${formatWholeNumber(value)} Credits`;
+    return `${formatWholeNumber(value)} Aether`;
   }
 
   function getStoredUser() {
@@ -69,20 +69,22 @@
   function extractBalance(user) {
     if (!user || typeof user !== 'object') {
       return {
-        gold: 0
+        aether: 0
       };
     }
 
     const currency = user.currency && typeof user.currency === 'object' ? user.currency : {};
 
-    const gold = Number(
-      user.gold
+    const aether = Number(
+      user.aether
+      ?? currency.aether
+      ?? user.gold
       ?? currency.gold
       ?? 0
     );
 
     return {
-      gold: Number.isFinite(gold) ? gold : 0
+      aether: Number.isFinite(aether) ? aether : 0
     };
   }
 
@@ -103,7 +105,7 @@
     }
 
     const balance = extractBalance(user);
-    goldEl.textContent = formatWholeNumber(balance.gold);
+    goldEl.textContent = formatWholeNumber(balance.aether);
     messageEl.textContent = 'Loaded from your current account session.';
     messageEl.className = 'text-xs min-h-[1.25rem] mt-3 text-ncst-neon';
   }
@@ -113,21 +115,23 @@
     return Number(String(goldEl?.textContent || '0').replace(/,/g, '')) || 0;
   }
 
-  function updateStoredUserGold(nextGold) {
+  function updateStoredUserAether(nextAether) {
     const stored = getStoredUser();
     if (!stored) {
       return;
     }
 
-    stored.gold = nextGold;
+    stored.aether = nextAether;
+    stored.gold = nextAether;
     if (stored.currency && typeof stored.currency === 'object') {
-      stored.currency.gold = nextGold;
+      stored.currency.aether = nextAether;
+      stored.currency.gold = nextAether;
     }
 
     localStorage.setItem('mathwizard_current_user', JSON.stringify(stored));
   }
 
-  function updateCachedPlayerGold(userId, nextGold) {
+  function updateCachedPlayerAether(userId, nextAether) {
     const key = `player_${userId}`;
     const raw = sessionStorage.getItem(key);
     if (!raw) {
@@ -137,7 +141,8 @@
     try {
       const parsed = JSON.parse(raw);
       parsed.currency = parsed.currency || {};
-      parsed.currency.gold = nextGold;
+      parsed.currency.aether = nextAether;
+      parsed.currency.gold = nextAether;
       sessionStorage.setItem(key, JSON.stringify(parsed));
     } catch (error) {
       // Ignore invalid session cache payloads.
@@ -173,20 +178,24 @@
         db.collection('users').doc(userId).get()
       ]);
 
-      const playerGold = playerDoc.exists ? Number(playerDoc.data()?.currency?.gold) : NaN;
-      const userGold = userDoc.exists ? Number(userDoc.data()?.gold) : NaN;
+      const playerAether = playerDoc.exists
+        ? Number(playerDoc.data()?.currency?.aether ?? playerDoc.data()?.currency?.gold)
+        : NaN;
+      const userAether = userDoc.exists
+        ? Number(userDoc.data()?.aether ?? userDoc.data()?.gold)
+        : NaN;
 
-      const gold = Number.isFinite(playerGold)
-        ? playerGold
-        : Number.isFinite(userGold)
-          ? userGold
-          : Number(user?.gold ?? 0);
+      const aether = Number.isFinite(playerAether)
+        ? playerAether
+        : Number.isFinite(userAether)
+          ? userAether
+          : Number(user?.aether ?? user?.gold ?? 0);
 
-      const safeGold = Number.isFinite(gold) ? Math.max(0, gold) : 0;
+      const safeAether = Number.isFinite(aether) ? Math.max(0, aether) : 0;
 
-      goldEl.textContent = formatWholeNumber(safeGold);
-      updateStoredUserGold(safeGold);
-      updateCachedPlayerGold(userId, safeGold);
+      goldEl.textContent = formatWholeNumber(safeAether);
+      updateStoredUserAether(safeAether);
+      updateCachedPlayerAether(userId, safeAether);
 
       messageEl.textContent = 'Synced from live account data.';
       messageEl.className = 'text-xs min-h-[1.25rem] mt-3 text-ncst-neon';
@@ -230,14 +239,14 @@
       return;
     }
 
-    const previousGold = readDisplayedGold();
+    const previousAether = readDisplayedGold();
     const maxAttempts = 6;
 
     for (let attempt = 0; attempt < maxAttempts; attempt += 1) {
       await refreshBalanceFromFirestore();
-      const currentGold = readDisplayedGold();
+      const currentAether = readDisplayedGold();
 
-      if (currentGold > previousGold) {
+      if (currentAether > previousAether) {
         showStatus('Payment confirmed and balance updated.', 'success');
         return;
       }

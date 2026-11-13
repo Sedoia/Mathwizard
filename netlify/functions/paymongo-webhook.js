@@ -263,11 +263,29 @@ async function processPaidTopupEvent(db, payload, eventData) {
     ]);
 
     const existingUser = userDoc.exists ? userDoc.data() || {} : {};
+    const transactionRecord = {
+      id: `txn_${eventId}`,
+      transactionId: eventId,
+      itemName: `${resolvedCreditsToAdd} Aether`,
+      name: `${resolvedCreditsToAdd} Aether`,
+      category: 'Aether',
+      currency: 'Aether',
+      aether: resolvedCreditsToAdd,
+      credits: resolvedCreditsToAdd,
+      amount: Number(resolvedMetadata?.amountPhp || 0),
+      date: now,
+      status: 'completed',
+      checkoutSessionId,
+      paymentMethod: String(resolvedMetadata?.paymentMethod || ''),
+      offerId: String(resolvedMetadata?.offerId || resolvedMetadata?.offer_id || '')
+    };
 
     tx.set(userRef, {
       id: resolvedUserId,
       username: existingUser.username || String(resolvedMetadata?.username || ''),
       gold: admin.firestore.FieldValue.increment(resolvedCreditsToAdd),
+      aether: admin.firestore.FieldValue.increment(resolvedCreditsToAdd),
+      purchaseHistory: admin.firestore.FieldValue.arrayUnion(transactionRecord),
       updatedAt: now,
       lastTopup: {
         creditsAdded: resolvedCreditsToAdd,
@@ -290,8 +308,10 @@ async function processPaidTopupEvent(db, payload, eventData) {
       id: resolvedUserId,
       currency: {
         ...playerCurrency,
-        gold: admin.firestore.FieldValue.increment(resolvedCreditsToAdd)
+        gold: admin.firestore.FieldValue.increment(resolvedCreditsToAdd),
+        aether: admin.firestore.FieldValue.increment(resolvedCreditsToAdd)
       },
+      purchaseHistory: admin.firestore.FieldValue.arrayUnion(transactionRecord),
       updatedAt: now
     }, { merge: true });
 

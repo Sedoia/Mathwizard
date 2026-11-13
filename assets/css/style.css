@@ -1352,6 +1352,266 @@ button, a[role="button"] {
     }
 }
 
+/* ─────────────────────────────────────────────────────────────
+   THEME SWITCHING
+   The academy keeps its parchment-and-gold identity in light mode
+   and shifts to an ink, teal, and gold palette in dark mode.
+───────────────────────────────────────────────────────────── */
+:root {
+    color-scheme: light;
+    --theme-page: #fffdf8;
+    --theme-surface: #ffffff;
+    --theme-surface-muted: #f4efe4;
+    --theme-text: #292621;
+    --theme-text-muted: #625b50;
+    --theme-border: #e5ded0;
+    --theme-accent: #8f6918;
+    --theme-accent-soft: #fbf5e8;
+}
+
+:root[data-theme="dark"] {
+    color-scheme: dark;
+    --theme-page: #120d19;
+    --theme-surface: #21172b;
+    --theme-surface-muted: #2b1d35;
+    --theme-text: #f7f1e3;
+    --theme-text-muted: #c3b9c9;
+    --theme-border: rgba(212, 168, 67, 0.3);
+    --theme-accent: #e4bd5d;
+    --theme-accent-soft: rgba(212, 168, 67, 0.12);
+}
+
+body {
+    background-color: var(--theme-page) !important;
+    color: var(--theme-text) !important;
+}
+
+.theme-toggle {
+    position: fixed;
+    top: 5.5rem;
+    right: 1rem;
+    z-index: 60;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 44px;
+    padding: 0.55rem 0.75rem;
+    border: 1px solid var(--theme-border);
+    border-radius: 999px;
+    background: var(--theme-surface);
+    color: var(--theme-text);
+    box-shadow: 0 8px 20px rgba(37, 27, 16, 0.12);
+    cursor: pointer;
+    font-family: 'Cinzel', Georgia, serif;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    transition: background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease, transform 0.2s ease;
+}
+
+.theme-toggle:hover {
+    border-color: var(--theme-accent);
+    color: var(--theme-accent);
+    transform: translateY(-1px);
+}
+
+.theme-toggle:focus-visible {
+    outline: 3px solid var(--theme-accent);
+    outline-offset: 3px;
+}
+
+[data-theme="light"] body {
+    background-image: linear-gradient(180deg, #fffdf8 0%, #faf7f0 100%) !important;
+}
+
+[data-theme="light"] body .text-white,
+[data-theme="light"] body .hover\:text-white:hover {
+    color: #292621 !important;
+}
+
+[data-theme="light"] body .text-gray-300 { color: #6b6255 !important; }
+[data-theme="light"] body .text-gray-400 { color: #71695d !important; }
+[data-theme="light"] body .text-gray-500 { color: #8a8173 !important; }
+[data-theme="light"] body .text-gray-600 { color: #5c554b !important; }
+
+[data-theme="light"] nav,
+[data-theme="light"] nav[style],
+[data-theme="light"] #mobile-menu {
+    background-color: rgba(255, 253, 248, 0.96) !important;
+    border-color: #e5ded0 !important;
+    box-shadow: 0 1px 12px rgba(66, 54, 35, 0.08) !important;
+}
+
+[data-theme="light"] .parchment-panel,
+[data-theme="light"] .glass-panel,
+[data-theme="light"] .corp-hero,
+[data-theme="light"] .corp-card {
+    background: #ffffff !important;
+    border-color: #e5ded0 !important;
+    border-radius: 14px !important;
+    box-shadow: 0 10px 28px rgba(66, 54, 35, 0.07) !important;
+}
+
+[data-theme="light"] .guild-board,
+[data-theme="light"] .hero-art-frame {
+    background: #f4efe4 !important;
+    border-color: #c9a65a !important;
+    box-shadow: 0 18px 36px rgba(66, 54, 35, 0.1) !important;
+}
+
+[data-theme="light"] .bg-img-scroll,
+[data-theme="light"] .bg-img-beam-small,
+[data-theme="light"] .bg-img-plank-2 {
+    background: #ffffff !important;
+    border-color: #e5ded0 !important;
+    border-radius: 14px !important;
+    box-shadow: 0 10px 28px rgba(66, 54, 35, 0.07) !important;
+}
+
+[data-theme="light"] .section-tag {
+    color: #8f6918 !important;
+    background: #fbf5e8 !important;
+    border-color: #c9a65a !important;
+}
+
+[data-theme="light"] input,
+[data-theme="light"] textarea,
+[data-theme="light"] select {
+    background: #fffdfa !important;
+    color: #292621 !important;
+    border-color: #d8cdbb !important;
+}
+
+[data-theme="dark"] body {
+    background-image: linear-gradient(160deg, #120d19 0%, #1a1025 55%, #0d1118 100%) !important;
+}
+
+[data-theme="dark"] body::before {
+    background: linear-gradient(135deg, rgba(212, 168, 67, 0.06), transparent 42%) !important;
+}
+
+[data-theme="dark"] .fixed.inset-0.pointer-events-none.z-0 > div:not(.bg-tech-grid) {
+    display: block !important;
+}
+
+[data-theme="dark"] nav,
+[data-theme="dark"] nav[style],
+[data-theme="dark"] #mobile-menu {
+    background: rgba(18, 13, 25, 0.94) !important;
+    border-color: rgba(212, 168, 67, 0.24) !important;
+    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.5) !important;
+}
+
+[data-theme="dark"] body .text-white,
+[data-theme="dark"] body .hover\:text-white:hover {
+    color: #f7f1e3 !important;
+}
+
+[data-theme="dark"] body .text-gray-300 { color: #c3b9c9 !important; }
+[data-theme="dark"] body .text-gray-400 { color: #b4a9bc !important; }
+[data-theme="dark"] body .text-gray-500 { color: #9c91a5 !important; }
+[data-theme="dark"] body .text-gray-600 { color: #c0b5c5 !important; }
+
+[data-theme="dark"] .bg-ncst-dark,
+[data-theme="dark"] .bg-ncst-dark\/40,
+[data-theme="dark"] .bg-ncst-dark\/50,
+[data-theme="dark"] .bg-ncst-dark\/60,
+[data-theme="dark"] .bg-ncst-blue\/10,
+[data-theme="dark"] .bg-ncst-blue\/20 {
+    background-color: #21172b !important;
+}
+
+[data-theme="dark"] .bg-ncst-neon\/10,
+[data-theme="dark"] .bg-ncst-neon\/20 {
+    background-color: rgba(212, 168, 67, 0.12) !important;
+}
+
+[data-theme="dark"] .parchment-panel,
+[data-theme="dark"] .glass-panel,
+[data-theme="dark"] .corp-hero,
+[data-theme="dark"] .corp-card {
+    background: linear-gradient(145deg, #2b1d35 0%, #21172b 72%) !important;
+    border-color: rgba(212, 168, 67, 0.3) !important;
+    border-radius: 0 !important;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35) !important;
+}
+
+[data-theme="dark"] .parchment-panel:hover,
+[data-theme="dark"] .glass-panel:hover {
+    background: linear-gradient(145deg, #35233f 0%, #25192f 72%) !important;
+    border-color: rgba(212, 168, 67, 0.62) !important;
+}
+
+[data-theme="dark"] .guild-board,
+[data-theme="dark"] .hero-art-frame {
+    background: linear-gradient(160deg, #2b1b2f 0%, #140e1d 100%) !important;
+    border-color: rgba(212, 168, 67, 0.42) !important;
+}
+
+[data-theme="dark"] .bg-img-scroll,
+[data-theme="dark"] .bg-img-beam-small,
+[data-theme="dark"] .bg-img-plank-2 {
+    background: linear-gradient(145deg, #2b1d35, #21172b) !important;
+    border-color: rgba(212, 168, 67, 0.3) !important;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.32) !important;
+}
+
+[data-theme="dark"] .section-tag {
+    color: #e4bd5d !important;
+    background: rgba(212, 168, 67, 0.12) !important;
+    border-color: rgba(212, 168, 67, 0.45) !important;
+}
+
+[data-theme="dark"] .corp-title,
+[data-theme="dark"] .corp-card h3,
+[data-theme="dark"] .corp-subtitle,
+[data-theme="dark"] .corp-card p,
+[data-theme="dark"] .corp-card li {
+    color: #f7f1e3 !important;
+}
+
+[data-theme="dark"] input,
+[data-theme="dark"] textarea,
+[data-theme="dark"] select {
+    background: #17111f !important;
+    color: #f7f1e3 !important;
+    border-color: rgba(212, 168, 67, 0.35) !important;
+}
+
+[data-theme="dark"] input::placeholder,
+[data-theme="dark"] textarea::placeholder {
+    color: #9c91a5 !important;
+}
+
+[data-theme="dark"] .rune-counter {
+    background: #21172b !important;
+    border-color: rgba(212, 168, 67, 0.3) !important;
+    box-shadow: 0 8px 22px rgba(0, 0, 0, 0.3) !important;
+}
+
+[data-theme="dark"] .rune-counter-number { color: #e4bd5d !important; }
+[data-theme="dark"] .rune-counter-label { color: #c3b9c9 !important; }
+[data-theme="dark"] .corp-footer { border-color: rgba(212, 168, 67, 0.22) !important; }
+[data-theme="dark"] .corp-footer small { color: #a99caf !important; }
+
+@media (max-width: 640px) {
+    .theme-toggle {
+        top: 4.75rem;
+        right: 0.75rem;
+        padding-inline: 0.65rem;
+    }
+
+    .theme-toggle span {
+        display: none;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .theme-toggle {
+        transition: none;
+    }
+}
+
 /* Final light-theme corrections for legacy components. */
 .rune-counter {
     background: #ffffff !important;
@@ -1691,4 +1951,103 @@ body > main > .max-w-6xl {
     body > main > .max-w-6xl {
         width: 100%;
     }
+}
+
+/* Final theme precedence over legacy compatibility tokens. */
+[data-theme="dark"] body {
+    background-color: #120d19 !important;
+    background-image: linear-gradient(160deg, #120d19 0%, #1a1025 55%, #0d1118 100%) !important;
+    color: #f7f1e3 !important;
+}
+
+[data-theme="dark"] body h1.text-white,
+[data-theme="dark"] body h2.text-white,
+[data-theme="dark"] body h3.text-white,
+[data-theme="dark"] body p.text-white,
+[data-theme="dark"] body .text-white,
+[data-theme="dark"] body .hover\:text-white:hover {
+    color: #f7f1e3 !important;
+}
+
+[data-theme="dark"] nav,
+[data-theme="dark"] nav[style],
+[data-theme="dark"] #mobile-menu {
+    background: rgba(18, 13, 25, 0.94) !important;
+    border-color: rgba(212, 168, 67, 0.24) !important;
+    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.5) !important;
+}
+
+[data-theme="dark"] .parchment-panel,
+[data-theme="dark"] .glass-panel,
+[data-theme="dark"] .corp-hero,
+[data-theme="dark"] .corp-card {
+    background: linear-gradient(145deg, #2b1d35 0%, #21172b 72%) !important;
+    border-color: rgba(212, 168, 67, 0.3) !important;
+    border-radius: 0 !important;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35) !important;
+}
+
+[data-theme="dark"] .hero-art-frame,
+[data-theme="dark"] .guild-board {
+    background: linear-gradient(160deg, #2b1b2f 0%, #140e1d 100%) !important;
+    border-color: rgba(212, 168, 67, 0.42) !important;
+    box-shadow: 0 18px 36px rgba(0, 0, 0, 0.4) !important;
+}
+
+[data-theme="dark"] .hero-art-frame .art-slot,
+[data-theme="dark"] .guild-board-item {
+    background: #21172b !important;
+    border-color: rgba(212, 168, 67, 0.24) !important;
+}
+
+[data-theme="dark"] .hero-art-frame .font-magic,
+[data-theme="dark"] .guild-board-item .font-heading,
+[data-theme="dark"] .corp-title,
+[data-theme="dark"] .corp-card h3 {
+    color: #f7f1e3 !important;
+}
+
+[data-theme="dark"] .corp-subtitle,
+[data-theme="dark"] .corp-card p,
+[data-theme="dark"] .corp-card li,
+[data-theme="dark"] .corp-footer small {
+    color: #c3b9c9 !important;
+}
+
+[data-theme="dark"] .corp-meta-chip {
+    color: #9de0d4 !important;
+    background: rgba(29, 106, 94, 0.2) !important;
+    border-color: rgba(100, 255, 218, 0.3) !important;
+}
+
+[data-theme="dark"] .text-gold-glow {
+    color: #e4bd5d !important;
+}
+
+[data-theme="dark"] input[type="email"],
+[data-theme="dark"] input[type="password"],
+[data-theme="dark"] input[type="text"],
+[data-theme="dark"] input[type="number"],
+[data-theme="dark"] textarea,
+[data-theme="dark"] select {
+    background: #17111f !important;
+    color: #f7f1e3 !important;
+    border-color: rgba(212, 168, 67, 0.35) !important;
+}
+
+[data-theme="dark"] .tab-btn {
+    color: #c3b9c9 !important;
+    background: #21172b !important;
+    border-color: rgba(212, 168, 67, 0.3) !important;
+}
+
+[data-theme="dark"] .tab-btn:hover,
+[data-theme="dark"] .tab-btn.active {
+    color: #e4bd5d !important;
+    background: rgba(212, 168, 67, 0.12) !important;
+    border-color: rgba(212, 168, 67, 0.55) !important;
+}
+
+[data-theme="dark"] #player-username {
+    color: #b4a9bc !important;
 }

@@ -16,7 +16,7 @@
   }
 
   function formatCredits(value) {
-    return `${new Intl.NumberFormat('en-US').format(Number(value || 0))} Credits`;
+    return `${new Intl.NumberFormat('en-US').format(Number(value || 0))} Aether`;
   }
 
   function getDraft() {
