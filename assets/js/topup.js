@@ -287,6 +287,20 @@
     reviewButton.disabled = !state.identified || !offer || state.busy;
   }
 
+  function updateOfferSelection() {
+    const cards = document.querySelectorAll('.offer-card');
+    cards.forEach((card) => {
+      const isSelected = card.dataset.offerId === state.selectedOfferId;
+      card.setAttribute('aria-pressed', isSelected ? 'true' : 'false');
+      card.classList.toggle('ring-2', isSelected);
+      card.classList.toggle('ring-ncst-gold', isSelected);
+      card.classList.toggle('border-ncst-gold', isSelected);
+      card.classList.toggle('bg-ncst-gold/10', isSelected);
+      card.classList.toggle('shadow-[0_0_20px_rgba(201,168,76,0.25)]', isSelected);
+      card.classList.toggle('border-ncst-gold/30', !isSelected);
+    });
+  }
+
   function renderOffers() {
     const offersGrid = document.getElementById('offers-grid');
     const offerCount = document.getElementById('offer-count');
@@ -298,7 +312,7 @@
       const button = document.createElement('button');
       button.type = 'button';
       button.dataset.offerId = offer.id;
-      button.className = 'offer-card text-left parchment-panel p-4 border border-ncst-gold/30 hover:border-ncst-gold transition-all';
+      button.className = 'offer-card w-full text-left parchment-panel p-4 border border-ncst-gold/30 hover:border-ncst-gold hover:shadow-[0_0_15px_rgba(201,168,76,0.15)] transition-all cursor-pointer';
       button.innerHTML = `
         <div class="flex items-start justify-between gap-3">
           <div>
@@ -309,21 +323,19 @@
         </div>
         <div class="mt-4 flex items-center justify-between">
           <p class="text-ncst-gold font-bold text-xl">${formatPeso(offer.amountPhp)}</p>
-          <span class="text-[0.65rem] uppercase tracking-[0.18em] text-ncst-neon border border-ncst-neon/30 px-2 py-1 bg-ncst-dark/40">Select</span>
         </div>
       `;
 
       button.addEventListener('click', () => {
         state.selectedOfferId = offer.id;
-        document.querySelectorAll('.offer-card').forEach((item) => {
-          item.classList.remove('ring-2', 'ring-ncst-gold', 'border-ncst-gold');
-        });
-        button.classList.add('ring-2', 'ring-ncst-gold', 'border-ncst-gold');
+        updateOfferSelection();
         updateProceedState();
       });
 
       offersGrid.appendChild(button);
     });
+
+    updateOfferSelection();
   }
 
   function updatePaymentMethodStyles() {
