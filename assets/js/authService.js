@@ -636,6 +636,12 @@ class AuthService {
 
     mapFirebaseError(error) {
         const code = error?.code || '';
+        const rawMessage = String(error?.message || '');
+
+        if (code === 'permission-denied' || rawMessage.toLowerCase().includes('insufficient permissions')) {
+            return 'Database permission denied. Please update and publish your Firestore security rules in the Firebase Console.';
+        }
+
         const messages = {
             'auth/invalid-email': 'Invalid email format.',
             'auth/user-disabled': 'This account has been disabled.',
@@ -645,12 +651,12 @@ class AuthService {
             'auth/email-already-in-use': 'Email already registered.',
             'auth/weak-password': 'Password must be at least 6 characters.',
             'auth/too-many-requests': 'Too many attempts. Please try again later.',
-            'auth/network-request-failed': 'Network error. Check your internet connection.',
+            'auth/network-request-failed': 'Network error. If you use an ad blocker or Brave Shields, disable it for this site.',
             'auth/popup-closed-by-user': 'Google sign-in was cancelled.',
             'auth/popup-blocked': 'Popup blocked by browser. Please allow popups and try again.',
-            'auth/operation-not-allowed': 'Google sign-in is not enabled in Firebase Authentication.'
-            ,
-            'auth/requires-recent-login': 'Please log in again to complete this action.'
+            'auth/operation-not-allowed': 'Google sign-in is not enabled in Firebase Authentication.',
+            'auth/requires-recent-login': 'Please log in again to complete this action.',
+            'unavailable': 'Unable to connect to the database. If using an ad blocker or Brave Shields, please disable it.'
         };
 
         return messages[code] || error?.message || 'Authentication failed.';

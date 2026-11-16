@@ -11,8 +11,9 @@ service cloud.firestore {
     }
 
     function isAdmin() {
-      return isSignedIn() &&
-        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+      return isSignedIn()
+        && exists(/databases/$(database)/documents/users/$(request.auth.uid))
+        && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
     }
 
     function isSafePlayerOwnerUpdate(uid) {
@@ -39,12 +40,11 @@ service cloud.firestore {
         && request.resource.data.role == 'player';
       allow get: if isOwner(uid) || isAdmin();
       allow list: if isAdmin();
-      allow update: if isAdmin()
-        || (
+      allow update: if (
           isOwner(uid)
           && request.resource.data.id == resource.data.id
           && request.resource.data.role == resource.data.role
-        );
+        ) || isAdmin();
       allow delete: if isOwner(uid) || isAdmin();
     }
 
@@ -52,16 +52,15 @@ service cloud.firestore {
     // Owner can update cosmetic/profile-facing fields only.
     // Admin can read/write for moderation/support and controlled adjustments.
     match /players/{uid} {
-      allow create: if isAdmin()
-        || (
+      allow create: if (
           isOwner(uid)
           && request.resource.data.id == uid
           && request.resource.data.level == 1
           && request.resource.data.seedVersion == 2
-        );
+        ) || isAdmin();
       allow get: if isOwner(uid) || isAdmin();
       allow list: if isAdmin();
-      allow update: if isAdmin() || isSafePlayerOwnerUpdate(uid);
+      allow update: if isSafePlayerOwnerUpdate(uid) || isAdmin();
       allow delete: if isOwner(uid) || isAdmin();
     }
 
