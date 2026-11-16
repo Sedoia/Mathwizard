@@ -1,69 +1,111 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Math Wizard - Features</title>
+    <meta name="description" content="What Math Wizard offers: 3D calculus challenges, Story and PVP modes, spells, progress tracking and in-game credit top-ups.">
     <link rel="shortcut icon" href="../assets/img/logo.png" type="image/x-icon">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="../assets/js/tailwind-config.js"></script>
     <link rel="stylesheet" href="../assets/css/style.css">
     <script src="../assets/js/theme.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Cinzel+Decorative:wght@400;700;900&family=Crimson+Text:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<body class="antialiased selection:bg-ncst-neon selection:text-ncst-dark">
+<body class="corp-page about-page antialiased selection:bg-ncst-neon selection:text-ncst-dark">
     <div class="fixed inset-0 pointer-events-none z-0"><div class="absolute inset-0 bg-tech-grid"></div></div>
 
     <nav class="fixed top-0 w-full z-50 bg-ncst-dark/95 border-b border-ncst-neon/20" style="box-shadow: 0 2px 20px rgba(0,0,0,0.8), 0 1px 0 rgba(201,168,76,0.1);">
-        <div class="max-w-7xl mx-auto px-6 h-20 flex justify-between items-center">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 sm:h-20 flex justify-between items-center">
             <a href="../index.html" class="flex items-center gap-3 group">
                 <img src="../assets/img/logo.png" alt="Math Wizard Logo" class="w-8 sm:w-10 h-8 sm:h-10 logo-image transition-all duration-500 group-hover:drop-shadow-[0_0_8px_#C9A84C]">
                 <div>
-                    <h1 class="font-magic text-xl text-white tracking-widest">Math<span class="text-ncst-gold">Wizard</span></h1>
+                    <h1 class="font-magic text-lg sm:text-xl text-white tracking-widest">Math<span class="text-ncst-gold">Wizard</span></h1>
                     <p class="text-[0.5rem] sm:text-[0.6rem] uppercase tracking-[0.2em] text-ncst-neon font-bold">The Era Of Mages</p>
                 </div>
             </a>
-            <div class="hidden md:flex items-center gap-10">
-                <a href="about.html" class="text-sm uppercase tracking-widest hover:text-ncst-neon transition-colors text-white">About</a>
-                <a href="features.html" class="text-ncst-neon text-sm uppercase tracking-widest font-bold">Features</a>
+            <div class="flex items-center gap-4 sm:gap-8">
+                <a href="about.html" class="text-xs sm:text-sm uppercase tracking-widest text-white hover:text-ncst-neon transition-colors">About</a>
+                <a href="features.html" class="text-xs sm:text-sm uppercase tracking-widest text-ncst-neon font-bold">Features</a>
+                <a href="../index.html#download" class="hidden sm:inline-flex rune-btn text-xs sm:text-sm">Download <i class="fa-solid fa-download"></i></a>
             </div>
         </div>
     </nav>
 
-    <main class="relative z-10 pt-28 pb-20">
-        <section class="px-6">
-            <div class="max-w-7xl mx-auto">
-                <div class="mb-16 text-center">
-                    <div class="bg-img-beam-small px-8 py-8 sm:px-12 sm:py-10 mx-auto inline-flex flex-col items-center justify-center min-h-[140px]">
-                        <div class="section-tag inline-flex items-center gap-2 mb-2 bg-ncst-dark/50 px-3 py-1 rounded border border-ncst-gold/50"><i class="fa-solid fa-book-open"></i> II. Arsenal of Arcana</div>
-                        <h2 class="font-magic text-3xl sm:text-4xl text-ncst-gold text-gold-glow mt-1">Game Mechanics</h2>
-                        <p class="font-flavor italic mt-2 text-white font-bold">Master the three pillars of the Grand Magic Academy</p>
-                    </div>
+    <main class="relative z-10 pt-28 pb-16 px-4 sm:px-6">
+        <div class="corp-shell">
+
+            <section class="corp-hero">
+                <div class="corp-badge"><i class="fa-solid fa-book-open"></i> Features</div>
+                <h2 class="corp-title">What you can do in Math Wizard</h2>
+                <p class="corp-subtitle">Math Wizard is built around one idea: you answer calculus problems to fight. Here is what the game and this website provide.</p>
+                <div class="corp-meta">
+                    <span class="corp-meta-chip">Android 12+ and 4 GB RAM</span>
+                    <span class="corp-meta-chip">Derivatives and integrals</span>
+                    <span class="corp-meta-chip">Story and PVP modes</span>
+                </div>
+            </section>
+
+            <section class="corp-layout">
+                <div class="corp-grid-3">
+                    <article class="corp-card">
+                        <h3><i class="fa-solid fa-cube text-ncst-gold mr-2"></i>3D visualization</h3>
+                        <p>Play in a 3D world that makes abstract calculus easier to picture. The visuals support the math. They do not replace working out the answer.</p>
+                    </article>
+                    <article class="corp-card">
+                        <h3><i class="fa-solid fa-wand-magic-sparkles text-ncst-gold mr-2"></i>Solve to cast</h3>
+                        <p>During enemy encounters, the game presents a derivative or integral problem. Type your answer with the in-game algebra keypad. Pick the differentiation rule that applies: Constant, Variable, Power or Constant Multiple.</p>
+                    </article>
+                    <article class="corp-card">
+                        <h3><i class="fa-solid fa-circle-check text-ncst-gold mr-2"></i>Instant checking</h3>
+                        <p>The Math Authority checks every answer. Correct answers restore or raise your health and energy. Wrong answers reduce them, so you get feedback on every problem.</p>
+                    </article>
                 </div>
 
-                <div class="grid md:grid-cols-3 gap-8">
-                    <div class="bg-img-scroll float-card px-10 py-20 sm:px-12 sm:py-24 group flex flex-col items-center text-center">
-                        <i class="fa-solid fa-cube text-5xl text-ncst-gold animate-ember mb-6 transition-colors drop-shadow-lg"></i>
-                        <h3 class="font-heading text-xl font-bold text-white mb-4 uppercase tracking-wide">Spatial Learning</h3>
-                        <p class="font-flavor italic leading-relaxed text-gray-300 font-bold">Navigate a 3D world where geometric problems are solved by physically moving through the environment.</p>
-                    </div>
-                    <div class="bg-img-scroll float-card px-10 py-20 sm:px-12 sm:py-24 group flex flex-col items-center text-center">
-                        <i class="fa-solid fa-wand-magic-sparkles text-5xl text-ncst-gold animate-ember mb-6 transition-colors drop-shadow-lg"></i>
-                        <h3 class="font-heading text-xl font-bold text-white mb-4 uppercase tracking-wide">Formula Casting</h3>
-                        <p class="font-flavor italic leading-relaxed text-gray-300 font-bold">Combat requires quick thinking. Select the correct derivative or integral to counter enemy attacks.</p>
-                    </div>
-                    <div class="bg-img-scroll float-card px-10 py-20 sm:px-12 sm:py-24 group flex flex-col items-center text-center">
-                        <i class="fa-solid fa-chart-line text-5xl text-ncst-gold animate-ember mb-6 transition-colors drop-shadow-lg"></i>
-                        <h3 class="font-heading text-xl font-bold text-white mb-4 uppercase tracking-wide">Performance Ledger</h3>
-                        <p class="font-flavor italic leading-relaxed text-gray-300 font-bold">The Grand Ledger tracks your solving speed and accuracy, highlighting areas for further study.</p>
-                    </div>
+                <div class="corp-grid-2">
+                    <article class="corp-card">
+                        <h3><i class="fa-solid fa-book-skull text-ncst-gold mr-2"></i>Story mode</h3>
+                        <p>Play single-player campaign stages in order. Story mode works offline, so you can practice without a connection. Your progress is saved on the device and synced when you are back online.</p>
+                    </article>
+                    <article class="corp-card">
+                        <h3><i class="fa-solid fa-user-group text-ncst-gold mr-2"></i>PVP mode</h3>
+                        <p>Battle other players online. The Network Authority confirms each move so matches stay fair. PVP needs an internet connection over Wi-Fi or 4G LTE.</p>
+                    </article>
                 </div>
-                <div class="pt-10 text-center">
-                    <a href="../index.html" class="rune-btn inline-flex items-center gap-2"><i class="fa-solid fa-arrow-left"></i> Return to the Academy</a>
+
+                <div class="corp-grid-3">
+                    <article class="corp-card">
+                        <h3><i class="fa-solid fa-hat-wizard text-ncst-gold mr-2"></i>Spell locker</h3>
+                        <p>Unlock spells such as Fireball and drag them into your spell rings at Basic, Advanced and Ultimate levels. Use them in combat.</p>
+                    </article>
+                    <article class="corp-card">
+                        <h3><i class="fa-solid fa-chart-line text-ncst-gold mr-2"></i>Progress tracking</h3>
+                        <p>Your profile shows level, daily streak, Calculus Power, accuracy rate, challenges won and play time. Progress is stored in the cloud, so it follows your account across devices.</p>
+                    </article>
+                    <article class="corp-card">
+                        <h3><i class="fa-solid fa-coins text-ncst-gold mr-2"></i>Top-up</h3>
+                        <p>Buy in-game credits (shown as Aether) on the website. Pay with GCash or PayMaya through PayMongo, and choose a pack from 100 to 1,200 Aether.</p>
+                    </article>
                 </div>
+
+                <article class="corp-card">
+                    <h3><i class="fa-solid fa-user-shield text-ncst-gold mr-2"></i>Your account</h3>
+                    <ul>
+                        <li>Register on this website, then sign in with your email or username, or continue with Google.</li>
+                        <li>Recover a forgotten password with a reset link sent to your email.</li>
+                        <li>Edit your profile and privacy settings, change your password, or delete your account from your profile page.</li>
+                    </ul>
+                </article>
+            </section>
+
+            <div class="corp-footer">
+                <small>Questions about the project: info@mathwizard.ncst.edu</small>
+                <a href="../index.html" class="rune-btn text-xs sm:text-sm"><i class="fa-solid fa-arrow-left"></i> Return home</a>
             </div>
-        </section>
+        </div>
     </main>
 </body>
 </html>

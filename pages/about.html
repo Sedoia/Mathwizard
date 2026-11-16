@@ -1,67 +1,153 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Math Wizard - About</title>
+    <meta name="description" content="Math Wizard is a 3D Android game for learning integral and differential calculus, developed as a capstone project at NCST Dasmariñas.">
     <link rel="shortcut icon" href="../assets/img/logo.png" type="image/x-icon">
-    
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="../assets/js/tailwind-config.js"></script>
     <link rel="stylesheet" href="../assets/css/style.css">
     <script src="../assets/js/theme.js"></script>
-    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Cinzel+Decorative:wght@400;700;900&family=Crimson+Text:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<body class="about-page antialiased selection:bg-ncst-neon selection:text-ncst-dark">
-
-    <div class="fixed inset-0 pointer-events-none z-0">
-        <div class="absolute inset-0 bg-tech-grid"></div>
-    </div>
+<body class="corp-page about-page antialiased selection:bg-ncst-neon selection:text-ncst-dark">
+    <div class="fixed inset-0 pointer-events-none z-0"><div class="absolute inset-0 bg-tech-grid"></div></div>
 
     <nav class="fixed top-0 w-full z-50 bg-ncst-dark/95 border-b border-ncst-neon/20" style="box-shadow: 0 2px 20px rgba(0,0,0,0.8), 0 1px 0 rgba(201,168,76,0.1);">
-        <div class="max-w-7xl mx-auto px-6 h-20 flex justify-between items-center">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 sm:h-20 flex justify-between items-center">
             <a href="../index.html" class="flex items-center gap-3 group">
                 <img src="../assets/img/logo.png" alt="Math Wizard Logo" class="w-8 sm:w-10 h-8 sm:h-10 logo-image transition-all duration-500 group-hover:drop-shadow-[0_0_8px_#C9A84C]">
                 <div>
-                    <h1 class="font-magic text-xl text-white tracking-widest">Math<span class="text-ncst-gold">Wizard</span></h1>
+                    <h1 class="font-magic text-lg sm:text-xl text-white tracking-widest">Math<span class="text-ncst-gold">Wizard</span></h1>
                     <p class="text-[0.5rem] sm:text-[0.6rem] uppercase tracking-[0.2em] text-ncst-neon font-bold">The Era Of Mages</p>
                 </div>
             </a>
-            <div class="hidden md:flex items-center gap-10">
-                <a href="about.html" class="text-ncst-neon text-sm uppercase tracking-widest font-bold">About</a>
-                <a href="features.html" class="text-sm uppercase tracking-widest hover:text-ncst-neon transition-colors text-white">Features</a>
+            <div class="flex items-center gap-4 sm:gap-8">
+                <a href="about.html" class="text-xs sm:text-sm uppercase tracking-widest text-ncst-neon font-bold">About</a>
+                <a href="features.html" class="text-xs sm:text-sm uppercase tracking-widest text-white hover:text-ncst-neon transition-colors">Features</a>
+                <a href="../index.html#download" class="hidden sm:inline-flex rune-btn text-xs sm:text-sm">Download <i class="fa-solid fa-download"></i></a>
             </div>
         </div>
     </nav>
 
-    <main class="relative z-10 pt-28 pb-20">
-        <section class="px-6">
-            <div class="bg-img-scroll max-w-4xl mx-auto px-10 py-20 sm:px-16 sm:py-28 text-center space-y-6 flex flex-col items-center">
-                <div class="section-tag inline-flex items-center gap-2 mx-auto bg-ncst-dark/50 px-3 py-1 rounded border border-ncst-gold"><i class="fa-solid fa-scroll"></i> I. The Academy's Mission</div>
-                <h2 class="font-magic text-4xl sm:text-5xl text-ncst-gold text-gold-glow mt-4">Bridging Magic &amp; Mathematics</h2>
-                <p class="about-copy text-lg font-flavor italic max-w-2xl mt-6">
-                    Calculus is often feared by engineering students. <span class="text-ncst-neon">Math Wizard</span> gamifies the learning process. By mapping complex equations to game mechanics, we turn abstract concepts into tangible spells, weapons, and tools for survival in a digital world.
-                </p>
-                <p class="about-supporting-copy text-sm font-tech font-bold max-w-xl mt-4 px-4 py-2 rounded-lg">Built upon the NCST engineering curriculum — every challenge, dungeon, and formula battle is designed to reinforce real coursework.</p>
-                <div class="grid grid-cols-2 gap-4 max-w-lg mx-auto pt-8 w-full">
-                    <div class="bg-img-plank-2 px-6 py-10 text-center flex flex-col justify-center items-center">
-                        <div class="text-3xl font-magic text-white font-bold mb-2">NCST</div>
-                        <div class="text-xs uppercase tracking-widest text-ncst-gold font-bold">Curriculum Aligned</div>
-                    </div>
-                    <div class="bg-img-plank-2 px-6 py-10 text-center flex flex-col justify-center items-center">
-                        <div class="text-3xl font-magic text-white font-bold mb-2">3D</div>
-                        <div class="text-xs uppercase tracking-widest text-ncst-gold font-bold">Immersive Engine</div>
-                    </div>
+    <main class="relative z-10 pt-28 pb-16 px-4 sm:px-6">
+        <div class="corp-shell">
+
+            <section class="corp-hero">
+                <div class="corp-badge"><i class="fa-solid fa-graduation-cap"></i> About the project</div>
+                <h2 class="corp-title">A 3D mobile game for learning calculus</h2>
+                <p class="corp-subtitle">Math Wizard helps engineering students at the National College of Science and Technology (NCST) Dasmariñas practice integral and differential calculus. Students solve derivative and integral problems to cast spells and defeat enemies, so practice happens inside the game.</p>
+                <div class="corp-meta">
+                    <span class="corp-meta-chip">Capstone project, BSIT</span>
+                    <span class="corp-meta-chip">Computer Studies Department</span>
+                    <span class="corp-meta-chip">Version 1.0.4</span>
                 </div>
-                <div class="pt-10">
-                    <a href="../index.html" class="rune-btn inline-flex items-center gap-2"><i class="fa-solid fa-arrow-left"></i> Return to the Academy</a>
+            </section>
+
+            <section class="corp-layout">
+                <div class="corp-grid-2">
+                    <article class="corp-card">
+                        <h3>The problem</h3>
+                        <p>Many NCST engineering students find calculus too theoretical. Calculus is the base of later engineering courses, but students often lack ways to visualize the concepts and practice them outside class. That leads to low motivation and weak exam results.</p>
+                    </article>
+                    <article class="corp-card">
+                        <h3>Our objectives</h3>
+                        <ul>
+                            <li>Design and develop a 3D mobile game focused on derivatives and integrals.</li>
+                            <li>Identify the difficulties NCST engineering students face with abstract calculus concepts under traditional teaching.</li>
+                            <li>Determine whether the game helps students understand calculus fundamentals.</li>
+                        </ul>
+                    </article>
                 </div>
+
+                <article class="corp-card">
+                    <h3>How it works</h3>
+                    <p>Math Wizard has two parts. This website handles account registration and distributes the Android installer. The 3D game runs on the student's phone. Players choose between two modes:</p>
+                    <ul>
+                        <li><strong>Story mode</strong> is single-player. It works offline, and the Local Authority checks answers on the device.</li>
+                        <li><strong>PVP mode</strong> lets players battle each other online. It needs an internet connection, and the Network Authority confirms each move.</li>
+                    </ul>
+                    <p>In both modes, enemy encounters present calculus problems. A correct answer restores or raises health and energy. A wrong answer reduces them.</p>
+                </article>
+
+                <div class="corp-grid-3">
+                    <article class="corp-card">
+                        <h3>Login module</h3>
+                        <p>Account sign-in, registration and password recovery.</p>
+                    </article>
+                    <article class="corp-card">
+                        <h3>Main menu and UI</h3>
+                        <p>Story mode, PVP mode, profile and settings. A centralized UI module manages screen changes.</p>
+                    </article>
+                    <article class="corp-card">
+                        <h3>Player control</h3>
+                        <p>Movement, spell casting, and health and energy tracking.</p>
+                    </article>
+                    <article class="corp-card">
+                        <h3>Enemy module</h3>
+                        <p>Enemy spawning and behavior. Enemies are reused (pooled) to keep performance steady.</p>
+                    </article>
+                    <article class="corp-card">
+                        <h3>Math module</h3>
+                        <p>The Math Generator produces pre-programmed calculus problems, and Math Authority checks each answer.</p>
+                    </article>
+                    <article class="corp-card">
+                        <h3>Authority module</h3>
+                        <p>The game's referee. Local Authority covers offline play and Network Authority covers online matches.</p>
+                    </article>
+                </div>
+
+                <div class="corp-grid-2">
+                    <article class="corp-card">
+                        <h3>Requirements and limitations</h3>
+                        <ul>
+                            <li>Android 12 or higher with at least 4 GB of RAM. iPhones are not supported.</li>
+                            <li>PVP mode needs an internet connection. Without one, players can use Story mode only.</li>
+                            <li>The game covers integral and differential calculus only.</li>
+                            <li>Problems are pre-programmed and do not adapt to other lessons.</li>
+                            <li>Testing is limited to selected NCST engineering students.</li>
+                        </ul>
+                    </article>
+                    <article class="corp-card">
+                        <h3>Built with</h3>
+                        <ul>
+                            <li>Unity and C# for the 3D game, written in Visual Studio Code.</li>
+                            <li>Blender for characters, enemies and level assets.</li>
+                            <li>Google Firebase for authentication, profiles and data storage.</li>
+                            <li>PayMongo (GCash and PayMaya) for in-game credit top-ups on this website.</li>
+                        </ul>
+                    </article>
+                </div>
+
+                <div class="corp-grid-2">
+                    <article class="corp-card">
+                        <h3>Evaluation</h3>
+                        <p>100 beta testers evaluate the game: 90 NCST engineering students, 5 engineering faculty and 5 IT experts. They answer a Google Forms questionnaire on a 5-point Likert scale covering performance, interface design, accuracy, security and instructional value.</p>
+                    </article>
+                    <article class="corp-card">
+                        <h3>The team</h3>
+                        <p>Capstone project presented to the Computer Studies Department, National College of Science and Technology, Dasmariñas, Cavite, in partial fulfillment of the Bachelor of Science in Information Technology.</p>
+                        <ul>
+                            <li>Al Christian Ber Gayamo</li>
+                            <li>Godwin Flaminia</li>
+                            <li>Joseph Lorienz Mendoza</li>
+                            <li>Robin Lasquete</li>
+                            <li>Zedrick Rubenecia</li>
+                        </ul>
+                    </article>
+                </div>
+            </section>
+
+            <div class="corp-footer">
+                <small>Questions about the project: info@mathwizard.ncst.edu</small>
+                <a href="../index.html" class="rune-btn text-xs sm:text-sm"><i class="fa-solid fa-arrow-left"></i> Return home</a>
             </div>
-        </section>
+        </div>
     </main>
 </body>
 </html>
