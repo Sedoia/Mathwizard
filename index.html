@@ -283,13 +283,20 @@
                 <p class="text-sm sm:text-lg text-gray-400 mb-8 sm:mb-12">Download the latest build and experience a structured, game-based approach to mastering calculus fundamentals.</p>
 
                 <div class="max-w-md mx-auto">
-                    <a href="https://github.com/Sedoia/Mathwizard/releases/download/v1.0.4/Math-Wizard.apk" class="group bounty-notice flex flex-col items-center gap-4 hover:border-ncst-gold transition-all duration-300">
-                        <i class="fa-brands fa-android text-4xl sm:text-5xl text-ncst-gold mb-2"></i>
-                        <h3 class="font-heading text-base sm:text-lg font-bold text-white mb-1">Android</h3>
-                        <p class="text-xs sm:text-sm font-flavor italic mb-2" style="color:#a08060;">Download For Android</p>
-                        <button class="rune-btn w-full">CLAIM ON ANDROID</button>
-                    </a>
-                </div>
+    <div class="bounty-notice flex flex-col items-center gap-4">
+        <i class="fa-brands fa-android text-4xl sm:text-5xl text-ncst-gold mb-2"></i>
+        <h3 class="font-heading text-base sm:text-lg font-bold text-white mb-1">Android</h3>
+        <p class="text-xs sm:text-sm font-flavor italic mb-2" style="color:#a08060;">
+            Version 1.0.4 &bull; Android 12+ &bull; 4 GB RAM
+        </p>
+        <a id="apk-download-btn"
+           href="https://github.com/Sedoia/Mathwizard/releases/download/v1.0.4/Math-Wizard.apk"
+           download="MathWizard-1.0.4.apk"
+           class="rune-btn w-full">
+            <i class="fa-solid fa-download"></i> DOWNLOAD APK
+        </a>
+    </div>
+</div>
 
                 <div class="mt-8 sm:mt-12 p-4 sm:p-6 border border-ncst-neon/30" style="background:rgba(212,168,67,0.04);">
                     <p class="text-xs sm:text-sm text-gray-400">
@@ -317,6 +324,30 @@
                 </div>
             </div>
         </section>
+
+        <div id="download-thanks-modal" class="hidden fixed inset-0 z-[60] items-center justify-center p-4 bg-stone-950/80" role="dialog" aria-modal="true" aria-labelledby="thanks-title">
+    <div class="parchment-panel p-6 sm:p-8 max-w-md w-full text-center">
+        <div class="wax-seal wax-seal-gold mx-auto mb-4"><i class="fa-solid fa-check"></i></div>
+        <h3 id="thanks-title" class="font-magic text-2xl sm:text-3xl text-ncst-gold text-gold-glow mb-2">Thank You!</h3>
+        <p class="font-flavor italic text-sm mb-5" style="color:#a08060;">
+            Thank you for downloading Math Wizard. Your download has started.
+        </p>
+
+        <div class="text-left text-xs sm:text-sm text-gray-400 space-y-2 mb-6">
+            <p class="font-bold text-white">To install:</p>
+            <p>1. Open the downloaded <strong>MathWizard-1.0.4.apk</strong> file.</p>
+            <p>2. If asked, allow <strong>Install unknown apps</strong> for your browser or file manager.</p>
+            <p>3. If Play Protect shows a warning, tap <strong>Install anyway</strong>.</p>
+            <p>4. Sign in with the account you registered on this website.</p>
+        </div>
+
+        <p class="text-xs text-gray-500 mb-4">
+            Download didn't start? <a id="apk-retry-link" href="https://github.com/Sedoia/Mathwizard/releases/download/v1.0.4/Math-Wizard.apk" download class="text-ncst-neon underline">Click here to retry</a>.
+        </p>
+
+        <button id="close-download-thanks" type="button" class="iron-plaque-btn w-full">Close</button>
+    </div>
+</div>
 
         <footer class="py-8 sm:py-12 px-4 sm:px-6 text-center text-xs sm:text-sm text-gray-600 font-magic tracking-widest border-t border-ncst-neon/15 bg-ncst-dark">
             <div class="max-w-7xl mx-auto mb-6 sm:mb-8">
