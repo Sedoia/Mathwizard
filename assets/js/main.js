@@ -231,28 +231,37 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log('%cMaster Calculus Through Gaming', 'color: #FFD700; font-size: 14px;');
 
     // APK download thank-you popup
-const apkBtn = document.getElementById('apk-download-btn');
-const thanksModal = document.getElementById('download-thanks-modal');
-const closeThanks = document.getElementById('close-download-thanks');
+// APK download thank-you popup
+(function () {
+    const thanksModal = document.getElementById('download-thanks-modal');
+    if (!thanksModal) {
+        console.warn('Thank-you modal not found in the page.');
+        return;
+    }
 
-const openThanks = () => {
-    thanksModal?.classList.remove('hidden');
-    thanksModal?.classList.add('flex');
-};
-const hideThanks = () => {
-    thanksModal?.classList.add('hidden');
-    thanksModal?.classList.remove('flex');
-};
+    const openThanks = () => {
+        thanksModal.classList.remove('hidden');
+        thanksModal.classList.add('flex');
+    };
+    const hideThanks = () => {
+        thanksModal.classList.add('hidden');
+        thanksModal.classList.remove('flex');
+    };
 
-if (apkBtn && thanksModal) {
-    // Don't preventDefault: the browser starts the download itself.
-    apkBtn.addEventListener('click', () => setTimeout(openThanks, 500));
-    closeThanks?.addEventListener('click', hideThanks);
+    // Works for the main button and the retry link
+    document.addEventListener('click', (e) => {
+        const link = e.target.closest('#apk-download-btn');
+        if (link) {
+            openThanks();
+        }
+    });
+
+    document.getElementById('close-download-thanks')?.addEventListener('click', hideThanks);
     thanksModal.addEventListener('click', (e) => {
         if (e.target === thanksModal) hideThanks();
     });
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') hideThanks();
     });
-}
+})();
 });
