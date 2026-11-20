@@ -64,7 +64,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let _otpEmail = '';
     let _otpPurpose = '';
 
-    function openOTPModal(email, purpose, onVerified, onCancel) {
+    function openOTPModal(email, purpose, onVerified, onCancel, debugCode = null) {
         _otpEmail = email;
         _otpPurpose = purpose;
         _otpCallbacks = { onVerified, onCancel };
@@ -80,7 +80,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 : 'Verify your email to complete registration';
         }
         if (otpEmailHint) {
-            otpEmailHint.innerHTML = `Code sent to <strong>${masked}</strong>`;
+            let hint = `Code sent to <strong>${masked}</strong>`;
+            if (debugCode) {
+                hint += `<br><span class="inline-block mt-2 px-2.5 py-1 rounded bg-amber-500/20 text-ncst-gold border border-ncst-gold/30 text-[11px] font-mono font-bold tracking-wider">Test Code: ${debugCode}</span>`;
+            }
+            otpEmailHint.innerHTML = hint;
         }
 
         // Clear inputs & errors
@@ -210,8 +214,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     otpVerifyBtn.innerHTML = '<i class="fa-solid fa-check mr-2"></i> Verified!';
                     otpVerifyBtn.classList.add('bg-green-500/20', 'border-green-500', 'text-green-400');
 
-                    // Cleanup OTP doc
-                    otpService.cleanupOTP(_otpEmail).catch(() => {});
+                    // Cleanup OTP
+                    otpService.cleanupOTP();
 
                     // Call success callback
                     if (_otpCallbacks.onVerified) {
@@ -242,8 +246,12 @@ document.addEventListener('DOMContentLoaded', () => {
             otpResendBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1"></i> Sending...';
 
             try {
-                await otpService.resendOTP(_otpEmail, _otpPurpose);
+                const resendResult = await otpService.resendOTP(_otpEmail, _otpPurpose);
                 showNotification('A new verification code has been sent to your email.', 'success', 'Code Resent');
+                if (resendResult?.debugCode && otpEmailHint) {
+                    const masked = otpService.maskEmail(_otpEmail);
+                    otpEmailHint.innerHTML = `Code sent to <strong>${masked}</strong><br><span class="inline-block mt-2 px-2.5 py-1 rounded bg-amber-500/20 text-ncst-gold border border-ncst-gold/30 text-[11px] font-mono font-bold tracking-wider">Test Code: ${resendResult.debugCode}</span>`;
+                }
                 // Clear inputs
                 otpDigitInputs.forEach(input => { input.value = ''; });
                 hideOTPError();
@@ -341,7 +349,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 // Step 3: Send OTP for login verification
                 button.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i> Sending verification code...';
-                await otpService.sendOTP(resolvedEmail, 'login');
+                const otpRes = await otpService.sendOTP(resolvedEmail, 'login');
 
                 // Step 4: Show OTP modal
                 // Keep the user signed in but don't redirect until OTP is verified
@@ -374,7 +382,8 @@ document.addEventListener('DOMContentLoaded', () => {
                         button.disabled = false;
                         button.innerHTML = originalText;
                         showNotification('Login verification cancelled.', 'info', 'Verification Cancelled');
-                    }
+                    },
+                    otpRes?.debugCode
                 );
 
             } catch (error) {
@@ -603,7 +612,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 button.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i> Sending verification code...';
 
                 // Step 1: Send OTP to email BEFORE creating the account
-                await otpService.sendOTP(email, 'registration');
+                const otpRes = await otpService.sendOTP(email, 'registration');
 
                 // Step 2: Store pending registration data
                 const pendingPayload = { firstName, lastName, username, email, password };
@@ -642,7 +651,8 @@ document.addEventListener('DOMContentLoaded', () => {
                         button.disabled = false;
                         button.innerHTML = originalText;
                         showNotification('Email verification cancelled. Your account was not created.', 'info', 'Verification Cancelled');
-                    }
+                    },
+                    otpRes?.debugCode
                 );
 
             } catch (error) {

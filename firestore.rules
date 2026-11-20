@@ -2,6 +2,7 @@ rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
+
     function isSignedIn() {
       return request.auth != null;
     }
@@ -32,25 +33,77 @@ service cloud.firestore {
         && request.resource.data.seedVersion == resource.data.seedVersion;
     }
 
+    // Only gold and the earn-tracking fields (plus profile metadata) may change in one update.
+    function onlyGoldFieldsChanged() {
+      return request.resource.data.diff(resource.data).affectedKeys()
+        .hasOnly(['gold', 'earnedWindowStart', 'earnedInWindow', 'updatedAt', 'name', 'firstName', 'lastName', 'settings', 'avatar', 'purchaseHistory']);
+    }
+
+    function goldDelta() {
+      return request.resource.data.gold - resource.data.gold;
+    }
+
+    // Spending: gold goes down by at most 1000 per update, never below zero.
+    function isSpend() {
+      return goldDelta() < 0
+        && -goldDelta() <= 1000
+        && request.resource.data.gold >= 0
+        && request.resource.data.get('earnedWindowStart', 0) == resource.data.get('earnedWindowStart', 0)
+        && request.resource.data.get('earnedInWindow', 0) == resource.data.get('earnedInWindow', 0);
+    }
+
+    // Earning: gold goes up by at most 100 per update, and at most 300 in any rolling 24 hours.
+    function isEarn() {
+      let now = request.time;
+      let epoch = timestamp.date(1970, 1, 1);
+      let start = resource.data.get('earnedWindowStart', epoch);
+      let used = resource.data.get('earnedInWindow', 0);
+      let newWindow = now.toMillis() - start.toMillis() >= 86400000;
+      return goldDelta() > 0
+        && goldDelta() <= 100
+        && (
+          (newWindow
+            && request.resource.data.get('earnedWindowStart', epoch) == now
+            && request.resource.data.get('earnedInWindow', 0) == goldDelta())
+          ||
+          (!newWindow
+            && request.resource.data.get('earnedWindowStart', epoch) == start
+            && request.resource.data.get('earnedInWindow', 0) == used + goldDelta()
+            && used + goldDelta() <= 300)
+        );
+    }
+
+    // Gold unchanged: allowed (other progress fields are covered by isSafePlayerOwnerUpdate).
+    function isGoldUnchanged() {
+      return goldDelta() == 0
+        && request.resource.data.get('earnedWindowStart', 0) == resource.data.get('earnedWindowStart', 0)
+        && request.resource.data.get('earnedInWindow', 0) == resource.data.get('earnedInWindow', 0);
+    }
+
     // User profile documents (users/{uid})
-    // Owner can manage own profile, but cannot escalate role.
     match /users/{uid} {
       allow create: if isOwner(uid)
         && request.resource.data.id == uid
-        && request.resource.data.role == 'player';
+        && request.resource.data.role == 'player'
+        && request.resource.data.gold == 0;
       allow get: if isOwner(uid) || isAdmin();
       allow list: if isAdmin();
       allow update: if (
           isOwner(uid)
           && request.resource.data.id == resource.data.id
-          && request.resource.data.role == resource.data.role
+          && request.resource.data.get('role', 'player') == resource.data.get('role', 'player')
+          && onlyGoldFieldsChanged()
+          && (isSpend() || isEarn() || isGoldUnchanged())
         ) || isAdmin();
       allow delete: if isOwner(uid) || isAdmin();
     }
 
+    // Game progress (game_users/{uid}), used by FirestoreProgressStore.
+    match /game_users/{uid} {
+      allow read, write: if isOwner(uid) || isAdmin();
+    }
+
     // Player data documents (players/{uid})
-    // Owner can update cosmetic/profile-facing fields only.
-    // Admin can read/write for moderation/support and controlled adjustments.
     match /players/{uid} {
       allow create: if (
           isOwner(uid)
@@ -64,11 +117,15 @@ service cloud.firestore {
       allow delete: if isOwner(uid) || isAdmin();
     }
 
-    // Shop item catalog for in-game store management.
-    // Admin maintains catalog; signed-in users can read items.
+    // Shop item catalog
     match /shop_items/{itemId} {
       allow get, list: if isSignedIn();
       allow create, update, delete: if isAdmin();
+    }
+
+    // OTP Verifications (Handled exclusively by serverless functions; block direct client access)
+    match /otp_verifications/{docId} {
+      allow read, write: if false;
     }
 
     // Block everything else by default

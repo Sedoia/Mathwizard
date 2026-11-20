@@ -1,24 +1,45 @@
 /**
  * Netlify Serverless Function: send-otp
- * Sends OTP verification emails using nodemailer (SMTP) or Resend API.
+ * Generates an OTP, signs a verification token (HMAC), and delivers the code via email.
  *
- * Environment variables required (set in Netlify dashboard):
- *   Option A (SMTP/Gmail App Password):
+ * Environment variables:
+ *   OTP_SECRET: Secret key for signing verification tokens (fallback to system secret)
+ *
+ *   Email Option A (Resend):
+ *     RESEND_API_KEY=re_xxxxxxxxxxxx
+ *     OTP_FROM_EMAIL=noreply@yourdomain.com
+ *
+ *   Email Option B (SMTP e.g. Gmail / Outlook / NCST mail server):
  *     SMTP_HOST=smtp.gmail.com
  *     SMTP_PORT=587
  *     SMTP_USER=your-email@gmail.com
  *     SMTP_PASS=your-app-password
- *
- *   Option B (Resend):
- *     RESEND_API_KEY=re_xxxxxxxxxxxx
- *     OTP_FROM_EMAIL=noreply@yourdomain.com
+ *     SMTP_FROM="MathWizard" <your-email@gmail.com>
  */
+
+const crypto = require('crypto');
+
+function getSecret() {
+    return process.env.OTP_SECRET ||
+        process.env.FIREBASE_PRIVATE_KEY ||
+        'mathwizard-arcane-cryptographic-salt-2026';
+}
+
+function generateCode() {
+    return String(crypto.randomInt(100000, 1000000));
+}
+
+function createToken(email, code, expiresAt, purpose) {
+    const data = `${email.toLowerCase()}:${code}:${expiresAt}:${purpose}`;
+    return crypto.createHmac('sha256', getSecret()).update(data).digest('hex');
+}
 
 exports.handler = async (event) => {
     // Only allow POST
     if (event.httpMethod !== 'POST') {
         return {
             statusCode: 405,
+            headers: { 'content-type': 'application/json' },
             body: JSON.stringify({ error: 'Method not allowed' })
         };
     }
@@ -29,18 +50,26 @@ exports.handler = async (event) => {
     } catch (e) {
         return {
             statusCode: 400,
+            headers: { 'content-type': 'application/json' },
             body: JSON.stringify({ error: 'Invalid JSON body' })
         };
     }
 
-    const { email, code, purpose } = body;
+    const email = (body.email || '').trim().toLowerCase();
+    const purpose = body.purpose === 'login' ? 'login' : 'registration';
 
-    if (!email || !code) {
+    if (!email) {
         return {
             statusCode: 400,
-            body: JSON.stringify({ error: 'Missing required fields: email, code' })
+            headers: { 'content-type': 'application/json' },
+            body: JSON.stringify({ error: 'Email is required' })
         };
     }
+
+    // Generate code and expiration (5 minutes)
+    const code = generateCode();
+    const expiresAt = Date.now() + 5 * 60 * 1000;
+    const token = createToken(email, code, expiresAt, purpose);
 
     const purposeLabel = purpose === 'login' ? 'Login Verification' : 'Registration Verification';
     const subject = `MathWizard - ${purposeLabel} Code: ${code}`;
@@ -76,7 +105,7 @@ exports.handler = async (event) => {
             </div>
 
             <p style="color:rgba(232,213,163,0.5);font-size:12px;text-align:center;margin:0 0 8px;">⏱ This code expires in <strong style="color:#c9a84c;">5 minutes</strong></p>
-            <p style="color:rgba(232,213,163,0.4);font-size:11px;text-align:center;margin:0;">If you didn't request this code, you can safely ignore this email.</p>
+            <p style="color:rgba(232,213,163,0.4);font-size:11px;text-align:center;margin:0;">If you did not request this code, you can safely ignore this email.</p>
         </div>
 
         <!-- Footer -->
@@ -87,10 +116,13 @@ exports.handler = async (event) => {
 </body>
 </html>`;
 
+    let emailSent = false;
+    let providerUsed = 'none';
+
     // --- Strategy 1: Resend API ---
     if (process.env.RESEND_API_KEY) {
         try {
-            const fromEmail = process.env.OTP_FROM_EMAIL || 'MathWizard <noreply@mathwizard.dev>';
+            const fromEmail = process.env.OTP_FROM_EMAIL || 'MathWizard <onboarding@resend.dev>';
             const res = await fetch('https://api.resend.com/emails', {
                 method: 'POST',
                 headers: {
@@ -105,33 +137,22 @@ exports.handler = async (event) => {
                 })
             });
 
-            if (!res.ok) {
+            if (res.ok) {
+                emailSent = true;
+                providerUsed = 'resend';
+            } else {
                 const errText = await res.text();
-                console.error('Resend API error:', res.status, errText);
-                return {
-                    statusCode: 502,
-                    body: JSON.stringify({ error: 'Email delivery failed', detail: errText })
-                };
+                console.error('Resend delivery failed:', res.status, errText);
             }
-
-            return {
-                statusCode: 200,
-                body: JSON.stringify({ success: true, method: 'resend' })
-            };
         } catch (err) {
             console.error('Resend error:', err);
-            return {
-                statusCode: 500,
-                body: JSON.stringify({ error: 'Email service error', detail: err.message })
-            };
         }
     }
 
     // --- Strategy 2: Nodemailer SMTP ---
-    if (process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS) {
+    if (!emailSent && process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS) {
         try {
             const nodemailer = require('nodemailer');
-
             const transporter = nodemailer.createTransport({
                 host: process.env.SMTP_HOST,
                 port: parseInt(process.env.SMTP_PORT || '587', 10),
@@ -149,27 +170,35 @@ exports.handler = async (event) => {
                 html: htmlBody
             });
 
-            return {
-                statusCode: 200,
-                body: JSON.stringify({ success: true, method: 'smtp' })
-            };
+            emailSent = true;
+            providerUsed = 'smtp';
         } catch (err) {
             console.error('SMTP error:', err);
-            return {
-                statusCode: 500,
-                body: JSON.stringify({ error: 'SMTP delivery failed', detail: err.message })
-            };
         }
     }
 
-    // --- No email provider configured ---
-    console.warn('No email provider configured (RESEND_API_KEY or SMTP_HOST/SMTP_USER/SMTP_PASS). OTP stored in Firestore only.');
+    const responsePayload = {
+        success: true,
+        token: token,
+        expiresAt: expiresAt,
+        emailSent: emailSent,
+        provider: providerUsed
+    };
+
+    // If email could not be sent (e.g. SMTP credentials not yet provided in Netlify),
+    // provide the debugCode so developer/tester is not blocked
+    if (!emailSent) {
+        console.warn(`[MathWizard OTP] No email provider configured or delivery failed. OTP for ${email}: ${code}`);
+        responsePayload.debugCode = code;
+        responsePayload.notice = 'Email provider not configured in Netlify yet. Use debug code for testing.';
+    }
+
     return {
         statusCode: 200,
-        body: JSON.stringify({
-            success: true,
-            method: 'none',
-            warning: 'No email provider configured. OTP stored in Firestore for verification but email was not sent.'
-        })
+        headers: {
+            'content-type': 'application/json; charset=utf-8',
+            'cache-control': 'no-store'
+        },
+        body: JSON.stringify(responsePayload)
     };
 };

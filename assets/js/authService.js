@@ -66,7 +66,7 @@ class AuthService {
             level: role === 'admin' ? 99 : 1,
             xp: role === 'admin' ? 999999 : 0,
             xpToNextLevel: role === 'admin' ? 1000000 : 1000,
-            gold: role === 'admin' ? 999999 : 500,
+            gold: role === 'admin' ? 999999 : 0,
             crystals: role === 'admin' ? 99999 : 50,
             energy: 100,
             createdAt: new Date().toISOString(),
@@ -209,7 +209,7 @@ class AuthService {
                 defense: 5
             },
             currency: {
-                gold: profile.gold || 500,
+                gold: Number.isFinite(profile.gold) ? profile.gold : 0,
                 crystals: profile.crystals || 50,
                 energy: {
                     current: profile.energy || 100,

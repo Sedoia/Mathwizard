@@ -59,7 +59,7 @@ class PlayerService {
                 defense: 5
             },
             currency: {
-                gold: 500,
+                gold: 0,
                 aether: 500,
                 crystals: 50,
                 energy: {
