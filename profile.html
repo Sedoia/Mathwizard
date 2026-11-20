@@ -50,9 +50,12 @@
                 if (goldEl) goldEl.textContent = (user.gold || 0).toLocaleString();
                 
                 // Update Numerals (formerly Arcane Crystals)
+                // Apply fresh-player correction: if still at legacy default of 50 and no real progress, show 0
                 const crystalsEl = document.getElementById('player-crystals');
                 if (crystalsEl) {
-                    const numVal = Number(user.numerals ?? user.crystals ?? user.currency?.numerals ?? user.currency?.crystals ?? 0);
+                    let numVal = Number(user.numerals ?? user.crystals ?? user.currency?.numerals ?? user.currency?.crystals ?? 0);
+                    const isFresh = (Number(user.level || 1) <= 1) && (Number(user.challengesWon || 0) === 0) && (user.role !== 'admin');
+                    if (isFresh && numVal === 50) numVal = 0;
                     crystalsEl.textContent = numVal.toLocaleString();
                 }
 

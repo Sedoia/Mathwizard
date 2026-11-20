@@ -127,6 +127,9 @@
                 <button onclick="showTab('users')" class="tab-btn px-4 py-2 text-sm font-bold uppercase tracking-wider rounded-sm transition-all" data-tab="users">
                     <i class="fa-solid fa-users mr-2"></i>Users
                 </button>
+                <button onclick="showTab('progress')" class="tab-btn px-4 py-2 text-sm font-bold uppercase tracking-wider rounded-sm transition-all" data-tab="progress">
+                    <i class="fa-solid fa-trophy mr-2"></i>Player Progress
+                </button>
             </div>
 
             <!-- Overview Tab -->
@@ -255,6 +258,56 @@
                 </div>
             </div>
 
+            <!-- Player Progress Tab -->
+            <div id="tab-progress" class="tab-content hidden">
+                <!-- Top 3 Podium -->
+                <div id="progress-podium" class="grid grid-cols-3 gap-4 mb-8"></div>
+
+                <!-- Controls -->
+                <div class="parchment-panel p-5 mb-6">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                        <h3 class="font-magic text-xl text-ncst-gold text-gold-glow">
+                            <i class="fa-solid fa-ranking-star mr-2"></i>Player Progress Tracker
+                        </h3>
+                        <div class="flex flex-wrap gap-2">
+                            <input id="progress-search" type="text" placeholder="Search player..." class="px-4 py-2 bg-ncst-dark/50 border border-ncst-neon/30 rounded-lg text-white placeholder-gray-500 text-sm min-h-[44px]">
+                            <select id="progress-sort" class="px-4 py-2 bg-ncst-dark/50 border border-ncst-neon/30 rounded-lg text-white text-sm min-h-[44px]">
+                                <option value="score">Sort: Progress Score</option>
+                                <option value="level">Sort: Level</option>
+                                <option value="challengesWon">Sort: Challenges Won</option>
+                                <option value="streak">Sort: Streak</option>
+                                <option value="playTime">Sort: Play Time</option>
+                            </select>
+                        </div>
+                    </div>
+                    <p id="progress-summary" class="text-xs text-gray-400 mt-3">Loading player data...</p>
+                </div>
+
+                <!-- Progress Table -->
+                <div class="parchment-panel p-6">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm">
+                            <thead>
+                                <tr class="border-b border-white/10">
+                                    <th class="text-left py-3 px-3 text-ncst-neon uppercase tracking-wider text-xs">Rank</th>
+                                    <th class="text-left py-3 px-3 text-ncst-neon uppercase tracking-wider text-xs">Player</th>
+                                    <th class="text-left py-3 px-3 text-ncst-neon uppercase tracking-wider text-xs">Level</th>
+                                    <th class="text-left py-3 px-3 text-ncst-neon uppercase tracking-wider text-xs">Challenges</th>
+                                    <th class="text-left py-3 px-3 text-ncst-neon uppercase tracking-wider text-xs">Streak</th>
+                                    <th class="text-left py-3 px-3 text-ncst-neon uppercase tracking-wider text-xs">Play Time</th>
+                                    <th class="text-left py-3 px-3 text-ncst-neon uppercase tracking-wider text-xs">Aether</th>
+                                    <th class="text-left py-3 px-3 text-ncst-neon uppercase tracking-wider text-xs">Score</th>
+                                    <th class="text-left py-3 px-3 text-ncst-neon uppercase tracking-wider text-xs">Progress</th>
+                                </tr>
+                            </thead>
+                            <tbody id="progress-table-body" class="text-gray-300">
+                                <tr><td colspan="9" class="py-10 text-center text-gray-400">Loading player progress...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </main>
 
@@ -288,6 +341,7 @@
         const adminState = {
             users: [],
             purchases: [],
+            progressPlayers: [],
             revenueChart: null,
             userActivityChart: null,
             purchaseCategoryChart: null
@@ -638,6 +692,143 @@
             });
         }
 
+        // ============================================================
+        //  PLAYER PROGRESS TRACKER
+        // ============================================================
+
+        const MEDAL = ['🥇', '🥈', '🥉'];
+
+        function computeScore(u) {
+            return (Number(u.level || 1) * 100)
+                 + (Number(u.challengesWon || 0) * 10)
+                 + (Number(u.streak || 0) * 5)
+                 + (Number(u.xp || 0));
+        }
+
+        function fmtPlayTime(hours) {
+            if (!hours || hours < 0.01) return '0h';
+            if (hours < 1) return `${Math.round(hours * 60)}m`;
+            return `${hours.toFixed(1)}h`;
+        }
+
+        function renderProgressPodium(top3) {
+            const container = document.getElementById('progress-podium');
+            if (!container) return;
+
+            if (!top3.length) {
+                container.innerHTML = '';
+                return;
+            }
+
+            // Order: 2nd, 1st, 3rd (classic podium layout)
+            const order = [top3[1], top3[0], top3[2]].filter(Boolean);
+            const podiumHeight = ['h-20', 'h-28', 'h-16'];
+            const podiumBorder = ['border-gray-400', 'border-ncst-gold', 'border-orange-400'];
+            const podiumLabel = ['Silver', 'Gold', 'Bronze'];
+
+            // Rebuild to [2nd, 1st, 3rd] display order with matching heights/borders
+            const display = [
+                { user: top3[1], rank: 2, height: 'h-20', border: 'border-gray-400', label: 'Silver', medal: '🥈' },
+                { user: top3[0], rank: 1, height: 'h-28', border: 'border-ncst-gold', label: 'Gold',   medal: '🥇' },
+                { user: top3[2], rank: 3, height: 'h-16', border: 'border-orange-400', label: 'Bronze', medal: '🥉' }
+            ].filter(d => d.user);
+
+            container.innerHTML = display.map(d => `
+                <div class="flex flex-col items-center gap-2">
+                    <div class="text-3xl">${d.medal}</div>
+                    <div class="parchment-panel p-3 border-2 ${d.border} text-center w-full">
+                        <div class="w-10 h-10 rounded-full bg-ncst-neon/20 border-2 ${d.border} flex items-center justify-center mx-auto mb-2 text-lg font-bold">
+                            ${String(d.user.name || d.user.username || '?').slice(0,1).toUpperCase()}
+                        </div>
+                        <p class="font-bold text-white text-sm truncate">${d.user.name || d.user.username || 'Unknown'}</p>
+                        <p class="text-xs text-gray-400 truncate">@${d.user.username || 'player'}</p>
+                        <p class="text-xs text-ncst-gold font-bold mt-1">Score: ${d.user.score.toLocaleString()}</p>
+                        <p class="text-xs text-gray-400">Lv. ${d.user.level} · ${d.user.challengesWon} wins</p>
+                    </div>
+                    <div class="${d.height} w-full rounded-sm ${d.border} border-t-4" style="background: linear-gradient(to top, rgba(100,255,218,0.05), transparent)"></div>
+                </div>
+            `).join('');
+        }
+
+        function renderProgressRows() {
+            const tbody = document.getElementById('progress-table-body');
+            const summary = document.getElementById('progress-summary');
+            const searchTerm = (document.getElementById('progress-search')?.value || '').trim().toLowerCase();
+            const sortKey = document.getElementById('progress-sort')?.value || 'score';
+
+            let rows = adminState.progressPlayers.slice();
+
+            if (searchTerm) {
+                rows = rows.filter(u =>
+                    String(u.name || '').toLowerCase().includes(searchTerm) ||
+                    String(u.username || '').toLowerCase().includes(searchTerm) ||
+                    String(u.email || '').toLowerCase().includes(searchTerm)
+                );
+            }
+
+            const sortFns = {
+                score:         (a, b) => b.score - a.score,
+                level:         (a, b) => b.level - a.level || b.score - a.score,
+                challengesWon: (a, b) => b.challengesWon - a.challengesWon || b.score - a.score,
+                streak:        (a, b) => b.streak - a.streak || b.score - a.score,
+                playTime:      (a, b) => b.playTime - a.playTime || b.score - a.score
+            };
+            rows.sort(sortFns[sortKey] || sortFns.score);
+
+            if (summary) summary.textContent = `Showing ${rows.length} player${rows.length !== 1 ? 's' : ''}`;
+            if (!tbody) return;
+
+            if (!rows.length) {
+                tbody.innerHTML = '<tr><td colspan="9" class="py-10 text-center text-gray-400">No players found.</td></tr>';
+                return;
+            }
+
+            const topScore = rows[0]?.score || 1;
+
+            tbody.innerHTML = rows.slice(0, 200).map((u, idx) => {
+                const rank = idx + 1;
+                const medal = rank <= 3 ? MEDAL[rank - 1] : '';
+                const rankDisplay = medal
+                    ? `<span class="text-lg">${medal}</span>`
+                    : `<span class="text-gray-400 font-bold">#${rank}</span>`;
+                const pct = Math.round((u.score / topScore) * 100);
+                const barColor = rank === 1 ? 'bg-ncst-gold' : rank === 2 ? 'bg-gray-400' : rank === 3 ? 'bg-orange-400' : 'bg-ncst-neon';
+                const initials = String(u.name || u.username || '?').slice(0, 1).toUpperCase();
+                const rowBg = rank <= 3 ? 'bg-ncst-gold/5' : '';
+
+                return `
+                    <tr class="border-b border-white/5 hover:bg-white/5 transition-colors ${rowBg}">
+                        <td class="py-3 px-3">${rankDisplay}</td>
+                        <td class="py-3 px-3">
+                            <div class="flex items-center gap-2">
+                                <div class="w-8 h-8 rounded-full bg-ncst-neon/20 border border-ncst-neon/40 flex items-center justify-center shrink-0">
+                                    <span class="text-ncst-neon text-xs font-bold">${initials}</span>
+                                </div>
+                                <div>
+                                    <p class="font-bold text-white text-sm">${u.name || u.username || 'Unknown'}</p>
+                                    <p class="text-xs text-gray-400">@${u.username || 'player'}</p>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="py-3 px-3"><span class="text-ncst-gold font-bold">${u.level}</span></td>
+                        <td class="py-3 px-3"><span class="text-white">${u.challengesWon.toLocaleString()}</span></td>
+                        <td class="py-3 px-3"><span class="${u.streak > 0 ? 'text-ncst-neon' : 'text-gray-500'}">${u.streak} day${u.streak !== 1 ? 's' : ''}</span></td>
+                        <td class="py-3 px-3"><span class="text-gray-300">${fmtPlayTime(u.playTime)}</span></td>
+                        <td class="py-3 px-3"><span class="text-ncst-gold">${Number(u.aether || 0).toLocaleString()}</span></td>
+                        <td class="py-3 px-3"><span class="font-bold text-ncst-neon">${u.score.toLocaleString()}</span></td>
+                        <td class="py-3 px-3 min-w-[100px]">
+                            <div class="flex items-center gap-2">
+                                <div class="flex-1 h-2 bg-white/10 rounded-full overflow-hidden">
+                                    <div class="h-full ${barColor} rounded-full transition-all" style="width:${pct}%"></div>
+                                </div>
+                                <span class="text-xs text-gray-400 w-9 text-right">${pct}%</span>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
         async function loadAdminData() {
             if (!window.firebaseDb) return;
 
@@ -653,6 +844,7 @@
 
             const purchases = [];
             const users = [];
+            adminState.progressPlayers = [];
 
             usersSnapshot.forEach((doc) => {
                 const user = doc.data() || {};
@@ -671,17 +863,38 @@
                 );
                 const spent = mergedPurchases.reduce((sum, row) => sum + Number(row.amount || row.price || 0), 0);
 
+                const pLevel    = Number(profile.level || user.level || 1);
+                const pWon      = Number(profile?.stats?.challengesWon || 0);
+                const pTime     = Number(profile?.stats?.playTime || 0);
+                const pStreak   = Number(profile?.streak?.current ?? profile?.streak?.count ?? 0);
+                const pXp       = Number(profile?.xp || profile?.stats?.xp || 0);
+                const pAether   = Number(profile?.currency?.aether ?? profile?.currency?.gold ?? user.aether ?? user.gold ?? 0);
+
                 users.push({
                     id: doc.id,
                     name: user.name || user.username || 'Unnamed',
                     username: user.username || '',
                     email: user.email || '',
                     createdAt: toDate(user.createdAt),
-                    level: profile.level || user.level || 1,
-                    challengesWon: profile?.stats?.challengesWon || 0,
-                    playTime: profile?.stats?.playTime || 0,
+                    level: pLevel,
+                    challengesWon: pWon,
+                    playTime: pTime,
                     active: true,
                     totalSpent: spent
+                });
+
+                adminState.progressPlayers.push({
+                    id: doc.id,
+                    name: user.name || user.username || 'Unnamed',
+                    username: user.username || '',
+                    email: user.email || '',
+                    level: pLevel,
+                    challengesWon: pWon,
+                    playTime: pTime,
+                    streak: pStreak,
+                    xp: pXp,
+                    aether: pAether,
+                    score: (pLevel * 100) + (pWon * 10) + (pStreak * 5) + pXp
                 });
 
                 mergedPurchases.forEach((entry, index) => {
@@ -708,11 +921,16 @@
             adminState.users = users;
             adminState.purchases = purchases;
 
+            // Sort progress players by score descending
+            adminState.progressPlayers.sort((a, b) => b.score - a.score);
+
             updateStatsCards();
             renderPurchaseRows();
             renderUsersRows();
             renderTopItems();
             renderCharts();
+            renderProgressPodium(adminState.progressPlayers.slice(0, 3));
+            renderProgressRows();
         }
 
         document.addEventListener('DOMContentLoaded', async () => {
@@ -723,6 +941,11 @@
             if (searchPurchases) searchPurchases.addEventListener('input', renderPurchaseRows);
             if (rangePurchases) rangePurchases.addEventListener('change', renderPurchaseRows);
             if (searchUsers) searchUsers.addEventListener('input', renderUsersRows);
+
+            const searchProgress = document.getElementById('progress-search');
+            const sortProgress   = document.getElementById('progress-sort');
+            if (searchProgress) searchProgress.addEventListener('input', renderProgressRows);
+            if (sortProgress)   sortProgress.addEventListener('change', renderProgressRows);
 
             try {
                 await loadAdminData();
