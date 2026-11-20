@@ -71,10 +71,19 @@ class ProfileRenderer {
 
     /**
      * Render expensive tab content only when a tab is opened.
-     * @param {string} tabName - Tab key (statistics, purchases, skins, achievements)
+     * @param {string} tabName - Tab key (statistics, purchases, achievements)
+     * @param {boolean} [force=false] - Force re-render even if previously rendered
      */
-    renderTabContent(tabName) {
-        if (!tabName || this.renderedTabs.has(tabName)) {
+    renderTabContent(tabName, force = false) {
+        if (!tabName) {
+            return;
+        }
+
+        if (force) {
+            this.renderedTabs.delete(tabName);
+        }
+
+        if (this.renderedTabs.has(tabName)) {
             return;
         }
 
@@ -86,12 +95,6 @@ class ProfileRenderer {
 
         if (tabName === 'purchases') {
             this.renderPurchasesTab();
-            this.renderedTabs.add(tabName);
-            return;
-        }
-
-        if (tabName === 'skins') {
-            this.renderSkinsTab();
             this.renderedTabs.add(tabName);
             return;
         }
@@ -174,16 +177,16 @@ class ProfileRenderer {
      * Render daily streak information
      */
     renderDailyStreak() {
-        const data = this.playerData.streak;
-        const current = Number(data.current || 0);
-        const best = Number(data.best || 0);
+        const streak = this.playerData.streak || {};
+        const current = Number(streak.current || 0);
+        const best = Number(streak.best || current || 0);
 
         const panel = document.getElementById('daily-streak-panel');
         if (panel) {
             panel.innerHTML = `
                 <p class="font-heading text-xs uppercase tracking-wider mb-2" style="color:#d4a843;"><i class="fa-solid fa-fire text-ncst-gold mr-1"></i>Current Streak</p>
-                <p class="text-3xl font-bold text-ncst-gold runic-glow">${current} Days</p>
-                <p class="font-flavor italic text-xs mt-1" style="color:#a08060;">Best: ${best} days</p>
+                <p class="text-3xl font-bold text-ncst-gold runic-glow">${current} Day${current === 1 ? '' : 's'}</p>
+                <p class="font-flavor italic text-xs mt-1" style="color:#a08060;">${best > 0 ? `Best: ${best} day${best === 1 ? '' : 's'}` : 'Play today to start your streak!'}</p>
             `;
         }
     }
@@ -192,7 +195,7 @@ class ProfileRenderer {
      * Render player stats section
      */
     renderStats() {
-        const stats = this.playerData.stats;
+        const stats = this.playerData.stats || {};
         const level = Number(this.playerData.level || 1);
 
         const xpLevelLabel = document.getElementById('xp-level-label');
@@ -201,8 +204,10 @@ class ProfileRenderer {
         }
         
         // Update XP bar
-        const xpWidth = (stats.xp / stats.maxXp) * 100;
-        const xpBar = document.getElementById('xp-bar') || document.querySelector('.h-full.w-4\/5, .h-full.bg-gradient-to-r');
+        const xp = Number(stats.xp || 0);
+        const maxXp = Number(stats.maxXp || 1000);
+        const xpWidth = Math.min(100, Math.max(0, (xp / maxXp) * 100));
+        const xpBar = document.getElementById('xp-bar');
         if (xpBar) {
             xpBar.style.width = `${xpWidth}%`;
         }
@@ -210,7 +215,7 @@ class ProfileRenderer {
         // Update XP text
         const xpText = document.getElementById('xp-text');
         if (xpText) {
-            xpText.textContent = `${stats.xp} / ${stats.maxXp} XP`;
+            xpText.textContent = `${xp.toLocaleString()} / ${maxXp.toLocaleString()} XP`;
         }
 
         const setText = (id, value) => {
@@ -220,41 +225,33 @@ class ProfileRenderer {
             }
         };
 
-        setText('stat-calc-power', String(stats.calcPower));
-        setText('stat-accuracy', `${Number(stats.accuracy).toFixed(1)}%`);
-        setText('stat-challenges', String(stats.challengesWon));
-        setText('stat-play-time', `${stats.playTime}h`);
-        setText('stat-crit-rate', `${stats.critRate}%`);
-        setText('stat-dodge', `${stats.dodge}%`);
-        setText('stat-defense', String(stats.defense));
+        setText('stat-calc-power', String(stats.calcPower ?? (10 + (level - 1) * 5)));
+        setText('stat-accuracy', `${Number(stats.accuracy || 0).toFixed(1)}%`);
+        setText('stat-challenges', Number(stats.challengesWon || 0).toLocaleString());
+        setText('stat-play-time', `${Number(stats.playTime || 0).toFixed(1)}h`);
     }
 
     /**
      * Render currency section
      */
     renderCurrency() {
-        const currency = this.playerData.currency;
+        const currency = this.playerData.currency || {};
 
         const goldEl = document.getElementById('player-gold');
         if (goldEl) {
-            goldEl.textContent = Number(currency.aether ?? currency.gold ?? 0).toLocaleString();
+            goldEl.textContent = Number(currency.aether ?? currency.gold ?? this.playerData.gold ?? 0).toLocaleString();
         }
 
         const crystalsEl = document.getElementById('player-crystals');
         if (crystalsEl) {
-            crystalsEl.textContent = Number(currency.crystals || 0).toLocaleString();
+            crystalsEl.textContent = Number(currency.crystals ?? this.playerData.crystals ?? 0).toLocaleString();
         }
 
-        // Update energy bar
-        const energyPercent = (currency.energy.current / currency.energy.max) * 100;
-        const energyBar = document.querySelector('[class*="bg-ncst-neon"]');
-        if (energyBar) {
-            energyBar.style.width = `${energyPercent}%`;
-        }
-
-        const energyText = document.querySelector('[class*="text-ncst-neon"][class*="font-bold"]');
-        if (energyText) {
-            energyText.textContent = `${currency.energy.current}/${currency.energy.max}`;
+        const energyEl = document.getElementById('player-energy');
+        if (energyEl) {
+            const current = Number(currency.energy?.current ?? currency.energy ?? this.playerData.energy ?? 100);
+            const max = Number(currency.energy?.max ?? 100);
+            energyEl.textContent = `${current} / ${max}`;
         }
     }
 
@@ -482,23 +479,34 @@ class ProfileRenderer {
      * Render achievements section
      */
     renderAchievements() {
-        const achievements = this.playerData.achievements;
+        const achievements = this.playerData.achievements || [];
         const container = document.getElementById('recent-achievements-grid');
         
         if (container) {
+            if (!achievements.length) {
+                container.innerHTML = '<div class="col-span-full text-center text-gray-400 py-4">No achievements available. Complete challenges in the game to unlock achievements!</div>';
+                return;
+            }
+
             let html = '';
-            achievements.forEach(achievement => {
-                const locked = !achievement.unlocked;
+            // Display top 4 achievements (prioritizing unlocked ones)
+            const sorted = [...achievements].sort((a, b) => (b.unlocked ? 1 : 0) - (a.unlocked ? 1 : 0)).slice(0, 4);
+
+            sorted.forEach(achievement => {
+                const unlocked = !!achievement.unlocked;
                 const safeName = this.escapeHtml(achievement.name);
                 const safeDescription = this.escapeHtml(achievement.description);
-                const safeDate = this.escapeHtml(achievement.date);
+                const safeDate = achievement.date ? this.escapeHtml(achievement.date) : '';
                 const safeIcon = this.sanitizeIcon(achievement.icon, 'fa-medal');
                 html += `
-                    <div class="p-4 glass-panel rounded-lg text-center hover:border-ncst-neon transition-all cursor-pointer ${locked ? 'opacity-50' : ''}"
-                         title="${locked ? 'Locked' : 'Unlocked: ' + safeDate}">
-                        <i class="fa-solid ${safeIcon} text-2xl ${locked ? 'text-gray-600' : 'text-ncst-gold'} mb-2"></i>
-                        <p class="font-bold text-white text-sm mb-1">${safeName}</p>
-                        <p class="text-xs text-gray-400">${safeDescription}</p>
+                    <div class="p-4 glass-panel rounded-lg text-center border transition-all cursor-pointer ${unlocked ? 'border-ncst-gold/40 hover:border-ncst-gold shadow-[0_0_12px_rgba(201,168,76,0.15)]' : 'border-white/10 opacity-60'}"
+                         title="${unlocked ? (safeDate ? 'Unlocked: ' + safeDate : 'Unlocked') : 'In progress: complete in-game challenge'}">
+                        <div class="text-3xl mb-2"><i class="fa-solid ${safeIcon} ${unlocked ? 'text-ncst-gold' : 'text-gray-500'}"></i></div>
+                        <p class="font-bold text-white text-sm mb-1 truncate">${safeName}</p>
+                        <p class="text-xs text-gray-400 line-clamp-2">${safeDescription}</p>
+                        <span class="inline-block mt-2 text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded ${unlocked ? 'bg-ncst-gold/20 text-ncst-gold' : 'bg-gray-700/50 text-gray-400'}">
+                            ${unlocked ? 'Unlocked' : 'Locked'}
+                        </span>
                     </div>
                 `;
             });
@@ -513,16 +521,24 @@ class ProfileRenderer {
         }
 
         const stats = this.playerData.stats || {};
+        const currency = this.playerData.currency || {};
+        const streak = this.playerData.streak || {};
+
         const solved = Number(stats.challengesWon || 0);
         const accuracy = Number(stats.accuracy || 0);
         const hours = Number(stats.playTime || 0);
-        const bestStreak = Number(this.playerData?.streak?.best || 0);
+        const currentStreak = Number(streak.current || 0);
+        const bestStreak = Number(streak.best || currentStreak || 0);
+        const crystals = Number(currency.crystals ?? this.playerData.crystals ?? 0);
+        const energyCurrent = Number(currency.energy?.current ?? currency.energy ?? this.playerData.energy ?? 100);
+        const energyMax = Number(currency.energy?.max ?? 100);
 
-        const derivativeScore = Math.min(100, Math.max(0, Math.round(accuracy)));
-        const integralScore = Math.min(100, Math.max(0, Math.round(accuracy * 0.92)));
-        const limitsScore = Math.min(100, Math.max(0, Math.round(accuracy * 0.88)));
-        const applicationsScore = Math.min(100, Math.max(0, Math.round(accuracy * 0.85)));
-        const seriesScore = Math.min(100, Math.max(0, Math.round(accuracy * 0.78)));
+        const baseMastery = solved > 0 ? accuracy : 0;
+        const derivativeScore = Math.min(100, Math.max(0, Math.round(baseMastery)));
+        const integralScore = Math.min(100, Math.max(0, Math.round(baseMastery * 0.92)));
+        const limitsScore = Math.min(100, Math.max(0, Math.round(baseMastery * 0.88)));
+        const applicationsScore = Math.min(100, Math.max(0, Math.round(baseMastery * 0.85)));
+        const seriesScore = Math.min(100, Math.max(0, Math.round(baseMastery * 0.78)));
 
         tab.innerHTML = `
             <div class="parchment-panel p-6 sm:p-8 mb-8">
@@ -530,7 +546,8 @@ class ProfileRenderer {
                     <i class="fa-solid fa-chart-line text-ncst-gold mr-2"></i>Detailed Statistics
                 </h3>
 
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+                <!-- Primary Metrics -->
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
                     <div class="parchment-panel p-4 text-center border-t-4 border-ncst-neon">
                         <p class="text-3xl font-bold text-ncst-neon runic-glow">${solved.toLocaleString()}</p>
                         <p class="text-xs text-gray-400 uppercase tracking-wider mt-1">Problems Solved</p>
@@ -540,30 +557,48 @@ class ProfileRenderer {
                         <p class="text-xs text-gray-400 uppercase tracking-wider mt-1">Accuracy Rate</p>
                     </div>
                     <div class="parchment-panel p-4 text-center border-t-4 border-ncst-accent">
-                        <p class="text-3xl font-bold text-ncst-accent runic-glow">${hours}</p>
-                        <p class="text-xs text-gray-400 uppercase tracking-wider mt-1">Hours Played</p>
+                        <p class="text-3xl font-bold text-ncst-accent runic-glow">${hours.toFixed(1)}h</p>
+                        <p class="text-xs text-gray-400 uppercase tracking-wider mt-1">Time Spent</p>
                     </div>
                     <div class="parchment-panel p-4 text-center border-t-4 border-green-400">
                         <p class="text-3xl font-bold text-green-400 runic-glow">${bestStreak}</p>
-                        <p class="text-xs text-gray-400 uppercase tracking-wider mt-1">Win Streak Best</p>
+                        <p class="text-xs text-gray-400 uppercase tracking-wider mt-1">Best Win Streak</p>
+                    </div>
+                </div>
+
+                <!-- Secondary Resources Status -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+                    <div class="p-4 glass-panel rounded-lg flex items-center justify-between border border-ncst-neon/30">
+                        <div>
+                            <p class="text-xs text-gray-400 uppercase tracking-wider">Numerals</p>
+                            <p class="text-xl font-bold text-ncst-neon">${crystals.toLocaleString()}</p>
+                        </div>
+                        <i class="fa-solid fa-gem text-2xl text-ncst-neon/60"></i>
+                    </div>
+                    <div class="p-4 glass-panel rounded-lg flex items-center justify-between border border-ncst-accent/30">
+                        <div>
+                            <p class="text-xs text-gray-400 uppercase tracking-wider">Mana Energy</p>
+                            <p class="text-xl font-bold text-ncst-accent">${energyCurrent} / ${energyMax}</p>
+                        </div>
+                        <i class="fa-solid fa-zap text-2xl text-ncst-accent/60"></i>
+                    </div>
+                    <div class="p-4 glass-panel rounded-lg flex items-center justify-between border border-ncst-gold/30">
+                        <div>
+                            <p class="text-xs text-gray-400 uppercase tracking-wider">Active Streak</p>
+                            <p class="text-xl font-bold text-ncst-gold">${currentStreak} Day${currentStreak === 1 ? '' : 's'}</p>
+                        </div>
+                        <i class="fa-solid fa-fire text-2xl text-ncst-gold/60"></i>
                     </div>
                 </div>
 
                 <h4 class="font-bold text-white mb-4 text-sm uppercase tracking-wider">Performance by Topic</h4>
                 <div class="space-y-4">
-                    ${this.renderTopicBar('Derivatives', derivativeScore, 'from-ncst-neon to-green-400', 'text-ncst-neon')}
-                    ${this.renderTopicBar('Integrals', integralScore, 'from-ncst-gold to-yellow-400', 'text-ncst-gold')}
-                    ${this.renderTopicBar('Limits', limitsScore, 'from-blue-400 to-blue-500', 'text-blue-400')}
-                    ${this.renderTopicBar('Applications', applicationsScore, 'from-purple-400 to-purple-500', 'text-purple-400')}
+                    ${this.renderTopicBar('Derivatives & Rates of Change', derivativeScore, 'from-ncst-neon to-green-400', 'text-ncst-neon')}
+                    ${this.renderTopicBar('Integrals & Area Calculations', integralScore, 'from-ncst-gold to-yellow-400', 'text-ncst-gold')}
+                    ${this.renderTopicBar('Limits & Continuity', limitsScore, 'from-blue-400 to-blue-500', 'text-blue-400')}
+                    ${this.renderTopicBar('Applications of Derivatives', applicationsScore, 'from-purple-400 to-purple-500', 'text-purple-400')}
                     ${this.renderTopicBar('Series & Sequences', seriesScore, 'from-ncst-accent to-pink-400', 'text-ncst-accent')}
                 </div>
-            </div>
-
-            <div class="parchment-panel p-6 sm:p-8">
-                <h3 class="font-magic text-xl text-ncst-gold text-gold-glow mb-6">
-                    <i class="fa-solid fa-calendar-week text-ncst-gold mr-2"></i>Weekly Activity
-                </h3>
-                <p class="text-sm text-gray-400">Weekly tracking is based on real gameplay sessions. Keep playing to populate this chart.</p>
             </div>
         `;
     }

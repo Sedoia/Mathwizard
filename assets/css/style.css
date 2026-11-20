@@ -1008,32 +1008,16 @@ textarea::placeholder {
     }
 
     .hero-art-frame img {
-        opacity: 0.12 !important;
-        filter: sepia(0.15) saturate(0.65) !important;
+        opacity: 0.95;
     }
 
     .hero-art-frame .font-magic {
-        color: #292621 !important;
-        text-shadow: none !important;
+        color: #f7f1e3;
     }
 
     .guild-board-item {
-        background: #fffdf8;
-        border-color: #e5ded0 !important;
+        border-color: rgba(201, 168, 76, 0.3) !important;
         border-radius: 12px;
-    }
-
-    .guild-board-item img {
-        opacity: 0.08 !important;
-        filter: sepia(0.15) saturate(0.6) !important;
-    }
-
-    .guild-board-item .font-heading {
-        color: #292621 !important;
-    }
-
-    .guild-board-item .text-xs {
-        color: #71695d !important;
     }
 
     .rune-btn,
@@ -1797,14 +1781,12 @@ nav[style] {
 
 .hero-art-frame img,
 .guild-board-item img {
-    opacity: 0.08 !important;
-    filter: sepia(0.15) saturate(0.65) !important;
+    opacity: 0.95;
 }
 
 .hero-art-frame .font-magic,
 .guild-board-item .font-heading {
-    color: #292621 !important;
-    text-shadow: none !important;
+    color: #f7f1e3;
 }
 
 .guild-board {

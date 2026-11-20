@@ -127,9 +127,6 @@
                 <button onclick="showTab('users')" class="tab-btn px-4 py-2 text-sm font-bold uppercase tracking-wider rounded-sm transition-all" data-tab="users">
                     <i class="fa-solid fa-users mr-2"></i>Users
                 </button>
-                <button onclick="showTab('items')" class="tab-btn px-4 py-2 text-sm font-bold uppercase tracking-wider rounded-sm transition-all" data-tab="items">
-                    <i class="fa-solid fa-box mr-2"></i>Manage Items
-                </button>
             </div>
 
             <!-- Overview Tab -->
@@ -155,7 +152,7 @@
                 <div class="grid lg:grid-cols-3 gap-6">
                     <!-- Purchase Categories -->
                     <div class="parchment-panel p-6">
-                        <h3 class="font-magic text-xl text-ncst-gold text-gold-glow mb-4">Scroll Categories</h3>
+                        <h3 class="font-magic text-xl text-ncst-gold text-gold-glow mb-4">Top-Up Categories</h3>
                         <div class="relative h-64">
                             <canvas id="purchaseCategoryChart"></canvas>
                         </div>
@@ -163,9 +160,9 @@
 
                     <!-- Top Selling Items -->
                     <div class="parchment-panel p-6 lg:col-span-2">
-                        <h3 class="font-magic text-xl text-ncst-gold text-gold-glow mb-4">Top Relics Sold</h3>
+                        <h3 class="font-magic text-xl text-ncst-gold text-gold-glow mb-4">Top Packages Sold</h3>
                         <div id="top-items-list" class="space-y-3">
-                            <div class="p-4 parchment-panel text-sm text-gray-400">No sales yet. Top relics will appear after first purchases.</div>
+                            <div class="p-4 parchment-panel text-sm text-gray-400">No sales yet. Top packages will appear after first purchases.</div>
                         </div>
                     </div>
                 </div>
@@ -258,76 +255,6 @@
                 </div>
             </div>
 
-            <!-- Manage Items Tab -->
-            <div id="tab-items" class="tab-content hidden">
-                <div class="grid lg:grid-cols-3 gap-6">
-                    <!-- Add New Item Form -->
-                    <div class="parchment-panel p-6">
-                        <h3 class="font-magic text-xl text-ncst-gold text-gold-glow mb-4">Add New Relic</h3>
-                        <form id="item-form" class="space-y-4">
-                            <input id="item-edit-id" type="hidden">
-                            <div>
-                                <label class="block text-xs text-ncst-neon uppercase tracking-wider mb-2">Item Name</label>
-                                <input id="item-name" type="text" placeholder="Enter item name" required class="w-full px-4 py-3 bg-ncst-dark/50 border border-ncst-neon/30 rounded-lg text-white placeholder-gray-500 text-sm min-h-[44px]">
-                            </div>
-                            <div>
-                                <label class="block text-xs text-ncst-neon uppercase tracking-wider mb-2">Category</label>
-                                <select id="item-category" class="w-full px-4 py-3 bg-ncst-dark/50 border border-ncst-neon/30 rounded-lg text-white text-sm min-h-[44px]">
-                                    <option>Currency Pack</option>
-                                    <option>Skin</option>
-                                    <option>Consumable</option>
-                                    <option>Battle Pass</option>
-                                    <option>Equipment</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label class="block text-xs text-ncst-neon uppercase tracking-wider mb-2">Price (PHP)</label>
-                                <input id="item-price" type="number" step="0.01" min="0" placeholder="0.00" required class="w-full px-4 py-3 bg-ncst-dark/50 border border-ncst-neon/30 rounded-lg text-white placeholder-gray-500 text-sm min-h-[44px]">
-                            </div>
-                            <div>
-                                <label class="block text-xs text-ncst-neon uppercase tracking-wider mb-2">Description</label>
-                                <textarea id="item-description" rows="3" placeholder="Item description..." class="w-full px-4 py-3 bg-ncst-dark/50 border border-ncst-neon/30 rounded-lg text-white placeholder-gray-500 text-sm resize-none"></textarea>
-                            </div>
-                            <div>
-                                <label class="block text-xs text-ncst-neon uppercase tracking-wider mb-2">Rarity</label>
-                                <select id="item-rarity" class="w-full px-4 py-3 bg-ncst-dark/50 border border-ncst-neon/30 rounded-lg text-white text-sm min-h-[44px]">
-                                    <option>Common</option>
-                                    <option>Rare</option>
-                                    <option>Epic</option>
-                                    <option>Legendary</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label class="block text-xs text-ncst-neon uppercase tracking-wider mb-2">Icon</label>
-                                <select id="item-icon" class="w-full px-4 py-3 bg-ncst-dark/50 border border-ncst-neon/30 rounded-lg text-white text-sm min-h-[44px]">
-                                    <option value="fa-gem">Gem</option>
-                                    <option value="fa-shirt">Shirt</option>
-                                    <option value="fa-scroll">Scroll</option>
-                                    <option value="fa-bolt">Bolt</option>
-                                    <option value="fa-coins">Coins</option>
-                                    <option value="fa-wand-magic-sparkles">Magic Wand</option>
-                                    <option value="fa-hat-wizard">Wizard Hat</option>
-                                    <option value="fa-fire-flame-curved">Flame</option>
-                                    <option value="fa-shield">Shield</option>
-                                </select>
-                            </div>
-                            <button id="item-submit-btn" type="submit" class="rune-btn w-full min-h-[44px]">
-                                <i class="fa-solid fa-plus mr-2"></i> Add Relic
-                            </button>
-                            <button id="item-cancel-edit" type="button" class="iron-plaque-btn w-full min-h-[44px] hidden">Cancel Edit</button>
-                        </form>
-                    </div>
-
-                    <!-- Existing Items List -->
-                    <div class="parchment-panel p-6 lg:col-span-2">
-                        <h3 class="font-magic text-xl text-ncst-gold text-gold-glow mb-4">Shop Relics</h3>
-                        <div id="shop-items-list" class="grid sm:grid-cols-2 gap-4">
-                            <div class="parchment-panel p-4 text-sm text-gray-400">No items in shop yet. Add your first relic.</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
         </div>
     </main>
 
@@ -361,7 +288,6 @@
         const adminState = {
             users: [],
             purchases: [],
-            items: [],
             revenueChart: null,
             userActivityChart: null,
             purchaseCategoryChart: null
@@ -380,12 +306,21 @@
         }
 
         function inferCategory(purchase) {
-            const raw = `${purchase.category || purchase.itemName || purchase.name || ''}`.toLowerCase();
-            if (raw.includes('skin')) return 'Skins';
-            if (raw.includes('battle pass') || raw.includes('pass')) return 'Battle Pass';
-            if (raw.includes('boost') || raw.includes('potion') || raw.includes('consumable')) return 'Consumables';
-            if (raw.includes('equipment') || raw.includes('staff') || raw.includes('wand')) return 'Equipment';
-            return 'Currency Packs';
+            const raw = `${purchase?.category || purchase?.itemName || purchase?.name || ''}`.toLowerCase();
+            const aether = Number(purchase?.aether || purchase?.credits || 0);
+
+            if (raw.includes('numeral') || raw.includes('crystal')) return 'Numerals';
+            if (aether === 1200 || raw.includes('1200') || raw.includes('1,200')) return '1,200 Aether';
+            if (aether === 500 || raw.includes('500')) return '500 Aether';
+            if (aether === 250 || raw.includes('250')) return '250 Aether';
+            if (aether === 100 || raw.includes('100')) return '100 Aether';
+
+            if (aether > 800) return '1,200 Aether';
+            if (aether > 350) return '500 Aether';
+            if (aether > 150) return '250 Aether';
+            if (aether > 0) return '100 Aether';
+
+            return '100 Aether';
         }
 
         function statusClasses(status) {
@@ -399,16 +334,9 @@
             if (purchase?.icon) {
                 return purchase.icon;
             }
-
-            const itemByName = adminState.items.find((item) =>
-                String(item.name || '').toLowerCase() === String(purchase?.itemName || '').toLowerCase()
-            );
-
-            if (itemByName?.icon) {
-                return itemByName.icon;
-            }
-
-            return itemIcon(purchase?.category || purchase?.itemName || '');
+            const raw = `${purchase?.category || purchase?.itemName || purchase?.name || ''}`.toLowerCase();
+            if (raw.includes('crystal')) return 'fa-gem';
+            return 'fa-coins';
         }
 
         function getWeekStart(now = new Date()) {
@@ -538,7 +466,7 @@
 
             const grouped = new Map();
             adminState.purchases.forEach((purchase) => {
-                const key = purchase.itemName || 'Unknown Item';
+                const key = purchase.itemName || 'Top-Up Package';
                 if (!grouped.has(key)) {
                     grouped.set(key, { itemName: key, count: 0, amount: Number(purchase.amount || 0) });
                 }
@@ -550,7 +478,7 @@
             const sorted = Array.from(grouped.values()).sort((a, b) => b.count - a.count).slice(0, 5);
 
             if (!sorted.length) {
-                container.innerHTML = '<div class="p-4 parchment-panel text-sm text-gray-400">No sales yet. Top relics will appear after first purchases.</div>';
+                container.innerHTML = '<div class="p-4 parchment-panel text-sm text-gray-400">No sales yet. Top packages will appear after first purchases.</div>';
                 return;
             }
 
@@ -558,7 +486,7 @@
                 <div class="flex items-center justify-between p-3 parchment-panel">
                     <div>
                         <p class="font-bold text-white">${item.itemName}</p>
-                        <p class="text-xs text-gray-400">In-game item</p>
+                        <p class="text-xs text-gray-400">Top-Up Package</p>
                     </div>
                     <div class="text-right">
                         <p class="text-ncst-neon font-bold">${item.count} sales</p>
@@ -566,176 +494,6 @@
                     </div>
                 </div>
             `).join('');
-        }
-
-        function itemIcon(category) {
-            const key = String(category || '').toLowerCase();
-            if (key.includes('skin')) return 'fa-shirt';
-            if (key.includes('battle')) return 'fa-scroll';
-            if (key.includes('consum')) return 'fa-bolt';
-            if (key.includes('equip')) return 'fa-wand-magic-sparkles';
-            return 'fa-gem';
-        }
-
-        function rarityBadgeClass(rarity) {
-            const key = String(rarity || '').toLowerCase();
-            if (key === 'legendary') return 'bg-ncst-gold/20 text-ncst-gold';
-            if (key === 'epic') return 'bg-purple-500/20 text-purple-400';
-            if (key === 'rare') return 'bg-blue-500/20 text-blue-400';
-            return 'bg-gray-500/20 text-gray-300';
-        }
-
-        function renderItems() {
-            const container = document.getElementById('shop-items-list');
-            if (!container) return;
-
-            if (!adminState.items.length) {
-                container.innerHTML = '<div class="parchment-panel p-4 text-sm text-gray-400">No items in shop yet. Add your first relic.</div>';
-                return;
-            }
-
-            container.innerHTML = adminState.items.map((item) => `
-                <div class="parchment-panel p-4 border border-ncst-gold/30 hover:border-ncst-gold transition-all">
-                    <div class="flex items-start justify-between mb-3">
-                        <div class="w-12 h-12 bg-ncst-gold/20 rounded-lg flex items-center justify-center">
-                            <i class="fa-solid ${item.icon || itemIcon(item.category)} text-ncst-gold text-xl"></i>
-                        </div>
-                        <span class="text-xs px-2 py-1 rounded ${rarityBadgeClass(item.rarity)}">${item.rarity || 'Common'}</span>
-                    </div>
-                    <h4 class="font-bold text-white mb-1">${item.name || 'Unnamed Item'}</h4>
-                    <p class="text-xs text-gray-400 mb-3">${item.description || 'No description provided.'}</p>
-                    <div class="flex justify-between items-center">
-                        <div>
-                            <span class="text-ncst-neon font-bold">${currency(item.price)}</span>
-                            <p class="text-[11px] text-gray-500">${item.category || 'Uncategorized'}</p>
-                        </div>
-                        <div>
-                            <button type="button" data-action="edit-item" data-id="${item.id}" class="text-ncst-gold hover:text-yellow-300 mr-2 text-sm"><i class="fa-solid fa-edit"></i></button>
-                            <button type="button" data-action="delete-item" data-id="${item.id}" class="text-ncst-accent hover:text-red-400 text-sm"><i class="fa-solid fa-trash"></i></button>
-                        </div>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        function resetItemForm() {
-            const form = document.getElementById('item-form');
-            const editId = document.getElementById('item-edit-id');
-            const submitBtn = document.getElementById('item-submit-btn');
-            const cancelBtn = document.getElementById('item-cancel-edit');
-
-            if (form) form.reset();
-            if (editId) editId.value = '';
-            if (submitBtn) submitBtn.innerHTML = '<i class="fa-solid fa-plus mr-2"></i> Add Relic';
-            if (cancelBtn) cancelBtn.classList.add('hidden');
-        }
-
-        function beginEditItem(itemId) {
-            const item = adminState.items.find(row => row.id === itemId);
-            if (!item) return;
-
-            const nameEl = document.getElementById('item-name');
-            const categoryEl = document.getElementById('item-category');
-            const priceEl = document.getElementById('item-price');
-            const descriptionEl = document.getElementById('item-description');
-            const rarityEl = document.getElementById('item-rarity');
-            const iconEl = document.getElementById('item-icon');
-            const editIdEl = document.getElementById('item-edit-id');
-            const submitBtn = document.getElementById('item-submit-btn');
-            const cancelBtn = document.getElementById('item-cancel-edit');
-
-            if (nameEl) nameEl.value = item.name || '';
-            if (categoryEl) categoryEl.value = item.category || 'Currency Pack';
-            if (priceEl) priceEl.value = Number(item.price || 0);
-            if (descriptionEl) descriptionEl.value = item.description || '';
-            if (rarityEl) rarityEl.value = item.rarity || 'Common';
-            if (iconEl) iconEl.value = item.icon || itemIcon(item.category);
-            if (editIdEl) editIdEl.value = item.id;
-            if (submitBtn) submitBtn.innerHTML = '<i class="fa-solid fa-check mr-2"></i> Update Relic';
-            if (cancelBtn) cancelBtn.classList.remove('hidden');
-        }
-
-        async function upsertItemFromForm() {
-            const name = (document.getElementById('item-name')?.value || '').trim();
-            const category = document.getElementById('item-category')?.value || 'Currency Pack';
-            const price = Number(document.getElementById('item-price')?.value || 0);
-            const description = (document.getElementById('item-description')?.value || '').trim();
-            const rarity = document.getElementById('item-rarity')?.value || 'Common';
-            const icon = document.getElementById('item-icon')?.value || itemIcon(category);
-            const editId = (document.getElementById('item-edit-id')?.value || '').trim();
-
-            if (!name) {
-                alert('Item name is required.');
-                return;
-            }
-
-            if (!Number.isFinite(price) || price < 0) {
-                alert('Price must be 0 or higher.');
-                return;
-            }
-
-            const payload = {
-                name,
-                category,
-                price,
-                description,
-                rarity,
-                icon,
-                updatedAt: new Date().toISOString()
-            };
-
-            if (editId) {
-                await window.firebaseDb.collection('shop_items').doc(editId).set(payload, { merge: true });
-            } else {
-                await window.firebaseDb.collection('shop_items').add({
-                    ...payload,
-                    createdAt: new Date().toISOString()
-                });
-            }
-
-            await loadItems();
-            resetItemForm();
-        }
-
-        async function deleteItem(itemId) {
-            if (!itemId) return;
-            const confirmed = window.confirm('Delete this shop item?');
-            if (!confirmed) return;
-
-            await window.firebaseDb.collection('shop_items').doc(itemId).delete();
-            await loadItems();
-            resetItemForm();
-        }
-
-        async function loadItems() {
-            if (!window.firebaseDb) return;
-
-            const snapshot = await window.firebaseDb.collection('shop_items').get();
-            const rows = [];
-
-            snapshot.forEach((doc) => {
-                const data = doc.data() || {};
-                rows.push({
-                    id: doc.id,
-                    name: data.name || 'Unnamed Item',
-                    category: data.category || 'Currency Pack',
-                    price: Number(data.price || 0),
-                    description: data.description || '',
-                    rarity: data.rarity || 'Common',
-                    icon: data.icon || itemIcon(data.category),
-                    createdAt: toDate(data.createdAt),
-                    updatedAt: toDate(data.updatedAt)
-                });
-            });
-
-            rows.sort((a, b) => {
-                const aTime = a.updatedAt?.getTime() || a.createdAt?.getTime() || 0;
-                const bTime = b.updatedAt?.getTime() || b.createdAt?.getTime() || 0;
-                return bTime - aTime;
-            });
-
-            adminState.items = rows;
-            renderItems();
         }
 
         function updateStatsCards() {
@@ -793,18 +551,22 @@
                 weeklyUsers[idx] += 1;
             });
 
-            const categoryLabels = ['Currency Packs', 'Skins', 'Battle Pass', 'Consumables', 'Equipment'];
+            const categoryLabels = ['100 Aether', '250 Aether', '500 Aether', '1,200 Aether', 'Numerals'];
             const categoryCounts = {
-                'Currency Packs': 0,
-                'Skins': 0,
-                'Battle Pass': 0,
-                'Consumables': 0,
-                'Equipment': 0
+                '100 Aether': 0,
+                '250 Aether': 0,
+                '500 Aether': 0,
+                '1,200 Aether': 0,
+                'Numerals': 0
             };
 
             adminState.purchases.forEach((purchase) => {
                 const category = inferCategory(purchase);
-                categoryCounts[category] += 1;
+                if (categoryCounts[category] !== undefined) {
+                    categoryCounts[category] += 1;
+                } else {
+                    categoryCounts['100 Aether'] += 1;
+                }
             });
 
             adminState.revenueChart = new Chart(revenueCanvas.getContext('2d'), {
@@ -859,7 +621,7 @@
                     labels: categoryLabels,
                     datasets: [{
                         data: categoryLabels.map(label => categoryCounts[label]),
-                        backgroundColor: [chartColors.neon, chartColors.gold, chartColors.accent, chartColors.blue, chartColors.violet],
+                        backgroundColor: [chartColors.neon, chartColors.gold, chartColors.blue, chartColors.violet, chartColors.accent],
                         borderWidth: 0
                     }]
                 },
@@ -946,8 +708,6 @@
             adminState.users = users;
             adminState.purchases = purchases;
 
-            await loadItems();
-
             updateStatsCards();
             renderPurchaseRows();
             renderUsersRows();
@@ -959,52 +719,10 @@
             const searchPurchases = document.getElementById('purchase-search');
             const rangePurchases = document.getElementById('purchase-range');
             const searchUsers = document.getElementById('users-search');
-            const itemForm = document.getElementById('item-form');
-            const itemCancelEdit = document.getElementById('item-cancel-edit');
-            const itemsContainer = document.getElementById('shop-items-list');
 
             if (searchPurchases) searchPurchases.addEventListener('input', renderPurchaseRows);
             if (rangePurchases) rangePurchases.addEventListener('change', renderPurchaseRows);
             if (searchUsers) searchUsers.addEventListener('input', renderUsersRows);
-
-            if (itemForm) {
-                itemForm.addEventListener('submit', async (event) => {
-                    event.preventDefault();
-                    try {
-                        await upsertItemFromForm();
-                    } catch (error) {
-                        console.error('Failed to save item:', error);
-                        alert('Failed to save item. Check Firestore rules and try again.');
-                    }
-                });
-            }
-
-            if (itemCancelEdit) {
-                itemCancelEdit.addEventListener('click', () => resetItemForm());
-            }
-
-            if (itemsContainer) {
-                itemsContainer.addEventListener('click', async (event) => {
-                    const button = event.target.closest('button[data-action]');
-                    if (!button) return;
-                    const action = button.getAttribute('data-action');
-                    const itemId = button.getAttribute('data-id');
-
-                    if (action === 'edit-item') {
-                        beginEditItem(itemId);
-                        return;
-                    }
-
-                    if (action === 'delete-item') {
-                        try {
-                            await deleteItem(itemId);
-                        } catch (error) {
-                            console.error('Failed to delete item:', error);
-                            alert('Failed to delete item. Check Firestore rules and try again.');
-                        }
-                    }
-                });
-            }
 
             try {
                 await loadAdminData();

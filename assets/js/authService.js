@@ -127,7 +127,7 @@ class AuthService {
                 dailyChallenges: [
                     { id: 'dc_1', name: 'Derivative Duel', progress: 5, max: 5, reward: '250 Gold', icon: 'fa-flash' },
                     { id: 'dc_2', name: 'Integration Challenge', progress: 3, max: 3, reward: '300 Gold', icon: 'fa-cube' },
-                    { id: 'dc_3', name: 'Perfect Score', progress: 1, max: 1, reward: '100 Crystals', icon: 'fa-crown' }
+                    { id: 'dc_3', name: 'Perfect Score', progress: 1, max: 1, reward: '100 Numerals', icon: 'fa-crown' }
                 ],
                 activeQuests: [],
                 inventory: [
@@ -197,7 +197,7 @@ class AuthService {
             dailyChallenges: [
                 { id: 'dc_1', name: 'Derivative Duel', progress: 0, max: 5, reward: '250 Gold', icon: 'fa-flash' },
                 { id: 'dc_2', name: 'Integration Challenge', progress: 0, max: 3, reward: '300 Gold', icon: 'fa-cube' },
-                { id: 'dc_3', name: 'Perfect Score', progress: 0, max: 1, reward: '100 Crystals', icon: 'fa-crown' }
+                { id: 'dc_3', name: 'Perfect Score', progress: 0, max: 1, reward: '100 Numerals', icon: 'fa-crown' }
             ],
             activeQuests: [
                 { id: 'q_1', name: 'Calculus Prophecy', type: 'main', progress: 0, max: 20, description: 'Complete 20 calculus challenges' },
@@ -264,6 +264,32 @@ class AuthService {
 
     getCurrentUser() {
         return this.currentUser || this.getStoredUser();
+    }
+
+    async refreshCurrentUser() {
+        await this._firebaseReady;
+        const current = this.getCurrentUser();
+        if (!current || !current.id) {
+            return null;
+        }
+
+        try {
+            const userDoc = await this.getUserDocByUid(current.id);
+            if (userDoc) {
+                const refreshed = {
+                    ...current,
+                    ...userDoc,
+                    token: this.getToken()
+                };
+                this.storeUser(refreshed);
+                this.currentUser = refreshed;
+                return refreshed;
+            }
+        } catch (error) {
+            console.warn('Unable to refresh user from Firestore:', error?.message || error);
+        }
+
+        return current;
     }
 
     isAuthenticated() {

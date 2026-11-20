@@ -67,24 +67,10 @@ class PlayerService {
                     max: 100
                 }
             },
-            dailyChallenges: [
-                { id: 'dc_1', name: 'Derivative Duel', progress: 0, max: 5, reward: '250 Aether', icon: 'fa-flash' },
-                { id: 'dc_2', name: 'Integration Challenge', progress: 0, max: 3, reward: '300 Aether', icon: 'fa-cube' },
-                { id: 'dc_3', name: 'Perfect Score', progress: 0, max: 1, reward: '100 Crystals', icon: 'fa-crown' }
-            ],
-            activeQuests: [
-                { id: 'q_1', name: 'Calculus Prophecy', type: 'main', progress: 0, max: 20, description: 'Complete 20 calculus challenges' },
-                { id: 'q_2', name: 'Dungeon Master', type: 'side', progress: 0, max: 10, description: 'Defeat 10 dungeon bosses' },
-                { id: 'q_3', name: 'Collector\'s Paradise', type: 'bonus', progress: 0, max: 15, description: 'Collect 15 rare items' }
-            ],
-            inventory: [
-                { id: 'inv_1', name: 'Apprentice Notes', rarity: 'Common', quantity: 1, icon: 'fa-book' },
-                { id: 'inv_2', name: 'Minor Focus Potion', rarity: 'Common', quantity: 1, icon: 'fa-vial' }
-            ],
-            equipment: [
-                { slot: 'Wand', item: 'Novice Wand', rarity: 'Common', stats: '+2 Calc Power' },
-                { slot: 'Armor', item: 'Student Robe', rarity: 'Common', stats: '+2 Defense' }
-            ],
+            dailyChallenges: [],
+            activeQuests: [],
+            inventory: [],
+            equipment: [],
             battleHistory: [],
             leaderboard: {
                 global: { rank: 50000, totalPlayers: 50000, points: 0 },
@@ -93,11 +79,12 @@ class PlayerService {
                 nextRank: { name: 'Bronze', pointsNeeded: 100, currentPoints: 0 }
             },
             achievements: [
-                { id: 'ach_1', name: 'First Victory', description: 'Win your first battle', icon: 'fa-trophy', unlocked: false, date: null },
-                { id: 'ach_2', name: 'Streak Master', description: 'Achieve a 7-day streak', icon: 'fa-fire', unlocked: false, date: null },
-                { id: 'ach_3', name: 'Calculation Wizard', description: 'Reach level 40', icon: 'fa-wand-magic-sparkles', unlocked: false, date: null },
-                { id: 'ach_4', name: 'Perfect Precision', description: 'Achieve 99% accuracy', icon: 'fa-bullseye', unlocked: false, date: null },
-                { id: 'ach_5', name: 'Legend Ascended', description: 'Reach Legendary rank', icon: 'fa-crown', unlocked: false, date: null }
+                { id: 'first_victory', name: 'First Victory', description: 'Win your first calculus challenge', icon: 'fa-trophy', unlocked: false, date: null },
+                { id: 'streak_king', name: 'Streak King', description: 'Achieve a 7-day challenge streak', icon: 'fa-fire', unlocked: false, date: null },
+                { id: 'calculation_wizard', name: 'Calculation Wizard', description: 'Reach level 40 in your journey', icon: 'fa-wand-magic-sparkles', unlocked: false, date: null },
+                { id: 'perfect_precision', name: 'Perfect Precision', description: 'Achieve 99% accuracy in battle', icon: 'fa-bullseye', unlocked: false, date: null },
+                { id: 'derivative_master', name: 'Derivative Master', description: 'Solve 20 derivative challenges', icon: 'fa-graduation-cap', unlocked: false, date: null },
+                { id: 'legend_ascended', name: 'Legend Ascended', description: 'Reach Legendary status', icon: 'fa-crown', unlocked: false, date: null }
             ],
             settings: {
                 soundEffects: true,
@@ -111,83 +98,164 @@ class PlayerService {
     }
 
     async getPlayerDoc(playerId) {
-        const doc = await window.firebaseDb.collection('players').doc(playerId).get();
-        return doc.exists ? doc.data() : null;
+        try {
+            const doc = await window.firebaseDb.collection('players').doc(playerId).get();
+            return doc.exists ? doc.data() : null;
+        } catch (error) {
+            console.warn('Could not fetch player doc:', error?.message || error);
+            return null;
+        }
     }
 
     async setPlayerDoc(playerId, payload, merge = true) {
-        await window.firebaseDb.collection('players').doc(playerId).set(payload, { merge });
+        try {
+            await window.firebaseDb.collection('players').doc(playerId).set(payload, { merge });
+        } catch (error) {
+            console.warn('Could not set player doc:', error?.message || error);
+        }
     }
 
     cachePlayer(playerId, data) {
-        sessionStorage.setItem(`player_${playerId}`, JSON.stringify(data));
+        try {
+            sessionStorage.setItem(`player_${playerId}`, JSON.stringify(data));
+        } catch (e) {
+            // Storage quota or disabled
+        }
     }
 
-    shouldResetNewAccountProgress(currentUser, playerData) {
-        if (!currentUser || currentUser.role === 'admin') {
-            return false;
+    normalizePlayerData(playerId, playerDoc, userDoc) {
+        const defaults = this.getDefaultPlayerData(playerId);
+        const p = playerDoc || {};
+        const u = userDoc || {};
+
+        const level = Number(p.level ?? u.level ?? defaults.level);
+        const xp = Number(p.stats?.xp ?? p.xp ?? u.xp ?? defaults.stats.xp);
+        const maxXp = Number(p.stats?.maxXp ?? p.maxXp ?? u.xpToNextLevel ?? defaults.stats.maxXp);
+
+        // Currencies: Gold/Aether, Arcane Crystals, Mana Energy
+        const gold = Number(p.currency?.aether ?? p.currency?.gold ?? p.gold ?? u.aether ?? u.gold ?? defaults.currency.gold);
+        const aether = gold;
+        const crystals = Number(p.currency?.crystals ?? p.crystals ?? u.crystals ?? defaults.currency.crystals);
+
+        let energyCurrent = 100;
+        let energyMax = 100;
+        if (typeof p.currency?.energy === 'object' && p.currency?.energy !== null) {
+            energyCurrent = Number(p.currency.energy.current ?? 100);
+            energyMax = Number(p.currency.energy.max ?? 100);
+        } else if (p.currency?.energy !== undefined) {
+            energyCurrent = Number(p.currency.energy);
+        } else if (p.energy !== undefined) {
+            energyCurrent = Number(p.energy);
+        } else if (u.energy !== undefined) {
+            energyCurrent = Number(u.energy);
         }
 
-        const isNewAccount = Number(currentUser.level || 1) <= 1;
-        if (!isNewAccount) {
-            return false;
+        // Stats: calcPower, accuracy, challengesWon, playTime
+        const calcPower = Number(p.stats?.calcPower ?? (10 + (level - 1) * 5));
+        const accuracy = Number(p.stats?.accuracy ?? u.stats?.accuracy ?? defaults.stats.accuracy);
+        const challengesWon = Number(
+            p.stats?.challengesWon ??
+            u.stats?.problemsSolved ??
+            u.stats?.totalWins ??
+            (Array.isArray(p.unlockedLevels) ? p.unlockedLevels.length : 0) ??
+            defaults.stats.challengesWon
+        );
+        const playTime = Number(p.stats?.playTime ?? u.stats?.hoursPlayed ?? defaults.stats.playTime);
+
+        // Streak: current and best
+        let currentStreak = 0;
+        let bestStreak = 0;
+        if (typeof p.streak === 'object' && p.streak !== null) {
+            currentStreak = Number(p.streak.current ?? 0);
+            bestStreak = Number(p.streak.best ?? currentStreak);
+        } else if (typeof p.streak === 'number') {
+            currentStreak = p.streak;
+            bestStreak = p.streak;
+        } else if (u.stats?.winStreak !== undefined) {
+            currentStreak = Number(u.stats.winStreak || 0);
+            bestStreak = currentStreak;
         }
 
-        const suspiciousLevel = Number(playerData.level || 1) > 1;
-        const suspiciousStreak = Number(playerData?.streak?.current || 0) > 30;
-        const suspiciousWins = Number(playerData?.stats?.challengesWon || 0) > 0;
-        const suspiciousAchievements = Array.isArray(playerData?.achievements)
-            && playerData.achievements.some(a => a.unlocked);
+        // Achievements: merge catalog with database unlocks & real stats milestones
+        const rawAchievements = p.achievements || u.achievements || [];
+        const unlockedIds = new Set();
 
-        return suspiciousLevel || suspiciousStreak || suspiciousWins || suspiciousAchievements;
-    }
+        if (Array.isArray(rawAchievements)) {
+            rawAchievements.forEach(item => {
+                if (typeof item === 'string') {
+                    unlockedIds.add(item.toLowerCase());
+                } else if (typeof item === 'object' && item !== null) {
+                    if (item.unlocked) {
+                        unlockedIds.add(String(item.id || item.name || '').toLowerCase());
+                    }
+                }
+            });
+        }
 
-    buildCleanStarterData(playerId, currentUser) {
-        const starter = this.getDefaultPlayerData(playerId);
+        const achievements = defaults.achievements.map(base => {
+            const isExplicitlyUnlocked = unlockedIds.has(base.id.toLowerCase()) || unlockedIds.has(base.name.toLowerCase());
+            
+            // Automatic milestone checks based on real player metrics
+            let meetsRequirement = false;
+            if (base.id === 'first_victory' && challengesWon >= 1) meetsRequirement = true;
+            if (base.id === 'streak_king' && (currentStreak >= 7 || bestStreak >= 7)) meetsRequirement = true;
+            if (base.id === 'calculation_wizard' && level >= 40) meetsRequirement = true;
+            if (base.id === 'perfect_precision' && accuracy >= 99 && challengesWon >= 3) meetsRequirement = true;
+            if (base.id === 'derivative_master' && challengesWon >= 20) meetsRequirement = true;
+            if (base.id === 'legend_ascended' && level >= 50) meetsRequirement = true;
+
+            const unlocked = isExplicitlyUnlocked || meetsRequirement;
+            return {
+                ...base,
+                unlocked,
+                date: unlocked ? (base.date || 'Achieved') : null
+            };
+        });
+
         return {
-            ...starter,
-            name: currentUser?.name || starter.name,
-            level: Number(currentUser?.level || 1),
+            id: playerId,
+            name: u.name || p.name || defaults.name,
+            username: u.username || p.username || '',
+            avatarUrl: u.avatarUrl || p.avatarUrl || '',
+            bio: p.bio || u.bio || '',
+            socialLinks: p.socialLinks || u.socialLinks || {},
+            level,
+            memberSince: p.memberSince || (u.createdAt ? new Date(u.createdAt).toLocaleString('en-US', { month: 'short', year: 'numeric' }) : defaults.memberSince),
+            avatar: p.avatar || defaults.avatar,
+            online: true,
+            streak: {
+                current: currentStreak,
+                best: bestStreak,
+                lastUpdated: p.streak?.lastUpdated || new Date().toISOString()
+            },
+            stats: {
+                xp,
+                maxXp,
+                calcPower,
+                accuracy,
+                challengesWon,
+                playTime,
+                critRate: Number(p.stats?.critRate ?? defaults.stats.critRate),
+                dodge: Number(p.stats?.dodge ?? defaults.stats.dodge),
+                defense: Number(p.stats?.defense ?? defaults.stats.defense)
+            },
             currency: {
-                ...starter.currency,
-                gold: Number(currentUser?.gold || starter.currency.gold),
-                aether: Number(currentUser?.aether || currentUser?.gold || starter.currency.aether),
-                crystals: Number(currentUser?.crystals || starter.currency.crystals),
+                gold,
+                aether,
+                crystals,
                 energy: {
-                    ...starter.currency.energy,
-                    current: Number(currentUser?.energy || starter.currency.energy.current)
+                    current: energyCurrent,
+                    max: energyMax
                 }
             },
-            updatedAt: new Date().toISOString()
+            achievements,
+            settings: {
+                ...defaults.settings,
+                ...(p.settings || {}),
+                ...(u.settings || {})
+            },
+            updatedAt: p.updatedAt || new Date().toISOString()
         };
-    }
-
-    syncPlayerIdentity(playerData, currentUser) {
-        if (!playerData || !currentUser) {
-            return { data: playerData, changed: false };
-        }
-
-        const canonicalName = String(currentUser.name || currentUser.username || '').trim();
-        const canonicalUsername = String(currentUser.username || '').trim();
-        const next = { ...playerData };
-        let changed = false;
-
-        if (canonicalName && next.name !== canonicalName) {
-            next.name = canonicalName;
-            changed = true;
-        }
-
-        if (canonicalUsername && next.username !== canonicalUsername) {
-            next.username = canonicalUsername;
-            changed = true;
-        }
-
-        if (currentUser.avatarUrl && next.avatarUrl !== currentUser.avatarUrl) {
-            next.avatarUrl = currentUser.avatarUrl;
-            changed = true;
-        }
-
-        return { data: next, changed };
     }
 
     async initializePlayer(playerId) {
@@ -196,36 +264,25 @@ class PlayerService {
 
             const currentUser = authService?.getCurrentUser?.() || null;
 
-            const cachedPlayer = sessionStorage.getItem(`player_${playerId}`);
-            if (cachedPlayer) {
-                const cachedData = JSON.parse(cachedPlayer);
-                if (this.shouldResetNewAccountProgress(currentUser, cachedData)) {
-                    sessionStorage.removeItem(`player_${playerId}`);
-                } else {
-                    const synced = this.syncPlayerIdentity(cachedData, currentUser);
-                    this.currentPlayer = synced.data;
-                    this.cachePlayer(playerId, this.currentPlayer);
-                    if (synced.changed) {
-                        await this.setPlayerDoc(playerId, synced.data, true);
-                    }
-                    this.isInitialized = true;
-                    return this.currentPlayer;
-                }
+            // Fetch real database records from Firestore
+            let playerDoc = null;
+            let userDoc = null;
+
+            try {
+                const [playerDocSnap, userDocSnap] = await Promise.all([
+                    window.firebaseDb.collection('players').doc(playerId).get(),
+                    window.firebaseDb.collection('users').doc(playerId).get()
+                ]);
+                if (playerDocSnap.exists) playerDoc = playerDocSnap.data();
+                if (userDocSnap.exists) userDoc = userDocSnap.data();
+            } catch (fetchErr) {
+                console.warn('Firestore fetch notice:', fetchErr?.message || fetchErr);
             }
 
-            let playerData = await this.getPlayerDoc(playerId);
+            const playerData = this.normalizePlayerData(playerId, playerDoc, userDoc || currentUser);
 
-            if (!playerData) {
-                playerData = this.buildCleanStarterData(playerId, currentUser);
-                await this.setPlayerDoc(playerId, playerData, false);
-            } else if (this.shouldResetNewAccountProgress(currentUser, playerData)) {
-                playerData = this.buildCleanStarterData(playerId, currentUser);
-                await this.setPlayerDoc(playerId, playerData, false);
-            }
-
-            const synced = this.syncPlayerIdentity(playerData, currentUser);
-            playerData = synced.data;
-            if (synced.changed) {
+            // If player document does not exist yet in Firestore, initialize it
+            if (!playerDoc && window.firebaseDb) {
                 await this.setPlayerDoc(playerId, playerData, true);
             }
 
@@ -236,8 +293,59 @@ class PlayerService {
             return playerData;
         } catch (error) {
             console.error('Error initializing player:', error);
-            return this.getDefaultPlayerData(playerId);
+            const fallback = this.getDefaultPlayerData(playerId);
+            this.currentPlayer = fallback;
+            return fallback;
         }
+    }
+
+    /**
+     * Subscribe to real-time database changes from Firestore for this player.
+     * @param {string} playerId
+     * @param {Function} callback
+     * @returns {Function} Unsubscribe function
+     */
+    subscribeToPlayer(playerId, callback) {
+        if (!window.firebaseDb || !playerId) {
+            return () => {};
+        }
+
+        let unsubscribePlayer = null;
+        let unsubscribeUser = null;
+        let latestPlayerDoc = null;
+        let latestUserDoc = null;
+
+        const notify = () => {
+            const merged = this.normalizePlayerData(playerId, latestPlayerDoc, latestUserDoc || authService?.getCurrentUser?.());
+            this.currentPlayer = merged;
+            this.cachePlayer(playerId, merged);
+            if (typeof callback === 'function') {
+                callback(merged);
+            }
+        };
+
+        try {
+            unsubscribePlayer = window.firebaseDb.collection('players').doc(playerId).onSnapshot(doc => {
+                if (doc.exists) {
+                    latestPlayerDoc = doc.data();
+                    notify();
+                }
+            }, err => console.warn('Player snapshot notice:', err?.message || err));
+
+            unsubscribeUser = window.firebaseDb.collection('users').doc(playerId).onSnapshot(doc => {
+                if (doc.exists) {
+                    latestUserDoc = doc.data();
+                    notify();
+                }
+            }, err => console.warn('User snapshot notice:', err?.message || err));
+        } catch (e) {
+            console.warn('Real-time listener setup notice:', e);
+        }
+
+        return () => {
+            if (unsubscribePlayer) unsubscribePlayer();
+            if (unsubscribeUser) unsubscribeUser();
+        };
     }
 
     getCurrentPlayer() {

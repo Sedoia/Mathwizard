@@ -14,6 +14,15 @@ document.addEventListener('DOMContentLoaded', async () => {
     let currentUser = authService.getCurrentUser();
     const playerId = currentUser?.id || 'player_12345';
 
+    // Refresh user document from Firestore to sync latest session data
+    if (typeof authService.refreshCurrentUser === 'function') {
+        try {
+            currentUser = (await authService.refreshCurrentUser()) || currentUser;
+        } catch (e) {
+            console.warn('User session refresh warning:', e);
+        }
+    }
+
     // Initialize player data from database
     console.log('📊 Loading player data from database...');
     let playerData = await playerService.initializePlayer(playerId);
@@ -22,7 +31,23 @@ document.addEventListener('DOMContentLoaded', async () => {
     console.log('🎨 Rendering profile with dynamic data...');
     await profileRenderer.render(playerData);
 
-    console.log('✅ Profile loaded successfully');
+    // Subscribe to live Firestore database updates from the game
+    if (typeof playerService.subscribeToPlayer === 'function') {
+        playerService.subscribeToPlayer(playerId, (freshData) => {
+            console.log('🔄 Real-time game database update received');
+            playerData = freshData;
+            profileRenderer.render(freshData);
+
+            // If a tab is open, update its content with live data
+            const activeTabBtn = document.querySelector('.profile-tab.active');
+            const activeTabName = activeTabBtn ? activeTabBtn.getAttribute('data-tab') : 'overview';
+            if (activeTabName && activeTabName !== 'overview') {
+                profileRenderer.renderTabContent(activeTabName, true);
+            }
+        });
+    }
+
+    console.log('✅ Profile loaded successfully and connected to real-time database');
 
     const showProfileMessage = (message, isError = false) => {
         const existing = document.querySelector('.profile-notification');

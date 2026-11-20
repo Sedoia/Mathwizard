@@ -43,11 +43,14 @@
                 <a href="index.html#gameplay" class="text-xs lg:text-sm uppercase tracking-widest hover:text-ncst-neon transition-colors relative group">
                     <span class="text-ncst-neon mr-1 font-bold">02.</span> Gameplay
                 </a>
+                <a href="index.html#world" class="text-xs lg:text-sm uppercase tracking-widest hover:text-ncst-neon transition-colors relative group">
+                    <span class="text-ncst-neon mr-1 font-bold">03.</span> World
+                </a>
                 <a href="pages/about.html" class="text-xs lg:text-sm uppercase tracking-widest hover:text-ncst-neon transition-colors relative group">
-                    <span class="text-ncst-neon mr-1 font-bold">03.</span> About
+                    <span class="text-ncst-neon mr-1 font-bold">04.</span> About
                 </a>
                 <a href="index.html#contact" class="text-xs lg:text-sm uppercase tracking-widest hover:text-ncst-neon transition-colors relative group">
-                    <span class="text-ncst-neon mr-1 font-bold">04.</span> Contact
+                    <span class="text-ncst-neon mr-1 font-bold">05.</span> Contact
                 </a>
             </div>
 
@@ -71,11 +74,14 @@
         <a href="index.html#gameplay" class="block text-xs sm:text-sm uppercase tracking-widest hover:text-ncst-neon transition-colors py-2">
             <span class="text-ncst-neon mr-1 font-bold">02.</span> Gameplay
         </a>
+        <a href="index.html#world" class="block text-xs sm:text-sm uppercase tracking-widest hover:text-ncst-neon transition-colors py-2">
+            <span class="text-ncst-neon mr-1 font-bold">03.</span> World
+        </a>
         <a href="pages/about.html" class="block text-xs sm:text-sm uppercase tracking-widest hover:text-ncst-neon transition-colors py-2">
-            <span class="text-ncst-neon mr-1 font-bold">03.</span> About
+            <span class="text-ncst-neon mr-1 font-bold">04.</span> About
         </a>
         <a href="index.html#contact" class="block text-xs sm:text-sm uppercase tracking-widest hover:text-ncst-neon transition-colors py-2">
-            <span class="text-ncst-neon mr-1 font-bold">04.</span> Contact
+            <span class="text-ncst-neon mr-1 font-bold">05.</span> Contact
         </a>
         <hr class="border-white/10 my-2">
         <a href="index.html#download" class="block px-4 sm:px-5 py-2 min-h-[44px] flex items-center justify-center border border-ncst-gold text-ncst-gold text-xs sm:text-sm font-bold tracking-widest hover:bg-ncst-gold/10 transition-colors">
@@ -124,13 +130,14 @@
                     </div>
                 </div>
 
-                <div class="lg:col-span-5 relative hidden lg:block animate-fadeInRight">
-                    <div class="hero-art-frame relative w-full aspect-[9/16] max-w-sm mx-auto p-2 transition-all duration-500">
-                        <div class="w-full h-full overflow-hidden relative group art-slot">
-                            <img src="https://via.placeholder.com/400x711/1a0e05/d4a843?text=Math+Wizard+%E2%80%94+Enter+the+Academy" alt="Math Wizard Preview" class="w-full h-full object-cover opacity-70 group-hover:opacity-95 transition-opacity duration-500">
-                            <div class="absolute inset-0 flex flex-col items-end justify-end p-4 z-10">
-                                <div class="font-magic text-xl sm:text-2xl text-ncst-neon tracking-widest runic-glow">Math Wizard</div>
-                                <div class="text-xs text-ncst-gold mt-1 tracking-wider font-flavor italic">Solve. Learn. Progress.</div>
+                <div class="lg:col-span-5 relative flex justify-center items-center mt-8 lg:mt-0 animate-fadeInRight">
+                    <div class="hero-art-frame relative w-full aspect-[9/16] max-w-[280px] sm:max-w-[320px] lg:max-w-[350px] mx-auto p-2 transition-all duration-500 rounded-2xl shadow-[0_0_35px_rgba(201,168,76,0.2)] border border-ncst-gold/40">
+                        <div class="w-full h-full overflow-hidden relative group art-slot rounded-xl bg-ncst-dark">
+                            <img src="assets/img/landingpage/fc4ace9e-d428-4867-8b20-7e1d18bf971d.jpg" alt="Math Wizard" class="w-full h-full object-cover object-[78%_center] group-hover:scale-105 transition-transform duration-700">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent pointer-events-none"></div>
+                            <div class="absolute bottom-4 left-4 right-4 z-10">
+                                <div class="font-magic text-lg sm:text-xl text-white tracking-widest text-gold-glow">Math Wizard</div>
+                                <div class="text-xs text-ncst-gold tracking-wider font-flavor italic">Solve. Learn. Progress.</div>
                             </div>
                         </div>
                     </div>
@@ -191,50 +198,152 @@
                 </div>
                 <div class="guild-board p-6 sm:p-8">
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8">
-                    <div class="group guild-board-item relative aspect-video border border-ncst-neon/30 overflow-hidden transition-all duration-300 hover:border-ncst-gold">
-                        <img src="https://via.placeholder.com/800x450/1a0e05/d4a843?text=Login+and+Account+Module" alt="Login and account module" class="absolute inset-0 w-full h-full object-cover opacity-40 group-hover:opacity-65 transition-opacity duration-500" style="filter:sepia(0.3) contrast(1.1);">
-                        <div class="absolute inset-0 flex flex-col items-center justify-center gap-3 sm:gap-4 z-10">
-                            <i class="fa-solid fa-gamepad text-4xl sm:text-5xl text-ncst-gold/70 group-hover:text-ncst-gold transition-colors animate-ember"></i>
-                            <div class="text-center">
-                                <div class="font-heading font-bold text-white text-sm sm:text-base mb-1">Login and Setup</div>
-                                <div class="text-xs font-flavor italic" style="color:#a08060;">Access account, profile, and game mode</div>
+                    <!-- Step 01: Login & Account Setup -->
+                    <div class="group guild-board-item relative aspect-video border border-ncst-neon/30 overflow-hidden rounded-xl transition-all duration-300 hover:border-ncst-gold hover:shadow-[0_0_20px_rgba(201,168,76,0.25)]">
+                        <img src="assets/img/landingpage/login.png" alt="Math Wizard Login and Setup" class="absolute inset-0 w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/95 via-black/45 to-black/20 group-hover:via-black/30 transition-colors pointer-events-none"></div>
+                        <div class="absolute top-3 left-3 z-10">
+                            <span class="px-2.5 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-black/75 text-ncst-gold border border-ncst-gold/40 backdrop-blur-sm shadow">
+                                <i class="fa-solid fa-shield-halved mr-1"></i> Step 01 &bull; Identity
+                            </span>
+                        </div>
+                        <div class="absolute inset-0 flex flex-col justify-end p-5 z-10">
+                            <div class="flex items-center gap-2 mb-1">
+                                <span class="w-7 h-7 rounded-lg bg-ncst-gold/20 border border-ncst-gold/40 flex items-center justify-center text-ncst-gold text-xs shadow">
+                                    <i class="fa-solid fa-gamepad"></i>
+                                </span>
+                                <h4 class="font-heading font-bold text-white text-base">Login & Account Setup</h4>
                             </div>
+                            <p class="text-xs text-gray-300 font-flavor italic">Access student profile, authenticate with Google or guest mode, and sync real-time progress.</p>
                         </div>
                     </div>
 
-                    <div class="group guild-board-item relative aspect-video border border-ncst-neon/30 overflow-hidden transition-all duration-300 hover:border-ncst-gold">
-                        <img src="https://via.placeholder.com/800x450/1a0e05/d4a843?text=Math+Generation+and+Validation" alt="Math generation and validation" class="absolute inset-0 w-full h-full object-cover opacity-40 group-hover:opacity-65 transition-opacity duration-500" style="filter:sepia(0.3) contrast(1.1);">
-                        <div class="absolute inset-0 flex flex-col items-center justify-center gap-4 z-10">
-                            <i class="fa-solid fa-book-open text-5xl text-ncst-gold/70 group-hover:text-ncst-gold transition-colors animate-ember"></i>
-                            <div class="text-center">
-                                <div class="font-heading font-bold text-white mb-1">Solve and Validate</div>
-                                <div class="text-xs font-flavor italic" style="color:#a08060;">Math module checks each answer</div>
+                    <!-- Step 02: Solve and Validate -->
+                    <div class="group guild-board-item relative aspect-video border border-ncst-neon/30 overflow-hidden rounded-xl transition-all duration-300 hover:border-ncst-gold hover:shadow-[0_0_20px_rgba(201,168,76,0.25)]">
+                        <img src="assets/img/landingpage/0398375b-38a9-40a4-bc89-cc1fb6f89b36.jpg" alt="Math Generation and Validation" class="absolute inset-0 w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/95 via-black/45 to-black/20 group-hover:via-black/30 transition-colors pointer-events-none"></div>
+                        <div class="absolute top-3 left-3 z-10">
+                            <span class="px-2.5 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-black/75 text-ncst-neon border border-ncst-neon/40 backdrop-blur-sm shadow">
+                                <i class="fa-solid fa-scroll mr-1"></i> Step 02 &bull; Spellcraft
+                            </span>
+                        </div>
+                        <div class="absolute inset-0 flex flex-col justify-end p-5 z-10">
+                            <div class="flex items-center gap-2 mb-1">
+                                <span class="w-7 h-7 rounded-lg bg-ncst-neon/20 border border-ncst-neon/40 flex items-center justify-center text-ncst-neon text-xs shadow">
+                                    <i class="fa-solid fa-calculator"></i>
+                                </span>
+                                <h4 class="font-heading font-bold text-white text-base">Solve & Cast Spells</h4>
                             </div>
+                            <p class="text-xs text-gray-300 font-flavor italic">Work through calculus equations with the runic keypad and verify solutions with Instant Answer.</p>
                         </div>
                     </div>
 
-                    <div class="group guild-board-item relative aspect-video border border-ncst-neon/30 overflow-hidden transition-all duration-300 hover:border-ncst-gold">
-                        <img src="https://via.placeholder.com/800x450/1a0e05/d4a843?text=Authority+and+Fairness+System" alt="Authority and fairness system" class="absolute inset-0 w-full h-full object-cover opacity-40 group-hover:opacity-65 transition-opacity duration-500" style="filter:sepia(0.3) contrast(1.1);">
-                        <div class="absolute inset-0 flex flex-col items-center justify-center gap-4 z-10">
-                            <i class="fa-solid fa-trophy text-5xl text-ncst-gold/70 group-hover:text-ncst-gold transition-colors animate-ember"></i>
-                            <div class="text-center">
-                                <div class="font-heading font-bold text-white mb-1">System Authority</div>
-                                <div class="text-xs font-flavor italic" style="color:#a08060;">Local/Network checks keep results fair</div>
+                    <!-- Step 03: 3D Exploration & Quests -->
+                    <div class="group guild-board-item relative aspect-video border border-ncst-neon/30 overflow-hidden rounded-xl transition-all duration-300 hover:border-ncst-gold hover:shadow-[0_0_20px_rgba(201,168,76,0.25)]">
+                        <img src="assets/img/landingpage/7fe962ba-40e1-4977-9fbc-086b5f14afc2.jpg" alt="Scroll Discovery in 3D Realm" class="absolute inset-0 w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/95 via-black/45 to-black/20 group-hover:via-black/30 transition-colors pointer-events-none"></div>
+                        <div class="absolute top-3 left-3 z-10">
+                            <span class="px-2.5 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-black/75 text-ncst-blue border border-ncst-blue/40 backdrop-blur-sm shadow">
+                                <i class="fa-solid fa-compass mr-1"></i> Step 03 &bull; Expedition
+                            </span>
+                        </div>
+                        <div class="absolute inset-0 flex flex-col justify-end p-5 z-10">
+                            <div class="flex items-center gap-2 mb-1">
+                                <span class="w-7 h-7 rounded-lg bg-ncst-blue/20 border border-ncst-blue/40 flex items-center justify-center text-ncst-blue text-xs shadow">
+                                    <i class="fa-solid fa-map-location-dot"></i>
+                                </span>
+                                <h4 class="font-heading font-bold text-white text-base">3D Exploration & Quests</h4>
                             </div>
+                            <p class="text-xs text-gray-300 font-flavor italic">Traverse 3D realms, manage health and mana reserves, and uncover ancient knowledge pedestals.</p>
                         </div>
                     </div>
 
-                    <div class="group guild-board-item relative aspect-video border border-ncst-neon/30 overflow-hidden transition-all duration-300 hover:border-ncst-gold">
-                        <img src="https://via.placeholder.com/800x450/1a0e05/d4a843?text=Progress+Tracking+and+Retention" alt="Progress tracking" class="absolute inset-0 w-full h-full object-cover opacity-40 group-hover:opacity-65 transition-opacity duration-500" style="filter:sepia(0.3) contrast(1.1);">
-                        <div class="absolute inset-0 flex flex-col items-center justify-center gap-4 z-10">
-                            <i class="fa-solid fa-chart-line text-5xl text-ncst-gold/70 group-hover:text-ncst-gold transition-colors animate-ember"></i>
-                            <div class="text-center">
-                                <div class="font-heading font-bold text-white mb-1">Track Improvement</div>
-                                <div class="text-xs font-flavor italic" style="color:#a08060;">Follow accuracy, confidence, and progress</div>
+                    <!-- Step 04: Arcane Spellcasting Combat -->
+                    <div class="group guild-board-item relative aspect-video border border-ncst-neon/30 overflow-hidden rounded-xl transition-all duration-300 hover:border-ncst-gold hover:shadow-[0_0_20px_rgba(201,168,76,0.25)]">
+                        <img src="assets/img/landingpage/c66b4a65-5dc7-4bbb-972a-0cab7614bda8.jpg" alt="Arcane Spellcasting Combat" class="absolute inset-0 w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/95 via-black/45 to-black/20 group-hover:via-black/30 transition-colors pointer-events-none"></div>
+                        <div class="absolute top-3 left-3 z-10">
+                            <span class="px-2.5 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-black/75 text-ncst-accent border border-ncst-accent/40 backdrop-blur-sm shadow">
+                                <i class="fa-solid fa-wand-magic-sparkles mr-1"></i> Step 04 &bull; Magic Power
+                            </span>
+                        </div>
+                        <div class="absolute inset-0 flex flex-col justify-end p-5 z-10">
+                            <div class="flex items-center gap-2 mb-1">
+                                <span class="w-7 h-7 rounded-lg bg-ncst-accent/20 border border-ncst-accent/40 flex items-center justify-center text-ncst-accent text-xs shadow">
+                                    <i class="fa-solid fa-bolt-lightning"></i>
+                                </span>
+                                <h4 class="font-heading font-bold text-white text-base">Arcane Combat & Magic</h4>
                             </div>
+                            <p class="text-xs text-gray-300 font-flavor italic">Channel verified solutions into radiant mana beams to shatter barriers and master calculus trials.</p>
                         </div>
                     </div>
                 </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- World Showcase Section -->
+        <section id="world" class="py-16 sm:py-24 px-4 sm:px-6 bg-ncst-blue/10 border-y border-ncst-neon/10">
+            <div class="max-w-7xl mx-auto">
+                <div class="mb-12 sm:mb-16">
+                    <div class="section-tag mb-4"><i class="fa-solid fa-earth-americas mr-2"></i>03. The Living World</div>
+                    <h2 class="font-magic text-4xl sm:text-5xl text-white mt-2 text-gold-glow">Explore The Realm</h2>
+                    <p class="text-sm sm:text-base text-gray-400 max-w-2xl font-flavor italic">Step into handcrafted 3D landscapes where calculus theorems shape the world around you.</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+                    <!-- Environment 1: The Town Crossroads (forest3.png) -->
+                    <div class="parchment-panel p-5 sm:p-6 border border-ncst-gold/30 hover:border-ncst-gold transition-all duration-300 group rounded-xl">
+                        <div class="relative aspect-[16/9] overflow-hidden rounded-lg mb-4 border border-ncst-neon/30 shadow-lg">
+                            <img src="assets/img/landingpage/forest3.png" alt="The Town Crossroads" class="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent pointer-events-none"></div>
+                            <span class="absolute top-3 right-3 px-2.5 py-1 rounded text-xs font-bold bg-black/75 text-ncst-gold border border-ncst-gold/40 backdrop-blur-sm shadow-md">
+                                <i class="fa-solid fa-map-location-dot mr-1.5"></i> Crossroads Well
+                            </span>
+                        </div>
+                        <div class="flex items-center gap-2 mb-2">
+                            <i class="fa-solid fa-compass text-ncst-gold"></i>
+                            <h3 class="font-magic text-xl text-white text-gold-glow">The Town Crossroads</h3>
+                        </div>
+                        <p class="text-xs sm:text-sm text-gray-300 font-flavor italic leading-relaxed">
+                            The central gathering square of Mathemagia with the ancient runic well. Cobblestone pathways branch outward toward the study lodges where mages convene.
+                        </p>
+                    </div>
+
+                    <!-- Environment 2: The Village of Axioms (forest.png) -->
+                    <div class="parchment-panel p-5 sm:p-6 border border-ncst-gold/30 hover:border-ncst-gold transition-all duration-300 group rounded-xl">
+                        <div class="relative aspect-[16/9] overflow-hidden rounded-lg mb-4 border border-ncst-neon/30 shadow-lg">
+                            <img src="assets/img/landingpage/forest.png" alt="The Village of Axioms" class="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent pointer-events-none"></div>
+                            <span class="absolute top-3 right-3 px-2.5 py-1 rounded text-xs font-bold bg-black/75 text-ncst-gold border border-ncst-gold/40 backdrop-blur-sm shadow-md">
+                                <i class="fa-solid fa-house-chimney mr-1.5"></i> Study Lodges
+                            </span>
+                        </div>
+                        <div class="flex items-center gap-2 mb-2">
+                            <i class="fa-solid fa-tree text-ncst-gold"></i>
+                            <h3 class="font-magic text-xl text-white text-gold-glow">The Village Sanctuaries</h3>
+                        </div>
+                        <p class="text-xs sm:text-sm text-gray-300 font-flavor italic leading-relaxed">
+                            Timber-framed cottages inscribed with mathematical runes (&Sigma;, &pi;, 7). Here, apprentice spellcasters practice foundational algebra and calculus before venturing into the wilderness.
+                        </p>
+                    </div>
+
+                    <!-- Environment 3: The Portal of Convergence (forest2.png) -->
+                    <div class="parchment-panel p-5 sm:p-6 border border-ncst-gold/30 hover:border-ncst-gold transition-all duration-300 group rounded-xl md:col-span-2 lg:col-span-1">
+                        <div class="relative aspect-[16/9] overflow-hidden rounded-lg mb-4 border border-ncst-neon/30 shadow-lg">
+                            <img src="assets/img/landingpage/forest2.png" alt="The Portal of Convergence" class="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent pointer-events-none"></div>
+                            <span class="absolute top-3 right-3 px-2.5 py-1 rounded text-xs font-bold bg-black/75 text-ncst-neon border border-ncst-neon/40 backdrop-blur-sm shadow-md">
+                                <i class="fa-solid fa-dungeon mr-1.5"></i> Mystic Portal
+                            </span>
+                        </div>
+                        <div class="flex items-center gap-2 mb-2">
+                            <i class="fa-solid fa-wand-magic-sparkles text-ncst-neon"></i>
+                            <h3 class="font-magic text-xl text-white text-gold-glow">The Portal of Convergence</h3>
+                        </div>
+                        <p class="text-xs sm:text-sm text-gray-300 font-flavor italic leading-relaxed">
+                            Deep within the foggy pine woods lies a monumental stone gateway inscribed with sacred geometry. Solve the sequence of pedestal scrolls to activate the portal and unlock the next dimensional trial.
+                        </p>
+                    </div>
                 </div>
             </div>
         </section>
@@ -244,7 +353,7 @@
             <div class="max-w-7xl mx-auto">
                 <div class="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
                     <div>
-                        <div class="section-tag mb-4"><i class="fa-solid fa-landmark mr-2"></i>03. Project Overview</div>
+                        <div class="section-tag mb-4"><i class="fa-solid fa-landmark mr-2"></i>04. Project Overview</div>
                         <h2 class="font-magic text-4xl sm:text-5xl text-white mt-2 mb-4 sm:mb-6 text-gold-glow">Designed For Modern Learners</h2>
                         <div class="space-y-3 sm:space-y-4 text-sm sm:text-base text-gray-400">
                             <p>Math Wizard is a 3D mobile educational platform focused on making advanced math concepts clearer, more engaging, and easier to practice.</p>
@@ -278,7 +387,7 @@
         <!-- Download Section -->
         <section id="download" class="py-16 sm:py-24 px-4 sm:px-6">
             <div class="max-w-4xl mx-auto text-center">
-                <div class="section-tag mx-auto inline-flex mb-4"><i class="fa-solid fa-map mr-2"></i>04. Expedition Board</div>
+                <div class="section-tag mx-auto inline-flex mb-4"><i class="fa-solid fa-map mr-2"></i>05. Expedition Board</div>
                 <h2 class="font-magic text-4xl sm:text-5xl text-white mt-2 mb-4 sm:mb-6 text-gold-glow">Download Math Wizard</h2>
                 <p class="text-sm sm:text-lg text-gray-400 mb-8 sm:mb-12">Download the latest build and experience a structured, game-based approach to mastering calculus fundamentals.</p>
 
@@ -310,7 +419,7 @@
         <!-- Contact Section -->
         <section id="contact" class="py-16 sm:py-24 px-4 sm:px-6 bg-ncst-blue/20 border-t border-ncst-neon/10">
             <div class="max-w-4xl mx-auto text-center">
-                <div class="section-tag mx-auto inline-flex mb-4"><i class="fa-solid fa-fire mr-2"></i>05. Heralds' Post</div>
+                <div class="section-tag mx-auto inline-flex mb-4"><i class="fa-solid fa-fire mr-2"></i>06. Heralds' Post</div>
                 <h2 class="font-magic text-4xl sm:text-5xl text-white mt-2 mb-4 sm:mb-6 text-gold-glow">Join Our Community</h2>
                 <p class="text-sm sm:text-lg text-gray-400 mb-8 sm:mb-12">Need installation help, gameplay support, or project information? Contact us through the channels below.</p>
 
