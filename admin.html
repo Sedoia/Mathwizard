@@ -698,11 +698,27 @@
 
         const MEDAL = ['🥇', '🥈', '🥉'];
 
+        function hasPlayerStarted(u) {
+            const level = Number(u.level || 1);
+            const challengesWon = Number(u.challengesWon || 0);
+            const playTime = Number(u.playTime || 0);
+            const streak = Number(u.streak || 0);
+            const xp = Number(u.xp || 0);
+            return challengesWon > 0 || playTime > 0 || xp > 0 || streak > 0 || level > 1;
+        }
+
         function computeScore(u) {
-            return (Number(u.level || 1) * 100)
-                 + (Number(u.challengesWon || 0) * 10)
-                 + (Number(u.streak || 0) * 5)
-                 + (Number(u.xp || 0));
+            if (!hasPlayerStarted(u)) return 0;
+            const level = Number(u.level || 1);
+            const challengesWon = Number(u.challengesWon || 0);
+            const streak = Number(u.streak || 0);
+            const xp = Number(u.xp || 0);
+            // Accounts starting at Level 1 with 0 activity earn 0 score.
+            // Points are earned as players gain levels beyond 1, win challenges, maintain streaks, and earn XP.
+            return (Math.max(0, level - 1) * 100)
+                 + (challengesWon * 15)
+                 + (streak * 5)
+                 + xp;
         }
 
         function fmtPlayTime(hours) {
@@ -715,22 +731,23 @@
             const container = document.getElementById('progress-podium');
             if (!container) return;
 
-            if (!top3.length) {
-                container.innerHTML = '';
+            const activeTop = (top3 || []).filter(u => hasPlayerStarted(u) && u.score > 0);
+            if (!activeTop.length) {
+                container.innerHTML = `
+                    <div class="col-span-3 text-center py-6 parchment-panel border border-ncst-neon/20 rounded-lg">
+                        <i class="fa-solid fa-gamepad text-2xl text-ncst-gold mb-2"></i>
+                        <p class="text-sm font-bold text-white">No In-Game Progress Recorded Yet</p>
+                        <p class="text-xs text-gray-400 mt-1">Adventurers will appear on the podium once they start playing challenges and gain experience.</p>
+                    </div>
+                `;
                 return;
             }
 
             // Order: 2nd, 1st, 3rd (classic podium layout)
-            const order = [top3[1], top3[0], top3[2]].filter(Boolean);
-            const podiumHeight = ['h-20', 'h-28', 'h-16'];
-            const podiumBorder = ['border-gray-400', 'border-ncst-gold', 'border-orange-400'];
-            const podiumLabel = ['Silver', 'Gold', 'Bronze'];
-
-            // Rebuild to [2nd, 1st, 3rd] display order with matching heights/borders
             const display = [
-                { user: top3[1], rank: 2, height: 'h-20', border: 'border-gray-400', label: 'Silver', medal: '🥈' },
-                { user: top3[0], rank: 1, height: 'h-28', border: 'border-ncst-gold', label: 'Gold',   medal: '🥇' },
-                { user: top3[2], rank: 3, height: 'h-16', border: 'border-orange-400', label: 'Bronze', medal: '🥉' }
+                { user: activeTop[1], rank: 2, height: 'h-20', border: 'border-gray-400', label: 'Silver', medal: '🥈' },
+                { user: activeTop[0], rank: 1, height: 'h-28', border: 'border-ncst-gold', label: 'Gold',   medal: '🥇' },
+                { user: activeTop[2], rank: 3, height: 'h-16', border: 'border-orange-400', label: 'Bronze', medal: '🥉' }
             ].filter(d => d.user);
 
             container.innerHTML = display.map(d => `
@@ -767,7 +784,7 @@
             }
 
             const sortFns = {
-                score:         (a, b) => b.score - a.score,
+                score:         (a, b) => b.score - a.score || b.level - a.level || b.challengesWon - a.challengesWon,
                 level:         (a, b) => b.level - a.level || b.score - a.score,
                 challengesWon: (a, b) => b.challengesWon - a.challengesWon || b.score - a.score,
                 streak:        (a, b) => b.streak - a.streak || b.score - a.score,
@@ -775,7 +792,10 @@
             };
             rows.sort(sortFns[sortKey] || sortFns.score);
 
-            if (summary) summary.textContent = `Showing ${rows.length} player${rows.length !== 1 ? 's' : ''}`;
+            const activeCount = rows.filter(u => hasPlayerStarted(u)).length;
+            if (summary) {
+                summary.textContent = `Showing ${rows.length} player${rows.length !== 1 ? 's' : ''} (${activeCount} active in-game)`;
+            }
             if (!tbody) return;
 
             if (!rows.length) {
@@ -783,18 +803,27 @@
                 return;
             }
 
-            const topScore = rows[0]?.score || 1;
+            // Benchmark target score for full game journey mastery (2,500 score ~ Lv 20-25 + 50 challenges)
+            const JOURNEY_TARGET = 2500;
+            const topActiveScore = Math.max(...adminState.progressPlayers.map(p => p.score || 0), 0);
+            const benchmarkScore = Math.max(JOURNEY_TARGET, topActiveScore);
 
             tbody.innerHTML = rows.slice(0, 200).map((u, idx) => {
                 const rank = idx + 1;
-                const medal = rank <= 3 ? MEDAL[rank - 1] : '';
+                const hasStarted = hasPlayerStarted(u);
+                const medal = (rank <= 3 && hasStarted && u.score > 0) ? MEDAL[rank - 1] : '';
                 const rankDisplay = medal
                     ? `<span class="text-lg">${medal}</span>`
                     : `<span class="text-gray-400 font-bold">#${rank}</span>`;
-                const pct = Math.round((u.score / topScore) * 100);
-                const barColor = rank === 1 ? 'bg-ncst-gold' : rank === 2 ? 'bg-gray-400' : rank === 3 ? 'bg-orange-400' : 'bg-ncst-neon';
+                
+                // If the player hasn't started the game yet, progress is 0%
+                const pct = (!hasStarted || u.score <= 0)
+                    ? 0
+                    : Math.min(100, Math.max(1, Math.round((u.score / benchmarkScore) * 100)));
+
+                const barColor = !hasStarted ? 'bg-gray-600' : (rank === 1 ? 'bg-ncst-gold' : rank === 2 ? 'bg-gray-400' : rank === 3 ? 'bg-orange-400' : 'bg-ncst-neon');
                 const initials = String(u.name || u.username || '?').slice(0, 1).toUpperCase();
-                const rowBg = rank <= 3 ? 'bg-ncst-gold/5' : '';
+                const rowBg = (rank <= 3 && hasStarted && u.score > 0) ? 'bg-ncst-gold/5' : '';
 
                 return `
                     <tr class="border-b border-white/5 hover:bg-white/5 transition-colors ${rowBg}">
@@ -815,13 +844,13 @@
                         <td class="py-3 px-3"><span class="${u.streak > 0 ? 'text-ncst-neon' : 'text-gray-500'}">${u.streak} day${u.streak !== 1 ? 's' : ''}</span></td>
                         <td class="py-3 px-3"><span class="text-gray-300">${fmtPlayTime(u.playTime)}</span></td>
                         <td class="py-3 px-3"><span class="text-ncst-gold">${Number(u.aether || 0).toLocaleString()}</span></td>
-                        <td class="py-3 px-3"><span class="font-bold text-ncst-neon">${u.score.toLocaleString()}</span></td>
+                        <td class="py-3 px-3"><span class="font-bold ${u.score > 0 ? 'text-ncst-neon' : 'text-gray-500'}">${u.score.toLocaleString()}</span></td>
                         <td class="py-3 px-3 min-w-[100px]">
                             <div class="flex items-center gap-2">
                                 <div class="flex-1 h-2 bg-white/10 rounded-full overflow-hidden">
                                     <div class="h-full ${barColor} rounded-full transition-all" style="width:${pct}%"></div>
                                 </div>
-                                <span class="text-xs text-gray-400 w-9 text-right">${pct}%</span>
+                                <span class="text-xs ${hasStarted ? 'text-gray-300 font-bold' : 'text-gray-500'} w-9 text-right">${pct}%</span>
                             </div>
                         </td>
                     </tr>
@@ -883,6 +912,14 @@
                     totalSpent: spent
                 });
 
+                const candidateProgress = {
+                    level: pLevel,
+                    challengesWon: pWon,
+                    playTime: pTime,
+                    streak: pStreak,
+                    xp: pXp
+                };
+
                 adminState.progressPlayers.push({
                     id: doc.id,
                     name: user.name || user.username || 'Unnamed',
@@ -894,7 +931,7 @@
                     streak: pStreak,
                     xp: pXp,
                     aether: pAether,
-                    score: (pLevel * 100) + (pWon * 10) + (pStreak * 5) + pXp
+                    score: computeScore(candidateProgress)
                 });
 
                 mergedPurchases.forEach((entry, index) => {
