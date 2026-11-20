@@ -465,9 +465,6 @@
                                 <option value="unresolved">Open Only</option>
                                 <option value="resolved">Resolved</option>
                             </select>
-                            <button onclick="simulateTestCrash()" class="rune-btn px-3 py-2 text-xs min-h-[40px] flex items-center gap-1.5 whitespace-nowrap">
-                                <i class="fa-solid fa-vial"></i> Test Crash
-                            </button>
                             <button onclick="loadCrashData()" class="iron-plaque-btn px-3 py-2 text-xs min-h-[40px] flex items-center gap-1.5 whitespace-nowrap">
                                 <i class="fa-solid fa-rotate"></i> Refresh
                             </button>
@@ -1361,41 +1358,6 @@
                 select.value = appName;
             }
             renderCrashRows();
-        }
-
-        async function simulateTestCrash() {
-            if (!window.firebaseDb) {
-                alert('Firebase Firestore is not initialized.');
-                return;
-            }
-            const sampleApps = ['Math Wizard (Android)', 'Math Wizard (Web)', 'MathWizard (Web)'];
-            const randomApp = sampleApps[Math.floor(Math.random() * sampleApps.length)];
-            const isAndroid = randomApp.includes('Android');
-            const sampleErrors = [
-                'NullReferenceException: Object reference not set to an instance of an object at MathWizard.BattleManager.CastSpell()',
-                'Uncaught TypeError: Cannot read properties of undefined (reading "numerals") at profileRenderer.js:242',
-                'FirebaseNetworkException: Connection timed out while streaming real-time leaderboard data',
-                'IndexOutOfBoundsException: Spell deck slot index 4 out of bounds (size 3) at SpellBar.cs:88'
-            ];
-            const randomError = sampleErrors[Math.floor(Math.random() * sampleErrors.length)];
-
-            try {
-                const currentUser = authService.getCurrentUser();
-                await window.firebaseDb.collection('crashes').add({
-                    app: randomApp,
-                    platform: isAndroid ? 'android' : 'web',
-                    error: randomError,
-                    stack: `${randomError}\n    at MathWizard.Engine.Update (Engine.cs:142)\n    at UnityEngine.EventSystems.Execute (EventSystem.cs:34)`,
-                    userId: currentUser?.id || 'admin_tester',
-                    userEmail: currentUser?.email || 'admin@ncst.edu',
-                    timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-                    date: new Date().toISOString(),
-                    resolved: false
-                });
-                await loadCrashData();
-            } catch (err) {
-                alert('Could not log test crash: ' + err.message);
-            }
         }
 
         async function resolveCrash(crashId) {
