@@ -247,13 +247,6 @@ class ProfileRenderer {
             const numeralsVal = Number(currency.numerals ?? currency.crystals ?? this.playerData.numerals ?? this.playerData.crystals ?? 0);
             crystalsEl.textContent = numeralsVal.toLocaleString();
         }
-
-        const energyEl = document.getElementById('player-energy');
-        if (energyEl) {
-            const current = Number(currency.energy?.current ?? currency.energy ?? this.playerData.energy ?? 100);
-            const max = Number(currency.energy?.max ?? 100);
-            energyEl.textContent = `${current} / ${max}`;
-        }
     }
 
     /**
@@ -568,20 +561,13 @@ class ProfileRenderer {
                 </div>
 
                 <!-- Secondary Resources Status -->
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
                     <div class="p-4 glass-panel rounded-lg flex items-center justify-between border border-ncst-neon/30">
                         <div>
                             <p class="text-xs text-gray-400 uppercase tracking-wider">Numerals</p>
                             <p class="text-xl font-bold text-ncst-neon">${crystals.toLocaleString()}</p>
                         </div>
                         <i class="fa-solid fa-gem text-2xl text-ncst-neon/60"></i>
-                    </div>
-                    <div class="p-4 glass-panel rounded-lg flex items-center justify-between border border-ncst-accent/30">
-                        <div>
-                            <p class="text-xs text-gray-400 uppercase tracking-wider">Mana Energy</p>
-                            <p class="text-xl font-bold text-ncst-accent">${energyCurrent} / ${energyMax}</p>
-                        </div>
-                        <i class="fa-solid fa-zap text-2xl text-ncst-accent/60"></i>
                     </div>
                     <div class="p-4 glass-panel rounded-lg flex items-center justify-between border border-ncst-gold/30">
                         <div>

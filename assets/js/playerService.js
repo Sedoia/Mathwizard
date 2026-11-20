@@ -62,11 +62,7 @@ class PlayerService {
                 gold: 0,
                 aether: 0,
                 crystals: 0,
-                numerals: 0,
-                energy: {
-                    current: 100,
-                    max: 100
-                }
+                numerals: 0
             },
             crystals: 0,
             numerals: 0,
@@ -135,36 +131,6 @@ class PlayerService {
         const xp = Number(p.stats?.xp ?? p.xp ?? u.xp ?? defaults.stats.xp);
         const maxXp = Number(p.stats?.maxXp ?? p.maxXp ?? u.xpToNextLevel ?? defaults.stats.maxXp);
 
-        // Currencies: Gold/Aether, Arcane Crystals / Numerals, Mana Energy
-        const gold = Number(p.currency?.aether ?? p.currency?.gold ?? p.gold ?? u.aether ?? u.gold ?? defaults.currency.gold ?? 0);
-        const aether = gold;
-        const crystals = Number(
-            p.currency?.numerals ??
-            p.currency?.crystals ??
-            p.numerals ??
-            p.crystals ??
-            u.currency?.numerals ??
-            u.currency?.crystals ??
-            u.numerals ??
-            u.crystals ??
-            defaults.currency.crystals ??
-            0
-        );
-        const numerals = crystals;
-
-        let energyCurrent = 100;
-        let energyMax = 100;
-        if (typeof p.currency?.energy === 'object' && p.currency?.energy !== null) {
-            energyCurrent = Number(p.currency.energy.current ?? 100);
-            energyMax = Number(p.currency.energy.max ?? 100);
-        } else if (p.currency?.energy !== undefined) {
-            energyCurrent = Number(p.currency.energy);
-        } else if (p.energy !== undefined) {
-            energyCurrent = Number(p.energy);
-        } else if (u.energy !== undefined) {
-            energyCurrent = Number(u.energy);
-        }
-
         // Stats: calcPower, accuracy, challengesWon, playTime
         const calcPower = Number(p.stats?.calcPower ?? (10 + (level - 1) * 5));
         const accuracy = Number(p.stats?.accuracy ?? u.stats?.accuracy ?? defaults.stats.accuracy);
@@ -176,6 +142,53 @@ class PlayerService {
             defaults.stats.challengesWon
         );
         const playTime = Number(p.stats?.playTime ?? u.stats?.hoursPlayed ?? defaults.stats.playTime);
+
+        // Currencies: Gold/Aether, Arcane Crystals / Numerals, Mana Energy
+        const gold = Number(p.currency?.aether ?? p.currency?.gold ?? p.gold ?? u.aether ?? u.gold ?? defaults.currency.gold ?? 0);
+        const aether = gold;
+        let crystals = Number(
+            p.currency?.numerals ??
+            p.currency?.crystals ??
+            p.numerals ??
+            p.crystals ??
+            u.currency?.numerals ??
+            u.currency?.crystals ??
+            u.numerals ??
+            u.crystals ??
+            defaults.currency.crystals ??
+            0
+        );
+
+        // Auto-fix: if an account had the legacy default of 50 seeded and hasn't unlocked levels or won challenges yet, reset to 0
+        const isFreshPlayer = (challengesWon === 0) && (level === 1) && (p.role !== 'admin') && (u.role !== 'admin');
+        if (isFreshPlayer && (crystals === 50 || p.currency?.crystals === 50 || u.crystals === 50)) {
+            crystals = 0;
+            // Also sync the correction to Firestore so it persists permanently in the database
+            if (window.firebaseDb && playerId && playerId !== 'player_12345') {
+                window.firebaseDb.collection('players').doc(playerId).set({
+                    currency: { crystals: 0, numerals: 0 }
+                }, { merge: true }).catch(() => {});
+                window.firebaseDb.collection('users').doc(playerId).set({
+                    crystals: 0,
+                    numerals: 0
+                }, { merge: true }).catch(() => {});
+            }
+            // Update current user in localStorage and sessionStorage if needed
+            const storedUser = authService?.getCurrentUser?.();
+            if (storedUser && (storedUser.id === playerId || storedUser.uid === playerId)) {
+                storedUser.crystals = 0;
+                storedUser.numerals = 0;
+                if (storedUser.currency) {
+                    storedUser.currency.crystals = 0;
+                    storedUser.currency.numerals = 0;
+                }
+                authService.storeUser(storedUser);
+            }
+            try {
+                sessionStorage.removeItem(`player_${playerId}`);
+            } catch (e) {}
+        }
+        const numerals = crystals;
 
         // Streak: current and best
         let currentStreak = 0;
@@ -258,11 +271,7 @@ class PlayerService {
                 gold,
                 aether,
                 crystals,
-                numerals,
-                energy: {
-                    current: energyCurrent,
-                    max: energyMax
-                }
+                numerals
             },
             crystals,
             numerals,

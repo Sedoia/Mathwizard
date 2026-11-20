@@ -212,11 +212,7 @@ class AuthService {
             currency: {
                 gold: Number.isFinite(profile.gold) ? profile.gold : 0,
                 crystals: Number.isFinite(profile.crystals) ? profile.crystals : (Number.isFinite(profile.numerals) ? profile.numerals : 0),
-                numerals: Number.isFinite(profile.numerals) ? profile.numerals : (Number.isFinite(profile.crystals) ? profile.crystals : 0),
-                energy: {
-                    current: profile.energy || 100,
-                    max: 100
-                }
+                numerals: Number.isFinite(profile.numerals) ? profile.numerals : (Number.isFinite(profile.crystals) ? profile.crystals : 0)
             },
             crystals: Number.isFinite(profile.crystals) ? profile.crystals : (Number.isFinite(profile.numerals) ? profile.numerals : 0),
             numerals: Number.isFinite(profile.numerals) ? profile.numerals : (Number.isFinite(profile.crystals) ? profile.crystals : 0),
@@ -302,6 +298,17 @@ class AuthService {
         try {
             const userDoc = await this.getUserDocByUid(current.id);
             if (userDoc) {
+                // Auto-normalize legacy 50 crystals on fresh player accounts
+                if (userDoc.role !== 'admin' && (userDoc.crystals === 50 || userDoc.currency?.crystals === 50) && (userDoc.stats?.problemsSolved || 0) === 0) {
+                    userDoc.crystals = 0;
+                    userDoc.numerals = 0;
+                    if (userDoc.currency) {
+                        userDoc.currency.crystals = 0;
+                        userDoc.currency.numerals = 0;
+                    }
+                    this.setUserDoc(current.id, { crystals: 0, numerals: 0 }, true).catch(() => {});
+                }
+
                 const refreshed = {
                     ...current,
                     ...userDoc,
@@ -377,6 +384,7 @@ class AuthService {
                 if (error.message.includes('not found')) {
                     throw error;
                 }
+                console.warn('Username lookup notice:', error);
                 throw new Error('Error looking up username. Please try signing in with your email instead.');
             }
         }
@@ -392,6 +400,14 @@ class AuthService {
                 const name = fbUser.displayName || fbUser.email.split('@')[0];
                 userProfile = this.getDefaultPlayerPayload(fbUser.uid, name, fbUser.email, role);
                 await this.setUserDoc(fbUser.uid, userProfile, false);
+            } else if (userProfile.role !== 'admin' && (userProfile.crystals === 50 || userProfile.currency?.crystals === 50) && (userProfile.stats?.problemsSolved || 0) === 0) {
+                userProfile.crystals = 0;
+                userProfile.numerals = 0;
+                if (userProfile.currency) {
+                    userProfile.currency.crystals = 0;
+                    userProfile.currency.numerals = 0;
+                }
+                this.setUserDoc(fbUser.uid, { crystals: 0, numerals: 0 }, true).catch(() => {});
             }
 
             await this.ensurePlayerProfileDoc(userProfile);

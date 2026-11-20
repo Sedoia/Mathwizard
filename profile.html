@@ -56,12 +56,6 @@
                     crystalsEl.textContent = numVal.toLocaleString();
                 }
 
-                // Update energy
-                const energyEl = document.getElementById('player-energy');
-                if (energyEl) {
-                    const energy = user.energy ?? 100;
-                    energyEl.textContent = `${energy} / 100`;
-                }
                 
                 // Update role badge
                 const roleBadge = document.getElementById('player-role');
@@ -238,7 +232,7 @@
 
 
             <!-- Currency & Resources -->
-            <div class="grid md:grid-cols-3 gap-6 mb-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
                 <div class="parchment-panel p-6 border-2 border-ncst-gold text-center">
                     <div class="text-4xl text-ncst-gold mb-2"><i class="fa-solid fa-coins"></i></div>
                     <p class="font-heading text-xs uppercase tracking-wider mb-2" style="color:#a08060;">Aether Reserve</p>
@@ -248,11 +242,6 @@
                     <div class="text-4xl text-ncst-neon mb-2"><i class="fa-solid fa-gem"></i></div>
                     <p class="font-heading text-xs uppercase tracking-wider mb-2" style="color:#a08060;">Numerals</p>
                     <p id="player-crystals" class="text-3xl font-bold text-ncst-neon">0</p>
-                </div>
-                <div class="parchment-panel p-6 border-2 border-ncst-accent text-center">
-                    <div class="text-4xl text-ncst-accent mb-2"><i class="fa-solid fa-zap"></i></div>
-                    <p class="font-heading text-xs uppercase tracking-wider mb-2" style="color:#a08060;">Mana Energy</p>
-                    <p id="player-energy" class="text-3xl font-bold text-ncst-accent">100 / 100</p>
                 </div>
             </div>
 
