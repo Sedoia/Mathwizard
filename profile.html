@@ -149,106 +149,88 @@
     <main class="relative z-10 w-full min-h-screen pt-28 px-4 sm:px-6 pb-12">
         <div class="max-w-6xl mx-auto w-full">
             <!-- Header with Player Info -->
-            <div class="grid sm:grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8 mb-8">
+            <div class="grid sm:grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-6 mb-5 items-stretch">
                 <!-- Character Card -->
                 <div class="lg:col-span-1">
-                    <div class="parchment-panel float-card p-6 sm:p-8 text-center border-2 border-ncst-gold">
-                        <div class="relative w-24 sm:w-28 lg:w-32 h-24 sm:h-28 lg:h-32 mx-auto mb-4">
+                    <div class="parchment-panel float-card p-5 sm:p-6 text-center border-2 border-ncst-gold flex flex-col justify-center h-full">
+                        <div class="relative w-20 sm:w-24 h-20 sm:h-24 mx-auto mb-3">
                             <div class="absolute inset-0 bg-gradient-to-br from-ncst-gold/40 to-ncst-neon/40 rounded-full blur-xl"></div>
                             <div id="player-avatar-container" class="relative w-full h-full bg-ncst-dark/50 rounded-full border-2 border-ncst-gold flex items-center justify-center">
-                                <i class="fa-solid fa-wizard text-4xl sm:text-5xl text-ncst-gold"></i>
+                                <i class="fa-solid fa-wizard text-3xl sm:text-4xl text-ncst-gold"></i>
                             </div>
-                            <div class="absolute -bottom-2 -right-2 bg-ncst-accent px-2 sm:px-3 py-1 rounded-full">
-                                <span class="text-xs font-bold text-white">ONLINE</span>
-                            </div>
-                        </div>
-                        <h2 id="player-name" class="font-magic text-xl sm:text-2xl text-ncst-gold text-gold-glow mb-1 runic-glow">Loading...</h2>
-                        <p id="player-username" class="text-xs text-gray-400 mb-6"></p>
-
-                        <div class="space-y-2 text-sm">
-                            <div class="flex justify-between items-center">
-                                <span class="text-gray-400">Level</span>
-                                <span id="player-level" class="text-2xl font-bold text-ncst-gold">1</span>
-                            </div>
-                            <div class="border border-ncst-neon/30 rounded"></div>
-                            <div class="flex justify-between items-center pt-2">
-                                <span class="text-gray-400">Member Since</span>
-                                <span id="player-member-since" class="text-ncst-neon font-bold text-xs">Jan 2024</span>
+                            <div class="absolute -bottom-1 -right-1 bg-ncst-accent px-2 py-0.5 rounded-full">
+                                <span class="text-[10px] font-bold text-white">ONLINE</span>
                             </div>
                         </div>
-                    </div>
+                        <h2 id="player-name" class="font-magic text-lg sm:text-xl text-ncst-gold text-gold-glow mb-1 runic-glow">Loading...</h2>
+                        <p id="player-username" class="text-xs text-gray-400 mb-3"></p>
 
-                    <!-- Daily Streak -->
-                    <div id="daily-streak-panel" class="parchment-panel p-4 border border-ncst-accent mt-4">
-                        <p class="font-heading text-xs uppercase tracking-wider mb-2" style="color:#d4a843;"><i class="fa-solid fa-fire text-ncst-gold mr-1"></i>Current Streak</p>
-                        <p class="text-3xl font-bold text-ncst-gold runic-glow">0 Days</p>
-                        <p class="font-flavor italic text-xs mt-1" style="color:#a08060;">Play today to keep the flame alive!</p>
+                        <div class="text-xs border-t border-ncst-neon/20 pt-2 flex justify-between items-center">
+                            <span class="text-gray-400">Member Since</span>
+                            <span id="player-member-since" class="text-ncst-neon font-bold">Jan 2024</span>
+                        </div>
                     </div>
                 </div>
 
                 <!-- Stats Panel -->
                 <div class="lg:col-span-2">
-                    <div class="parchment-panel p-6 sm:p-8">
-                        <h3 class="font-magic text-xl sm:text-2xl text-ncst-gold text-gold-glow mb-4 sm:mb-6">Character Stats</h3>
-                        
-                        <!-- XP Bar -->
-                        <div class="mb-6">
-                            <div class="flex justify-between items-center mb-2 text-xs sm:text-sm">
-                                <span id="xp-level-label" class="text-gray-400 uppercase tracking-wider">Experience to Level 2</span>
-                                <span id="xp-text" class="text-ncst-gold font-bold">0 / 1000 XP</span>
-                            </div>
-                            <div class="h-2 sm:h-3 bg-ncst-dark/50 rounded-full overflow-hidden border border-ncst-neon/30">
-                                <div id="xp-bar" class="h-full w-4/5 bg-gradient-to-r from-ncst-neon to-ncst-gold rounded-full"></div>
-                            </div>
+                    <div class="parchment-panel p-5 sm:p-6 flex flex-col justify-center h-full">
+                        <div class="flex items-center justify-between mb-3">
+                            <h3 class="font-magic text-lg sm:text-xl text-ncst-gold text-gold-glow">Character Stats</h3>
+                            <span class="text-[11px] uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-ncst-neon/10 text-ncst-neon border border-ncst-neon/30 flex items-center gap-1.5 font-mono">
+                                <span class="w-1.5 h-1.5 rounded-full bg-ncst-neon animate-pulse"></span> Live Sync
+                            </span>
                         </div>
 
-                        <!-- Stats Grid - Responsive -->
+                        <!-- Stats Grid: Current Streak & Play Time -->
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-                            <div class="parchment-panel p-4 border-l-4 border-ncst-neon">
-                                <p class="font-heading text-xs uppercase tracking-wider mb-1" style="color:#a08060;"><i class="fa-solid fa-staff mr-1"></i>Calculus Power</p>
-                                <p id="stat-calc-power" class="text-2xl font-bold text-ncst-neon runic-glow">0</p>
-                                <p class="font-flavor italic text-xs mt-1" style="color:#a08060;">Arcane mastery</p>
+                            <div id="daily-streak-panel" class="parchment-panel p-4 border-l-4 border-ncst-gold relative overflow-hidden">
+                                <div class="flex items-center justify-between mb-1">
+                                    <p class="font-heading text-xs uppercase tracking-wider" style="color:#a08060;"><i class="fa-solid fa-fire text-ncst-gold mr-1.5"></i>Current Streak</p>
+                                    <i class="fa-solid fa-flame text-ncst-gold/30 text-lg"></i>
+                                </div>
+                                <p id="stat-current-streak" class="text-2xl sm:text-3xl font-bold text-ncst-gold runic-glow">0 Days</p>
+                                <p id="stat-streak-sub" class="font-flavor italic text-xs mt-1" style="color:#a08060;">Play today to start your streak!</p>
                             </div>
-                            <div class="parchment-panel p-4 border-l-4 border-ncst-gold">
-                                <p class="font-heading text-xs uppercase tracking-wider mb-1" style="color:#a08060;"><i class="fa-solid fa-crosshairs mr-1"></i>Accuracy Rate</p>
-                                <p id="stat-accuracy" class="text-2xl font-bold text-ncst-gold runic-glow">0%</p>
-                                <p class="font-flavor italic text-xs mt-1" style="color:#a08060;">Master tier</p>
-                            </div>
-                            <div class="parchment-panel p-4 border-l-4 border-ncst-accent">
-                                <p class="font-heading text-xs uppercase tracking-wider mb-1" style="color:#a08060;"><i class="fa-solid fa-trophy mr-1"></i>Challenges Won</p>
-                                <p id="stat-challenges" class="text-2xl font-bold text-ncst-accent runic-glow">0</p>
-                                <p class="font-flavor italic text-xs mt-1" style="color:#a08060;">Win rate: 96%</p>
-                            </div>
-                            <div class="parchment-panel p-4 border-l-4 border-yellow-400">
-                                <p class="font-heading text-xs uppercase tracking-wider mb-1" style="color:#a08060;"><i class="fa-solid fa-hourglass-end mr-1"></i>Play Time</p>
-                                <p id="stat-play-time" class="text-2xl font-bold text-yellow-400 runic-glow">0h</p>
-                                <p class="font-flavor italic text-xs mt-1" style="color:#a08060;">Avg: 2.6h/day</p>
+                            <div class="parchment-panel p-4 border-l-4 border-yellow-400 relative overflow-hidden">
+                                <div class="flex items-center justify-between mb-1">
+                                    <p class="font-heading text-xs uppercase tracking-wider" style="color:#a08060;"><i class="fa-solid fa-hourglass-end text-yellow-400 mr-1.5"></i>Play Time</p>
+                                    <i class="fa-solid fa-clock text-yellow-400/30 text-lg"></i>
+                                </div>
+                                <p id="stat-play-time" class="text-2xl sm:text-3xl font-bold text-yellow-400 runic-glow">0.0h</p>
+                                <p id="stat-playtime-sub" class="font-flavor italic text-xs mt-1" style="color:#a08060;">Ready for your first session</p>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-
-
             <!-- Currency & Resources -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-                <div class="parchment-panel p-6 border-2 border-ncst-gold text-center">
-                    <div class="text-4xl text-ncst-gold mb-2"><i class="fa-solid fa-coins"></i></div>
-                    <p class="font-heading text-xs uppercase tracking-wider mb-2" style="color:#a08060;">Aether Reserve</p>
-                    <p id="player-gold" class="text-3xl font-bold text-ncst-gold">0</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4 mb-5">
+                <div class="parchment-panel p-4 sm:p-5 border-2 border-ncst-gold flex items-center justify-between">
+                    <div class="flex items-center gap-3.5">
+                        <div class="text-2xl sm:text-3xl text-ncst-gold"><i class="fa-solid fa-coins"></i></div>
+                        <div>
+                            <p class="font-heading text-xs uppercase tracking-wider" style="color:#a08060;">Aether Reserve</p>
+                            <p id="player-gold" class="text-2xl sm:text-3xl font-bold text-ncst-gold">0</p>
+                        </div>
+                    </div>
+                    <a href="pages/top-up.html" class="rune-btn text-xs px-3 py-1.5 whitespace-nowrap">Get Aether</a>
                 </div>
-                <div class="parchment-panel p-6 border-2 border-ncst-neon text-center">
-                    <div class="text-4xl text-ncst-neon mb-2"><i class="fa-solid fa-gem"></i></div>
-                    <p class="font-heading text-xs uppercase tracking-wider mb-2" style="color:#a08060;">Numerals</p>
-                    <p id="player-crystals" class="text-3xl font-bold text-ncst-neon">0</p>
+                <div class="parchment-panel p-4 sm:p-5 border-2 border-ncst-neon flex items-center justify-between">
+                    <div class="flex items-center gap-3.5">
+                        <div class="text-2xl sm:text-3xl text-ncst-neon"><i class="fa-solid fa-gem"></i></div>
+                        <div>
+                            <p class="font-heading text-xs uppercase tracking-wider" style="color:#a08060;">Numerals</p>
+                            <p id="player-crystals" class="text-2xl sm:text-3xl font-bold text-ncst-neon">0</p>
+                        </div>
+                    </div>
+                    <span class="text-xs text-gray-400 font-mono">Earned in-game</span>
                 </div>
             </div>
 
-
-
             <!-- Profile Navigation Tabs -->
-            <div class="flex flex-wrap gap-2 mb-8 border-b border-white/10 pb-4">
+            <div class="flex flex-wrap gap-2 mb-5 border-b border-white/10 pb-3">
                 <button onclick="showProfileTab('overview')" class="profile-tab active px-3 sm:px-4 py-2 text-xs sm:text-sm font-bold uppercase tracking-wider rounded-lg transition-all bg-ncst-neon/20 text-ncst-neon" data-tab="overview">
                     <i class="fa-solid fa-home mr-1 sm:mr-2"></i><span class="hidden sm:inline">Overview</span>
                 </button>
@@ -258,29 +240,128 @@
                 <button onclick="showProfileTab('purchases')" class="profile-tab px-3 sm:px-4 py-2 text-xs sm:text-sm font-bold uppercase tracking-wider rounded-lg transition-all text-gray-400" data-tab="purchases">
                     <i class="fa-solid fa-receipt mr-1 sm:mr-2"></i><span class="hidden sm:inline">Purchases</span>
                 </button>
-                <button onclick="showProfileTab('achievements')" class="profile-tab px-3 sm:px-4 py-2 text-xs sm:text-sm font-bold uppercase tracking-wider rounded-lg transition-all text-gray-400" data-tab="achievements">
-                    <i class="fa-solid fa-trophy mr-1 sm:mr-2"></i><span class="hidden sm:inline">Achievements</span>
-                </button>
                 <button onclick="showProfileTab('settings')" class="profile-tab px-3 sm:px-4 py-2 text-xs sm:text-sm font-bold uppercase tracking-wider rounded-lg transition-all text-gray-400" data-tab="settings">
                     <i class="fa-solid fa-user-pen mr-1 sm:mr-2"></i><span class="hidden sm:inline">Edit Profile</span>
                 </button>
             </div>
 
-            <!-- Overview Tab (Original Content) -->
+            <!-- Overview Tab (Redesigned) -->
             <div id="profile-tab-overview" class="profile-tab-content">
-            <!-- Recent Achievements -->
-            <div id="recent-achievements-panel" class="parchment-panel p-6 sm:p-8 mb-8">
-                <h3 class="font-magic text-xl sm:text-2xl text-ncst-gold text-gold-glow mb-6">
-                    <i class="fa-solid fa-medal text-ncst-gold mr-2"></i>Recent Achievements
-                </h3>
-                <div id="recent-achievements-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 sm:gap-4">
-                    <div class="col-span-full py-8 text-center text-gray-400">
-                        <i class="fa-solid fa-spinner fa-spin text-ncst-gold text-2xl mb-2"></i>
-                        <p class="text-xs">Loading achievements from database...</p>
+                <!-- Adventure Sanctum Banner -->
+                <div class="parchment-panel p-5 sm:p-6 mb-5 border border-ncst-gold/40 relative overflow-hidden">
+                    <div class="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                        <div>
+                            <span class="text-xs uppercase tracking-widest text-ncst-neon font-bold flex items-center gap-2 mb-1">
+                                <i class="fa-solid fa-wand-magic-sparkles"></i> Wizard's Chamber
+                            </span>
+                            <h3 class="font-magic text-xl sm:text-2xl text-ncst-gold text-gold-glow">Adventure Overview</h3>
+                            <p class="text-xs text-gray-400 mt-1 max-w-xl">
+                                Welcome to your sanctum. Track your active calculus journey, keep your daily fire burning, and manage your mystical reserves.
+                            </p>
+                        </div>
+                        <div class="flex flex-wrap gap-3">
+                            <a href="pages/top-up.html" class="rune-btn text-xs px-4 py-2 flex items-center gap-2 whitespace-nowrap">
+                                <i class="fa-solid fa-coins"></i> Get Aether
+                            </a>
+                        </div>
                     </div>
                 </div>
-            </div>
 
+                <!-- Topic Mastery / Learning Progress -->
+                <div class="parchment-panel p-5 sm:p-6 mb-5">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 mb-6">
+                        <div>
+                            <h3 class="font-magic text-xl sm:text-2xl text-ncst-gold text-gold-glow flex items-center gap-2">
+                                <i class="fa-solid fa-graduation-cap text-ncst-gold"></i>Calculus Topic Mastery
+                            </h3>
+                            <p class="text-xs text-gray-400">Real-time proficiency tracked across arcane mathematical realms</p>
+                        </div>
+                        <span class="text-xs font-mono text-ncst-neon bg-ncst-neon/10 px-3 py-1 rounded-full border border-ncst-neon/20">
+                            Live Game Tracking
+                        </span>
+                    </div>
+
+                    <div id="overview-topic-bars" class="space-y-4">
+                        <!-- Populated dynamically by profileRenderer -->
+                        <div>
+                            <div class="flex justify-between text-sm mb-1">
+                                <span class="text-gray-400">Derivatives & Rates of Change</span>
+                                <span class="text-ncst-neon font-bold">0%</span>
+                            </div>
+                            <div class="h-3 bg-ncst-dark/50 rounded-full overflow-hidden">
+                                <div class="h-full bg-gradient-to-r from-ncst-neon to-green-400 rounded-full" style="width: 0%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-sm mb-1">
+                                <span class="text-gray-400">Integrals & Area Calculations</span>
+                                <span class="text-ncst-gold font-bold">0%</span>
+                            </div>
+                            <div class="h-3 bg-ncst-dark/50 rounded-full overflow-hidden">
+                                <div class="h-full bg-gradient-to-r from-ncst-gold to-yellow-400 rounded-full" style="width: 0%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-sm mb-1">
+                                <span class="text-gray-400">Limits & Continuity</span>
+                                <span class="text-blue-400 font-bold">0%</span>
+                            </div>
+                            <div class="h-3 bg-ncst-dark/50 rounded-full overflow-hidden">
+                                <div class="h-full bg-gradient-to-r from-blue-400 to-blue-500 rounded-full" style="width: 0%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-sm mb-1">
+                                <span class="text-gray-400">Applications of Derivatives</span>
+                                <span class="text-purple-400 font-bold">0%</span>
+                            </div>
+                            <div class="h-3 bg-ncst-dark/50 rounded-full overflow-hidden">
+                                <div class="h-full bg-gradient-to-r from-purple-400 to-purple-500 rounded-full" style="width: 0%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Game Status & Vault Quick Glance -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                    <div class="parchment-panel p-6 border-l-4 border-ncst-gold">
+                        <div class="flex items-center justify-between mb-3">
+                            <h4 class="font-heading text-xs uppercase tracking-wider text-ncst-gold">
+                                <i class="fa-solid fa-vault mr-2"></i>Currencies in Vault
+                            </h4>
+                            <a href="pages/top-up.html" class="text-xs text-ncst-neon hover:underline">Top Up &rarr;</a>
+                        </div>
+                        <div class="grid grid-cols-2 gap-3 mt-4">
+                            <div class="glass-panel p-3 rounded-lg text-center">
+                                <p class="text-xs text-gray-400 mb-1">Aether</p>
+                                <p id="overview-gold" class="text-2xl font-bold text-ncst-gold">0</p>
+                            </div>
+                            <div class="glass-panel p-3 rounded-lg text-center">
+                                <p class="text-xs text-gray-400 mb-1">Numerals</p>
+                                <p id="overview-crystals" class="text-2xl font-bold text-ncst-neon">0</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="parchment-panel p-6 border-l-4 border-ncst-neon">
+                        <div class="flex items-center justify-between mb-3">
+                            <h4 class="font-heading text-xs uppercase tracking-wider text-ncst-neon">
+                                <i class="fa-solid fa-gamepad mr-2"></i>Session Highlights
+                            </h4>
+                            <span class="text-[11px] text-gray-400">Firebase Cloud</span>
+                        </div>
+                        <div class="grid grid-cols-2 gap-3 mt-4">
+                            <div class="glass-panel p-3 rounded-lg text-center">
+                                <p class="text-xs text-gray-400 mb-1">Current Streak</p>
+                                <p id="overview-streak" class="text-2xl font-bold text-ncst-gold">0 Days</p>
+                            </div>
+                            <div class="glass-panel p-3 rounded-lg text-center">
+                                <p class="text-xs text-gray-400 mb-1">Total Play Time</p>
+                                <p id="overview-playtime" class="text-2xl font-bold text-yellow-400">0.0h</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
             <!-- End Overview Tab -->
 
@@ -299,16 +380,6 @@
                 </div>
             </div>
             <!-- End Purchase History Tab -->
-
-
-
-            <!-- Achievements Tab -->
-            <div id="profile-tab-achievements" class="profile-tab-content hidden">
-                <div class="parchment-panel p-6 sm:p-8 mb-8">
-                    <p class="text-sm text-gray-400">Loading achievements...</p>
-                </div>
-            </div>
-            <!-- End Achievements Tab -->
 
             <!-- Edit Profile Tab -->
             <div id="profile-tab-settings" class="profile-tab-content hidden">
@@ -372,33 +443,7 @@
                             </div>
                         </div>
 
-                        <!-- Privacy Settings -->
-                        <div class="pt-6 border-t border-white/10">
-                            <h4 class="font-bold text-white mb-4 text-sm">Privacy Settings</h4>
-                            <div class="space-y-3">
-                                <label class="flex items-center justify-between p-3 glass-panel rounded-lg cursor-pointer hover:border-ncst-neon transition-all">
-                                    <div>
-                                        <p class="text-white text-sm">Show Online Status</p>
-                                        <p class="text-xs text-gray-400">Let others see when you're online</p>
-                                    </div>
-                                    <input id="privacy-online" type="checkbox" checked class="w-5 h-5 cursor-pointer">
-                                </label>
-                                <label class="flex items-center justify-between p-3 glass-panel rounded-lg cursor-pointer hover:border-ncst-neon transition-all">
-                                    <div>
-                                        <p class="text-white text-sm">Show Profile on Leaderboard</p>
-                                        <p class="text-xs text-gray-400">Display your profile publicly</p>
-                                    </div>
-                                    <input id="privacy-leaderboard" type="checkbox" checked class="w-5 h-5 cursor-pointer">
-                                </label>
-                                <label class="flex items-center justify-between p-3 glass-panel rounded-lg cursor-pointer hover:border-ncst-neon transition-all">
-                                    <div>
-                                        <p class="text-white text-sm">Allow Friend Requests</p>
-                                        <p class="text-xs text-gray-400">Receive requests from other players</p>
-                                    </div>
-                                    <input id="privacy-friends" type="checkbox" checked class="w-5 h-5 cursor-pointer">
-                                </label>
-                            </div>
-                        </div>
+
 
                         <!-- Save Button -->
                         <div class="pt-6 flex flex-col sm:flex-row gap-4">
@@ -456,10 +501,42 @@
                 <div>
                     <label class="block text-xs font-bold text-ncst-neon uppercase tracking-wider mb-2">New Password</label>
                     <div class="relative">
-                        <input id="cp-new-password" type="password" required minlength="6" class="w-full px-4 pr-12 py-3 bg-ncst-dark/50 border border-ncst-neon/30 rounded-lg text-white focus:outline-none focus:border-ncst-neon min-h-[44px]">
+                        <input id="cp-new-password" type="password" required minlength="8" class="w-full px-4 pr-12 py-3 bg-ncst-dark/50 border border-ncst-neon/30 rounded-lg text-white focus:outline-none focus:border-ncst-neon min-h-[44px]" placeholder="Create a strong password">
                         <button type="button" class="password-toggle-btn absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-ncst-neon transition-colors" data-target="cp-new-password" aria-label="Show password">
                             <i class="fa-solid fa-eye"></i>
                         </button>
+                    </div>
+
+                    <!-- Live Password Strength Meter & Interactive Checklist -->
+                    <div id="cp-password-requirements" class="auth-password-requirements mt-2.5 p-3.5 rounded-lg space-y-2.5">
+                        <div class="flex items-center justify-between text-xs">
+                            <span class="auth-strength-heading font-heading tracking-wider uppercase text-[11px]">Security Strength:</span>
+                            <span id="cp-password-strength-label" class="auth-strength-label font-bold text-[11px] transition-colors">Enter a password</span>
+                        </div>
+                        <div class="auth-meter-track w-full h-2 rounded-full overflow-hidden">
+                            <div id="cp-password-strength-bar" class="h-full w-0 transition-all duration-300 rounded-full bg-gray-400"></div>
+                        </div>
+
+                        <p class="auth-requirements-note text-[11px] font-flavor italic pt-0.5">Password must include numbers, special characters, and casing:</p>
+
+                        <ul class="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1 text-xs">
+                            <li id="cp-rule-length" class="auth-rule-item is-unmet flex items-center gap-2 transition-colors">
+                                <i class="fa-solid fa-circle-xmark rule-icon text-xs"></i>
+                                <span class="text-[11px]">8+ characters</span>
+                            </li>
+                            <li id="cp-rule-number" class="auth-rule-item is-unmet flex items-center gap-2 transition-colors">
+                                <i class="fa-solid fa-circle-xmark rule-icon text-xs"></i>
+                                <span class="text-[11px]">Numbers (0-9)</span>
+                            </li>
+                            <li id="cp-rule-special" class="auth-rule-item is-unmet flex items-center gap-2 transition-colors">
+                                <i class="fa-solid fa-circle-xmark rule-icon text-xs"></i>
+                                <span class="text-[11px]">Special symbol (!@#$%^&*)</span>
+                            </li>
+                            <li id="cp-rule-casing" class="auth-rule-item is-unmet flex items-center gap-2 transition-colors">
+                                <i class="fa-solid fa-circle-xmark rule-icon text-xs"></i>
+                                <span class="text-[11px]">Upper & lower case</span>
+                            </li>
+                        </ul>
                     </div>
                 </div>
                 <div>

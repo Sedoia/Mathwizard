@@ -141,7 +141,18 @@ class PlayerService {
             (Array.isArray(p.unlockedLevels) ? p.unlockedLevels.length : 0) ??
             defaults.stats.challengesWon
         );
-        const playTime = Number(p.stats?.playTime ?? u.stats?.hoursPlayed ?? defaults.stats.playTime);
+        const playTime = Number(
+            p.stats?.playTime ??
+            p.playTime ??
+            p.stats?.hoursPlayed ??
+            p.hoursPlayed ??
+            p.play_time ??
+            u.stats?.playTime ??
+            u.stats?.hoursPlayed ??
+            u.playTime ??
+            u.hoursPlayed ??
+            defaults.stats.playTime
+        );
 
         // Currencies: Gold/Aether, Arcane Crystals / Numerals, Mana Energy
         const gold = Number(p.currency?.aether ?? p.currency?.gold ?? p.gold ?? u.aether ?? u.gold ?? defaults.currency.gold ?? 0);
@@ -194,14 +205,26 @@ class PlayerService {
         let currentStreak = 0;
         let bestStreak = 0;
         if (typeof p.streak === 'object' && p.streak !== null) {
-            currentStreak = Number(p.streak.current ?? 0);
+            currentStreak = Number(p.streak.current ?? p.streak.count ?? p.streak.days ?? 0);
             bestStreak = Number(p.streak.best ?? currentStreak);
         } else if (typeof p.streak === 'number') {
             currentStreak = p.streak;
             bestStreak = p.streak;
-        } else if (u.stats?.winStreak !== undefined) {
-            currentStreak = Number(u.stats.winStreak || 0);
-            bestStreak = currentStreak;
+        } else if (p.currentStreak !== undefined) {
+            currentStreak = Number(p.currentStreak || 0);
+            bestStreak = Number(p.bestStreak || currentStreak);
+        } else if (typeof u.streak === 'object' && u.streak !== null) {
+            currentStreak = Number(u.streak.current ?? u.streak.count ?? u.streak.days ?? 0);
+            bestStreak = Number(u.streak.best ?? currentStreak);
+        } else if (typeof u.streak === 'number') {
+            currentStreak = u.streak;
+            bestStreak = u.streak;
+        } else if (u.currentStreak !== undefined) {
+            currentStreak = Number(u.currentStreak || 0);
+            bestStreak = Number(u.bestStreak || currentStreak);
+        } else if (u.stats?.winStreak !== undefined || u.stats?.currentStreak !== undefined) {
+            currentStreak = Number(u.stats.currentStreak ?? u.stats.winStreak ?? 0);
+            bestStreak = Number(u.stats.bestStreak ?? currentStreak);
         }
 
         // Achievements: merge catalog with database unlocks & real stats milestones

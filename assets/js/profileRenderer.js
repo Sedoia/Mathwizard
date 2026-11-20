@@ -57,13 +57,13 @@ class ProfileRenderer {
         this.renderDailyStreak();
         this.renderStats();
         this.renderCurrency();
+        this.renderOverview();
         this.renderDailyChallenges();
         this.renderActiveQuests();
         this.renderInventory();
         this.renderEquipment();
         this.renderBattleHistory();
         this.renderLeaderboard();
-        this.renderAchievements();
         this.renderedTabs.clear();
         
         console.log('✨ Profile rendered with dynamic data');
@@ -71,7 +71,7 @@ class ProfileRenderer {
 
     /**
      * Render expensive tab content only when a tab is opened.
-     * @param {string} tabName - Tab key (statistics, purchases, achievements)
+     * @param {string} tabName - Tab key (statistics, purchases)
      * @param {boolean} [force=false] - Force re-render even if previously rendered
      */
     renderTabContent(tabName, force = false) {
@@ -97,11 +97,6 @@ class ProfileRenderer {
             this.renderPurchasesTab();
             this.renderedTabs.add(tabName);
             return;
-        }
-
-        if (tabName === 'achievements') {
-            this.renderAllAchievementsTab();
-            this.renderedTabs.add(tabName);
         }
     }
 
@@ -146,8 +141,8 @@ class ProfileRenderer {
             `;
         }
 
-        // Update level
-        const levelEl = document.getElementById('player-level') || document.querySelector('.text-2xl.font-bold.text-ncst-gold');
+        // Update level if element present
+        const levelEl = document.getElementById('player-level');
         if (levelEl) levelEl.textContent = data.level;
 
         // Update member since date
@@ -181,54 +176,61 @@ class ProfileRenderer {
         const current = Number(streak.current || 0);
         const best = Number(streak.best || current || 0);
 
-        const panel = document.getElementById('daily-streak-panel');
-        if (panel) {
-            panel.innerHTML = `
-                <p class="font-heading text-xs uppercase tracking-wider mb-2" style="color:#d4a843;"><i class="fa-solid fa-fire text-ncst-gold mr-1"></i>Current Streak</p>
-                <p class="text-3xl font-bold text-ncst-gold runic-glow">${current} Day${current === 1 ? '' : 's'}</p>
-                <p class="font-flavor italic text-xs mt-1" style="color:#a08060;">${best > 0 ? `Best: ${best} day${best === 1 ? '' : 's'}` : 'Play today to start your streak!'}</p>
-            `;
+        const streakEl = document.getElementById('stat-current-streak');
+        if (streakEl) {
+            streakEl.textContent = `${current} Day${current === 1 ? '' : 's'}`;
+        }
+        const streakSubEl = document.getElementById('stat-streak-sub');
+        if (streakSubEl) {
+            streakSubEl.textContent = current > 0
+                ? (best > current ? `Best: ${best} day${best === 1 ? '' : 's'}` : 'Active streak — keep the flame alive!')
+                : 'Play today to start your streak!';
         }
     }
 
     /**
-     * Render player stats section
+     * Render player stats section (Current Streak & Play Time without avg/day)
      */
     renderStats() {
         const stats = this.playerData.stats || {};
-        const level = Number(this.playerData.level || 1);
+        const streak = this.playerData.streak || {};
+        const currentStreak = Number(streak.current || 0);
+        const bestStreak = Number(streak.best || currentStreak);
+        const hours = Number(stats.playTime || 0);
 
-        const xpLevelLabel = document.getElementById('xp-level-label');
-        if (xpLevelLabel) {
-            xpLevelLabel.textContent = `Experience to Level ${level + 1}`;
+        // Update Current Streak card in Character Stats panel
+        const streakEl = document.getElementById('stat-current-streak');
+        if (streakEl) {
+            streakEl.textContent = `${currentStreak} Day${currentStreak === 1 ? '' : 's'}`;
         }
-        
-        // Update XP bar
-        const xp = Number(stats.xp || 0);
-        const maxXp = Number(stats.maxXp || 1000);
-        const xpWidth = Math.min(100, Math.max(0, (xp / maxXp) * 100));
-        const xpBar = document.getElementById('xp-bar');
-        if (xpBar) {
-            xpBar.style.width = `${xpWidth}%`;
-        }
-
-        // Update XP text
-        const xpText = document.getElementById('xp-text');
-        if (xpText) {
-            xpText.textContent = `${xp.toLocaleString()} / ${maxXp.toLocaleString()} XP`;
+        const streakSubEl = document.getElementById('stat-streak-sub');
+        if (streakSubEl) {
+            streakSubEl.textContent = currentStreak > 0
+                ? (bestStreak > currentStreak ? `Best streak: ${bestStreak} days` : 'Active streak — keep the flame alive!')
+                : 'Play today to start your streak!';
         }
 
-        const setText = (id, value) => {
-            const el = document.getElementById(id);
-            if (el) {
-                el.textContent = value;
-            }
-        };
+        // Update Play Time card in Character Stats panel (NO avg/day)
+        const playTimeEl = document.getElementById('stat-play-time');
+        if (playTimeEl) {
+            playTimeEl.textContent = `${hours.toFixed(1)}h`;
+        }
+        const playTimeSubEl = document.getElementById('stat-playtime-sub');
+        if (playTimeSubEl) {
+            playTimeSubEl.textContent = hours > 0
+                ? `${Math.round(hours * 60)} minutes logged in-game`
+                : 'Ready for your first session';
+        }
 
-        setText('stat-calc-power', String(stats.calcPower ?? (10 + (level - 1) * 5)));
-        setText('stat-accuracy', `${Number(stats.accuracy || 0).toFixed(1)}%`);
-        setText('stat-challenges', Number(stats.challengesWon || 0).toLocaleString());
-        setText('stat-play-time', `${Number(stats.playTime || 0).toFixed(1)}h`);
+        // Update Overview mirror stats if present
+        const ovStreak = document.getElementById('overview-streak');
+        if (ovStreak) {
+            ovStreak.textContent = `${currentStreak} Day${currentStreak === 1 ? '' : 's'}`;
+        }
+        const ovPlaytime = document.getElementById('overview-playtime');
+        if (ovPlaytime) {
+            ovPlaytime.textContent = `${hours.toFixed(1)}h`;
+        }
     }
 
     /**
@@ -236,17 +238,72 @@ class ProfileRenderer {
      */
     renderCurrency() {
         const currency = this.playerData.currency || {};
+        const goldVal = Number(currency.aether ?? currency.gold ?? this.playerData.gold ?? 0);
+        const numeralsVal = Number(currency.numerals ?? currency.crystals ?? this.playerData.numerals ?? this.playerData.crystals ?? 0);
 
         const goldEl = document.getElementById('player-gold');
         if (goldEl) {
-            goldEl.textContent = Number(currency.aether ?? currency.gold ?? this.playerData.gold ?? 0).toLocaleString();
+            goldEl.textContent = goldVal.toLocaleString();
         }
 
         const crystalsEl = document.getElementById('player-crystals');
         if (crystalsEl) {
-            const numeralsVal = Number(currency.numerals ?? currency.crystals ?? this.playerData.numerals ?? this.playerData.crystals ?? 0);
             crystalsEl.textContent = numeralsVal.toLocaleString();
         }
+
+        const ovGold = document.getElementById('overview-gold');
+        if (ovGold) {
+            ovGold.textContent = goldVal.toLocaleString();
+        }
+
+        const ovCrystals = document.getElementById('overview-crystals');
+        if (ovCrystals) {
+            ovCrystals.textContent = numeralsVal.toLocaleString();
+        }
+    }
+
+    /**
+     * Render dynamic content for the redesigned Overview tab
+     */
+    renderOverview() {
+        const stats = this.playerData.stats || {};
+        const solved = Number(stats.challengesWon || 0);
+        const accuracy = Number(stats.accuracy || 0);
+        const baseMastery = solved > 0 ? accuracy : 0;
+
+        const derivativeScore = Math.min(100, Math.max(0, Math.round(baseMastery)));
+        const integralScore = Math.min(100, Math.max(0, Math.round(baseMastery * 0.92)));
+        const limitsScore = Math.min(100, Math.max(0, Math.round(baseMastery * 0.88)));
+        const applicationsScore = Math.min(100, Math.max(0, Math.round(baseMastery * 0.85)));
+
+        const container = document.getElementById('overview-topic-bars');
+        if (container) {
+            container.innerHTML = `
+                ${this.renderTopicBar('Derivatives & Rates of Change', derivativeScore, 'from-ncst-neon to-green-400', 'text-ncst-neon')}
+                ${this.renderTopicBar('Integrals & Area Calculations', integralScore, 'from-ncst-gold to-yellow-400', 'text-ncst-gold')}
+                ${this.renderTopicBar('Limits & Continuity', limitsScore, 'from-blue-400 to-blue-500', 'text-blue-400')}
+                ${this.renderTopicBar('Applications of Derivatives', applicationsScore, 'from-purple-400 to-purple-500', 'text-purple-400')}
+            `;
+        }
+
+        const currency = this.playerData.currency || {};
+        const streak = this.playerData.streak || {};
+        const goldVal = Number(currency.aether ?? currency.gold ?? this.playerData.gold ?? 0);
+        const numeralsVal = Number(currency.numerals ?? currency.crystals ?? this.playerData.numerals ?? this.playerData.crystals ?? 0);
+        const currentStreak = Number(streak.current || 0);
+        const hours = Number(stats.playTime || 0);
+
+        const ovGold = document.getElementById('overview-gold');
+        if (ovGold) ovGold.textContent = goldVal.toLocaleString();
+
+        const ovCrystals = document.getElementById('overview-crystals');
+        if (ovCrystals) ovCrystals.textContent = numeralsVal.toLocaleString();
+
+        const ovStreak = document.getElementById('overview-streak');
+        if (ovStreak) ovStreak.textContent = `${currentStreak} Day${currentStreak === 1 ? '' : 's'}`;
+
+        const ovPlaytime = document.getElementById('overview-playtime');
+        if (ovPlaytime) ovPlaytime.textContent = `${hours.toFixed(1)}h`;
     }
 
     /**
@@ -469,44 +526,6 @@ class ProfileRenderer {
         }
     }
 
-    /**
-     * Render achievements section
-     */
-    renderAchievements() {
-        const achievements = this.playerData.achievements || [];
-        const container = document.getElementById('recent-achievements-grid');
-        
-        if (container) {
-            if (!achievements.length) {
-                container.innerHTML = '<div class="col-span-full text-center text-gray-400 py-4">No achievements available. Complete challenges in the game to unlock achievements!</div>';
-                return;
-            }
-
-            let html = '';
-            // Display top 4 achievements (prioritizing unlocked ones)
-            const sorted = [...achievements].sort((a, b) => (b.unlocked ? 1 : 0) - (a.unlocked ? 1 : 0)).slice(0, 4);
-
-            sorted.forEach(achievement => {
-                const unlocked = !!achievement.unlocked;
-                const safeName = this.escapeHtml(achievement.name);
-                const safeDescription = this.escapeHtml(achievement.description);
-                const safeDate = achievement.date ? this.escapeHtml(achievement.date) : '';
-                const safeIcon = this.sanitizeIcon(achievement.icon, 'fa-medal');
-                html += `
-                    <div class="p-4 glass-panel rounded-lg text-center border transition-all cursor-pointer ${unlocked ? 'border-ncst-gold/40 hover:border-ncst-gold shadow-[0_0_12px_rgba(201,168,76,0.15)]' : 'border-white/10 opacity-60'}"
-                         title="${unlocked ? (safeDate ? 'Unlocked: ' + safeDate : 'Unlocked') : 'In progress: complete in-game challenge'}">
-                        <div class="text-3xl mb-2"><i class="fa-solid ${safeIcon} ${unlocked ? 'text-ncst-gold' : 'text-gray-500'}"></i></div>
-                        <p class="font-bold text-white text-sm mb-1 truncate">${safeName}</p>
-                        <p class="text-xs text-gray-400 line-clamp-2">${safeDescription}</p>
-                        <span class="inline-block mt-2 text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded ${unlocked ? 'bg-ncst-gold/20 text-ncst-gold' : 'bg-gray-700/50 text-gray-400'}">
-                            ${unlocked ? 'Unlocked' : 'Locked'}
-                        </span>
-                    </div>
-                `;
-            });
-            container.innerHTML = html;
-        }
-    }
 
     renderStatisticsTab() {
         const tab = document.getElementById('profile-tab-statistics');
@@ -704,48 +723,7 @@ class ProfileRenderer {
         `;
     }
 
-    renderAllAchievementsTab() {
-        const tab = document.getElementById('profile-tab-achievements');
-        if (!tab) {
-            return;
-        }
 
-        const achievements = this.playerData.achievements || [];
-        const unlockedCount = achievements.filter(a => a.unlocked).length;
-        const points = unlockedCount * 50;
-
-        const achievementsHtml = achievements.map((achievement) => {
-            const unlocked = !!achievement.unlocked;
-            const safeName = this.escapeHtml(achievement.name);
-            const safeDescription = this.escapeHtml(achievement.description);
-            const safeIcon = this.sanitizeIcon(achievement.icon, 'fa-medal');
-            return `
-                <div class="glass-panel p-4 rounded-lg text-center border ${unlocked ? 'border-ncst-gold/50' : 'border-gray-600/30 opacity-50'}">
-                    <div class="text-4xl mb-2"><i class="fa-solid ${safeIcon} ${unlocked ? 'text-ncst-gold' : 'text-gray-500'}"></i></div>
-                    <p class="font-bold ${unlocked ? 'text-white' : 'text-gray-500'} text-sm mb-1">${safeName}</p>
-                    <p class="text-xs ${unlocked ? 'text-gray-400' : 'text-gray-600'}">${safeDescription}</p>
-                    <p class="text-xs mt-2 ${unlocked ? 'text-ncst-neon' : 'text-gray-600'}">${unlocked ? '+50 pts' : 'Locked'}</p>
-                </div>
-            `;
-        }).join('');
-
-        tab.innerHTML = `
-            <div class="parchment-panel p-6 sm:p-8 mb-8">
-                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
-                    <h3 class="font-magic text-2xl text-ncst-gold text-gold-glow">
-                        <i class="fa-solid fa-trophy text-ncst-gold mr-2"></i>All Achievements
-                    </h3>
-                    <div class="flex gap-4 text-sm">
-                        <span class="text-gray-400">Unlocked: <span class="text-ncst-gold font-bold">${unlockedCount}/${achievements.length}</span></span>
-                        <span class="text-gray-400">Points: <span class="text-ncst-neon font-bold">${points}</span></span>
-                    </div>
-                </div>
-                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-                    ${achievementsHtml || '<div class="col-span-full text-gray-400">No achievements configured.</div>'}
-                </div>
-            </div>
-        `;
-    }
 }
 
 // Export singleton instance

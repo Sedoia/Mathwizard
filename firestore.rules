@@ -17,12 +17,10 @@ service cloud.firestore {
         && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
     }
 
-    // Safe updates to players/{uid} cosmetic and profile fields
+    // Safe updates to players/{uid} game progress, stats, and profile fields
     function isSafePlayerOwnerUpdate(uid) {
       return isOwner(uid)
-        && request.resource.data.id == resource.data.id
-        && request.resource.data.get('level', 1) == resource.data.get('level', 1)
-        && request.resource.data.get('seedVersion', 2) == resource.data.get('seedVersion', 2);
+        && request.resource.data.id == resource.data.id;
     }
 
     // Spending: gold goes down by at most 1000 per update, never below zero.

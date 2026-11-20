@@ -229,10 +229,11 @@ document.addEventListener('DOMContentLoaded', async () => {
                     return;
                 }
 
+                const existingPrivacy = currentUser.privacySettings || playerData.settings?.privacy || {};
                 const privacySettings = {
-                    showOnlineStatus: !!privacyOnline?.checked,
-                    showLeaderboardProfile: !!privacyLeaderboard?.checked,
-                    allowFriendRequests: !!privacyFriends?.checked
+                    showOnlineStatus: privacyOnline ? !!privacyOnline.checked : (existingPrivacy.showOnlineStatus !== false),
+                    showLeaderboardProfile: privacyLeaderboard ? !!privacyLeaderboard.checked : (existingPrivacy.showLeaderboardProfile !== false),
+                    allowFriendRequests: privacyFriends ? !!privacyFriends.checked : (existingPrivacy.allowFriendRequests !== false)
                 };
 
                 const emailChanged = nextEmail !== (currentUser.email || '').toLowerCase();
@@ -284,7 +285,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 playerData = updatedPlayer;
                 await profileRenderer.render(playerData);
                 fillEditForm();
-                showProfileMessage('Profile and privacy settings saved.');
+                showProfileMessage('Profile settings saved successfully.');
             } catch (error) {
                 showProfileMessage(error.message || 'Failed to save profile settings.', true);
             }
@@ -307,6 +308,109 @@ document.addEventListener('DOMContentLoaded', async () => {
         modalEl.classList.remove('flex');
     };
 
+    const evaluatePassword = (password) => {
+        const minLength = 8;
+        const hasLength = password.length >= minLength;
+        const hasNumber = /[0-9]/.test(password);
+        const hasSpecial = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+        const hasCasing = /[a-z]/.test(password) && /[A-Z]/.test(password);
+
+        let score = 0;
+        if (hasLength) score += 1;
+        if (hasNumber) score += 1;
+        if (hasSpecial) score += 1;
+        if (hasCasing) score += 1;
+
+        return {
+            hasLength,
+            hasNumber,
+            hasSpecial,
+            hasCasing,
+            score,
+            isValid: score === 4
+        };
+    };
+
+    const updateRequirementItem = (elId, passed) => {
+        const el = document.getElementById(elId);
+        if (!el) return;
+        const icon = el.querySelector('.rule-icon') || el.querySelector('i');
+        if (passed) {
+            el.classList.remove('is-unmet');
+            el.classList.add('is-met');
+            if (icon) {
+                icon.className = 'fa-solid fa-circle-check rule-icon text-xs';
+            }
+        } else {
+            el.classList.remove('is-met');
+            el.classList.add('is-unmet');
+            if (icon) {
+                icon.className = 'fa-solid fa-circle-xmark rule-icon text-xs';
+            }
+        }
+    };
+
+    const updateCpPasswordMeter = (password) => {
+        const result = evaluatePassword(password);
+        const bar = document.getElementById('cp-password-strength-bar');
+        const label = document.getElementById('cp-password-strength-label');
+
+        updateRequirementItem('cp-rule-length', result.hasLength);
+        updateRequirementItem('cp-rule-number', result.hasNumber);
+        updateRequirementItem('cp-rule-special', result.hasSpecial);
+        updateRequirementItem('cp-rule-casing', result.hasCasing);
+
+        if (!bar || !label) return result;
+
+        if (!password) {
+            bar.style.width = '0%';
+            bar.className = 'h-full transition-all duration-300 rounded-full bg-gray-400';
+            label.textContent = 'Enter a password';
+            label.className = 'auth-strength-label font-bold text-[11px] transition-colors';
+            return result;
+        }
+
+        switch (result.score) {
+            case 1:
+                bar.style.width = '25%';
+                bar.className = 'h-full transition-all duration-300 rounded-full bg-red-600';
+                label.textContent = 'Weak';
+                label.className = 'font-bold text-[11px] text-red-600 dark:text-red-400 transition-colors';
+                break;
+            case 2:
+                bar.style.width = '50%';
+                bar.className = 'h-full transition-all duration-300 rounded-full bg-amber-500';
+                label.textContent = 'Moderate';
+                label.className = 'font-bold text-[11px] text-amber-600 dark:text-amber-400 transition-colors';
+                break;
+            case 3:
+                bar.style.width = '75%';
+                bar.className = 'h-full transition-all duration-300 rounded-full bg-yellow-500';
+                label.textContent = 'Strong';
+                label.className = 'font-bold text-[11px] text-amber-700 dark:text-yellow-300 transition-colors';
+                break;
+            case 4:
+                bar.style.width = '100%';
+                bar.className = 'h-full transition-all duration-300 rounded-full bg-emerald-600 dark:bg-green-400 shadow-[0_0_10px_rgba(34,197,94,0.4)]';
+                label.textContent = 'Arcane Shield (Very Strong)';
+                label.className = 'font-bold text-[11px] text-emerald-700 dark:text-green-300 transition-colors';
+                break;
+            default:
+                bar.style.width = '10%';
+                bar.className = 'h-full transition-all duration-300 rounded-full bg-red-600';
+                label.textContent = 'Very Weak';
+                label.className = 'font-bold text-[11px] text-red-600 dark:text-red-400 transition-colors';
+        }
+
+        return result;
+    };
+
+    if (cpNewPassword) {
+        cpNewPassword.addEventListener('input', () => {
+            updateCpPasswordMeter(cpNewPassword.value);
+        });
+    }
+
     if (changePasswordBtn) {
         changePasswordBtn.addEventListener('click', () => {
             const providerIds = (window.firebaseAuth?.currentUser?.providerData || []).map(p => p.providerId);
@@ -317,6 +421,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (changePasswordForm) {
                 changePasswordForm.reset();
             }
+            updateCpPasswordMeter('');
             openModal(changePasswordModal);
         });
     }
@@ -350,8 +455,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                 return;
             }
 
-            if (newPassword.length < 6) {
-                showProfileMessage('New password must be at least 6 characters.', true);
+            const strength = evaluatePassword(newPassword);
+            if (!strength.isValid) {
+                showProfileMessage('New password must meet all arcane requirements (8+ characters, numbers, symbols, and uppercase/lowercase letters).', true);
                 return;
             }
 
