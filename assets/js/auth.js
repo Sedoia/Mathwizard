@@ -713,18 +713,18 @@ function showNotification(message, type = 'info', title = '') {
     const existing = document.querySelector('.auth-notification');
     if (existing) existing.remove();
 
-    const colors = {
-        success: 'bg-green-500/20 border-green-500 text-green-400',
-        error: 'bg-red-500/20 border-red-500 text-red-400',
-        info: 'bg-blue-500/20 border-blue-500 text-blue-400',
-        warning: 'bg-yellow-500/20 border-yellow-500 text-yellow-400'
+    const icons = {
+        success: 'fa-circle-check',
+        error: 'fa-circle-exclamation',
+        info: 'fa-circle-info',
+        warning: 'fa-triangle-exclamation'
     };
 
-    const icons = {
-        success: 'fa-check-circle',
-        error: 'fa-exclamation-circle',
-        info: 'fa-info-circle',
-        warning: 'fa-exclamation-triangle'
+    const iconColors = {
+        success: 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400',
+        error: 'bg-red-500/15 text-red-600 dark:text-red-400',
+        info: 'bg-blue-500/15 text-blue-600 dark:text-blue-400',
+        warning: 'bg-amber-500/15 text-amber-600 dark:text-amber-400'
     };
 
     const defaultTitles = {
@@ -737,32 +737,20 @@ function showNotification(message, type = 'info', title = '') {
     const finalTitle = title || defaultTitles[type] || defaultTitles.info;
     const finalMessage = normalizeAuthMessage(message);
     const iconClass = icons[type] || icons.info;
+    const iconWrapColor = iconColors[type] || iconColors.info;
 
     const notification = document.createElement('div');
-    notification.className = `auth-notification fixed top-20 sm:top-24 left-1/2 -translate-x-1/2 rounded-xl border ${colors[type]} z-50 transition-all duration-300`;
-    const inner = document.createElement('div');
-    inner.className = 'auth-notification-inner flex items-start gap-3';
-
-    const icon = document.createElement('i');
-    icon.className = `fa-solid ${iconClass} auth-notification-icon mt-0.5`;
-    icon.setAttribute('aria-hidden', 'true');
-
-    const copy = document.createElement('div');
-    copy.className = 'auth-notification-copy min-w-0';
-
-    const titleEl = document.createElement('p');
-    titleEl.className = 'auth-notification-title';
-    titleEl.textContent = finalTitle;
-
-    const messageEl = document.createElement('p');
-    messageEl.className = 'auth-notification-message';
-    messageEl.textContent = finalMessage;
-
-    copy.appendChild(titleEl);
-    copy.appendChild(messageEl);
-    inner.appendChild(icon);
-    inner.appendChild(copy);
-    notification.appendChild(inner);
+    notification.className = `auth-notification is-${type} fixed top-20 sm:top-24 left-1/2 -translate-x-1/2 z-50 transition-all duration-300`;
+    notification.setAttribute('role', 'alert');
+    notification.innerHTML = `
+        <div class="flex items-center justify-center w-8 h-8 rounded-full ${iconWrapColor} shrink-0 text-base">
+            <i class="fa-solid ${iconClass}"></i>
+        </div>
+        <div class="auth-notification-copy min-w-0 flex-1">
+            <p class="auth-notification-title text-xs font-bold uppercase tracking-wider mb-0.5 leading-tight">${finalTitle}</p>
+            <p class="auth-notification-message text-sm font-semibold leading-snug">${finalMessage}</p>
+        </div>
+    `;
 
     document.body.appendChild(notification);
 

@@ -49,21 +49,35 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     console.log('✅ Profile loaded successfully and connected to real-time database');
 
-    const showProfileMessage = (message, isError = false) => {
+    const showProfileMessage = (message, isError = false, title = '') => {
         const existing = document.querySelector('.profile-notification');
         if (existing) {
             existing.remove();
         }
 
+        const typeClass = isError ? 'is-error' : 'is-success';
+        const iconClass = isError ? 'fa-circle-exclamation' : 'fa-circle-check';
+        const defaultTitle = isError ? 'Action Needed' : 'Success';
+        const displayTitle = title || defaultTitle;
+
         const note = document.createElement('div');
-        note.className = `profile-notification fixed top-24 left-1/2 -translate-x-1/2 z-50 px-5 py-3 rounded-lg border ${isError ? 'bg-red-500/20 border-red-500 text-red-300' : 'bg-green-500/20 border-green-500 text-green-300'}`;
-        note.textContent = message;
+        note.className = `profile-notification ${typeClass} animate-fadeInDown`;
+        note.setAttribute('role', 'alert');
+        note.innerHTML = `
+            <div class="flex items-center justify-center w-8 h-8 rounded-full ${isError ? 'bg-red-500/15 text-red-600 dark:text-red-400' : 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400'} shrink-0 text-base">
+                <i class="fa-solid ${iconClass}"></i>
+            </div>
+            <div class="min-w-0 flex-1">
+                <p class="notification-title text-xs font-bold uppercase tracking-wider mb-0.5 leading-tight">${displayTitle}</p>
+                <p class="notification-message text-sm font-semibold leading-snug">${message}</p>
+            </div>
+        `;
         document.body.appendChild(note);
 
         setTimeout(() => {
             note.classList.add('opacity-0', 'transition-opacity', 'duration-300');
             setTimeout(() => note.remove(), 300);
-        }, 2400);
+        }, 3200);
     };
 
     // ============================================================================

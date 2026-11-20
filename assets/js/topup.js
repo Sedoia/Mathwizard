@@ -292,12 +292,25 @@
     cards.forEach((card) => {
       const isSelected = card.dataset.offerId === state.selectedOfferId;
       card.setAttribute('aria-pressed', isSelected ? 'true' : 'false');
-      card.classList.toggle('ring-2', isSelected);
-      card.classList.toggle('ring-ncst-gold', isSelected);
-      card.classList.toggle('border-ncst-gold', isSelected);
-      card.classList.toggle('bg-ncst-gold/10', isSelected);
-      card.classList.toggle('shadow-[0_0_20px_rgba(201,168,76,0.25)]', isSelected);
-      card.classList.toggle('border-ncst-gold/30', !isSelected);
+      card.classList.toggle('is-selected', isSelected);
+
+      const badge = card.querySelector('.offer-selected-badge');
+      if (badge) {
+        badge.classList.toggle('hidden', !isSelected);
+      }
+
+      const radio = card.querySelector('.offer-radio');
+      if (radio) {
+        radio.classList.toggle('border-ncst-gold', isSelected);
+        radio.classList.toggle('bg-ncst-gold', isSelected);
+        radio.classList.toggle('border-gray-400', !isSelected);
+        radio.classList.toggle('bg-transparent', !isSelected);
+        const dot = radio.querySelector('.offer-radio-dot');
+        if (dot) {
+          dot.classList.toggle('opacity-100', isSelected);
+          dot.classList.toggle('opacity-0', !isSelected);
+        }
+      }
     });
   }
 
@@ -315,13 +328,24 @@
       button.className = 'offer-card w-full text-left parchment-panel p-4 border border-ncst-gold/30 hover:border-ncst-gold hover:shadow-[0_0_15px_rgba(201,168,76,0.15)] transition-all cursor-pointer';
       button.innerHTML = `
         <div class="flex items-start justify-between gap-3">
-          <div>
-            <p class="font-heading text-white text-lg">${formatCredits(offer.credits)}</p>
-            <p class="text-xs text-gray-300">Instantly delivered after confirmation</p>
+          <div class="flex items-start gap-3">
+            <div class="offer-radio w-5 h-5 rounded-full border-2 border-gray-400 flex items-center justify-center mt-1 transition-all">
+              <div class="offer-radio-dot w-2 h-2 rounded-full bg-ncst-dark opacity-0 transition-opacity"></div>
+            </div>
+            <div>
+              <div class="flex items-center gap-2 flex-wrap">
+                <p class="font-heading text-lg font-bold offer-title">${formatCredits(offer.credits)}</p>
+                <span class="offer-selected-badge hidden px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-ncst-gold text-ncst-dark shadow-sm">
+                  <i class="fa-solid fa-check mr-1"></i> Selected
+                </span>
+              </div>
+              <p class="text-xs text-gray-400 offer-subtitle mt-0.5">Instantly delivered after confirmation</p>
+            </div>
           </div>
-          <img src="../assets/img/ICON_PremiumCurrency.png" alt="Premium currency" class="w-10 h-10 object-contain">
+          <img src="../assets/img/ICON_PremiumCurrency.png" alt="Premium currency" class="w-10 h-10 object-contain shrink-0">
         </div>
-        <div class="mt-4 flex items-center justify-between">
+        <div class="mt-4 flex items-center justify-between pt-3 border-t border-ncst-gold/20">
+          <span class="text-xs uppercase tracking-wider text-gray-400">Price</span>
           <p class="text-ncst-gold font-bold text-xl">${formatPeso(offer.amountPhp)}</p>
         </div>
       `;

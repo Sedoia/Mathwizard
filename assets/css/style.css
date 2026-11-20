@@ -2408,3 +2408,159 @@ nav .nav-item:hover::after {
 [data-theme="dark"] nav .nav-item:hover {
     color: #f7d57f !important;
 }
+
+/* ─────────────────────────────────────────────────────────────
+   UNIVERSAL NOTIFICATIONS (LIGHT & DARK MODE HIGH-CONTRAST)
+   Fixes login, signup, and profile save change toasts
+───────────────────────────────────────────────────────────── */
+
+.auth-notification,
+.profile-notification {
+    position: fixed !important;
+    top: 5rem !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    z-index: 99999 !important;
+    min-width: min(92vw, 360px);
+    max-width: min(92vw, 560px);
+    width: auto;
+    padding: 0.9rem 1.25rem !important;
+    border-radius: 14px !important;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35), 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 0.85rem !important;
+    backdrop-filter: blur(12px) !important;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+/* Light Mode / Default Notifications */
+.auth-notification.is-success,
+.profile-notification.is-success,
+[data-theme="light"] .auth-notification.is-success,
+[data-theme="light"] .profile-notification.is-success,
+.auth-notification:not(.is-error):not(.is-warning):not(.is-info),
+.profile-notification:not(.is-error):not(.is-warning):not(.is-info) {
+    background: #ffffff !important;
+    border: 1.5px solid #059669 !important;
+    box-shadow: 0 14px 36px rgba(5, 150, 105, 0.18), 0 4px 14px rgba(0, 0, 0, 0.08) !important;
+}
+
+.auth-notification.is-success .auth-notification-title,
+.profile-notification.is-success .notification-title,
+[data-theme="light"] .auth-notification.is-success .auth-notification-title,
+[data-theme="light"] .profile-notification.is-success .notification-title,
+.auth-notification:not(.is-error) .auth-notification-title,
+.profile-notification:not(.is-error) .notification-title {
+    color: #047857 !important;
+    font-weight: 700 !important;
+}
+
+.auth-notification.is-success .auth-notification-message,
+.profile-notification.is-success .notification-message,
+[data-theme="light"] .auth-notification.is-success .auth-notification-message,
+[data-theme="light"] .profile-notification.is-success .notification-message,
+.auth-notification:not(.is-error) .auth-notification-message,
+.profile-notification:not(.is-error) .notification-message {
+    color: #0f172a !important;
+    font-weight: 600 !important;
+}
+
+/* Light Mode Error Notification */
+.auth-notification.is-error,
+.profile-notification.is-error,
+[data-theme="light"] .auth-notification.is-error,
+[data-theme="light"] .profile-notification.is-error {
+    background: #ffffff !important;
+    border: 1.5px solid #dc2626 !important;
+    box-shadow: 0 14px 36px rgba(220, 38, 38, 0.18), 0 4px 14px rgba(0, 0, 0, 0.08) !important;
+}
+
+.auth-notification.is-error .auth-notification-title,
+.profile-notification.is-error .notification-title,
+[data-theme="light"] .auth-notification.is-error .auth-notification-title,
+[data-theme="light"] .profile-notification.is-error .notification-title {
+    color: #b91c1c !important;
+    font-weight: 700 !important;
+}
+
+.auth-notification.is-error .auth-notification-message,
+.profile-notification.is-error .notification-message,
+[data-theme="light"] .auth-notification.is-error .auth-notification-message,
+[data-theme="light"] .profile-notification.is-error .notification-message {
+    color: #0f172a !important;
+    font-weight: 600 !important;
+}
+
+/* Dark Mode Notifications */
+[data-theme="dark"] .auth-notification.is-success,
+[data-theme="dark"] .profile-notification.is-success,
+[data-theme="dark"] .auth-notification:not(.is-error):not(.is-warning):not(.is-info),
+[data-theme="dark"] .profile-notification:not(.is-error):not(.is-warning):not(.is-info) {
+    background: #111a18 !important;
+    border: 1.5px solid #10b981 !important;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.7), 0 0 24px rgba(16, 185, 129, 0.25) !important;
+}
+
+[data-theme="dark"] .auth-notification-title,
+[data-theme="dark"] .notification-title {
+    color: #34d399 !important;
+    font-weight: 700 !important;
+}
+
+[data-theme="dark"] .auth-notification-message,
+[data-theme="dark"] .notification-message {
+    color: #f8fafc !important;
+    font-weight: 600 !important;
+}
+
+[data-theme="dark"] .auth-notification.is-error,
+[data-theme="dark"] .profile-notification.is-error {
+    background: #201113 !important;
+    border: 1.5px solid #ef4444 !important;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.7), 0 0 24px rgba(239, 68, 68, 0.25) !important;
+}
+
+[data-theme="dark"] .auth-notification.is-error .auth-notification-title,
+[data-theme="dark"] .profile-notification.is-error .notification-title {
+    color: #f87171 !important;
+}
+
+[data-theme="dark"] .auth-notification.is-error .auth-notification-message,
+[data-theme="dark"] .profile-notification.is-error .notification-message {
+    color: #f8fafc !important;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   TOP-UP OFFER CARDS SELECTION HIGHLIGHT
+───────────────────────────────────────────────────────────── */
+
+.offer-card {
+    transition: all 0.22s ease-in-out !important;
+    position: relative !important;
+}
+
+.offer-card.is-selected,
+[data-theme="light"] .offer-card.is-selected {
+    border-color: #c9a84c !important;
+    border-width: 2px !important;
+    background: #fffdf5 !important;
+    box-shadow: 0 0 0 3px rgba(201, 168, 76, 0.25), 0 12px 28px rgba(201, 168, 76, 0.2) !important;
+    transform: translateY(-2px);
+}
+
+[data-theme="dark"] .offer-card.is-selected {
+    border-color: #e5c46b !important;
+    border-width: 2px !important;
+    background: linear-gradient(145deg, #38281a 0%, #251c14 100%) !important;
+    box-shadow: 0 0 0 3px rgba(229, 196, 107, 0.3), 0 12px 32px rgba(0, 0, 0, 0.5), 0 0 20px rgba(201, 168, 76, 0.25) !important;
+    transform: translateY(-2px);
+}
+
+[data-theme="light"] .offer-card .offer-title {
+    color: #1f1d1a !important;
+}
+
+[data-theme="light"] .offer-card .offer-subtitle {
+    color: #665e52 !important;
+}
