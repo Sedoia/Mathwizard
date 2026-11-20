@@ -49,11 +49,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (desktopAuthSlot) {
             desktopAuthSlot.innerHTML = `
-                <a href="${destination}" class="hidden md:flex items-center gap-2 px-3 py-2 border border-ncst-gold/40 rounded-sm hover:border-ncst-gold transition-colors max-w-[220px]">
+                <a href="${destination}" class="flex items-center gap-2 px-3 py-1.5 border border-ncst-gold/40 rounded-sm hover:border-ncst-gold transition-colors max-w-[200px]" title="View Profile">
                     ${buildAvatar(sessionUser)}
-                    <span class="text-xs lg:text-sm text-ncst-gold truncate">${displayName}</span>
+                    <span class="text-xs xl:text-sm text-ncst-gold truncate font-semibold">${displayName}</span>
                 </a>
-                <button id="desktop-logout-btn" type="button" class="hidden md:flex px-3 py-2 border border-ncst-accent text-ncst-accent text-xs lg:text-sm font-bold rounded-sm hover:bg-ncst-accent/10 transition-colors">
+                <button id="desktop-logout-btn" type="button" class="flex items-center justify-center w-8 h-8 border border-ncst-accent text-ncst-accent text-xs font-bold rounded-sm hover:bg-ncst-accent/10 transition-colors" title="Logout">
                     <i class="fa-solid fa-right-from-bracket"></i>
                 </button>
             `;

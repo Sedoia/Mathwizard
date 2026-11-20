@@ -16,6 +16,7 @@
     <script src="assets/js/firebaseConfig.js"></script>
     <!-- Service Layer Scripts -->
     <script src="assets/js/authService.js"></script>
+    <script src="assets/js/otpService.js"></script>
     <!-- Auth Page Script -->
     <script src="assets/js/auth.js" defer></script>
     
@@ -57,32 +58,33 @@
                 <div class="parchment-panel p-6 sm:p-8">
                     <div class="text-center mb-8">
                         <div class="wax-seal wax-seal-gold mx-auto mb-4"><i class="fa-solid fa-hat-wizard text-xl"></i></div>
-                        <h2 class="font-magic text-3xl sm:text-4xl text-ncst-gold text-gold-glow mb-2">Welcome Back</h2>
-                        <p class="font-flavor italic text-xs sm:text-sm" style="color:#a08060;">Return to your calculus adventure, adventurer</p>
+                        <h2 class="auth-title font-magic text-3xl sm:text-4xl mb-2">Welcome Back</h2>
+                        <p class="auth-subtitle font-flavor italic text-xs sm:text-sm">Return to your calculus adventure, adventurer</p>
                     </div>
 
                     <form class="space-y-5">
                         <div>
-                            <label class="block font-heading text-xs sm:text-sm font-bold text-ncst-gold uppercase tracking-wider mb-2">Email or Username</label>
-                            <input id="login-identifier" type="text" placeholder="student@ncst.edu" required class="w-full px-4 py-3 border border-ncst-gold/30 text-white placeholder-gray-500 focus:outline-none transition-all duration-300 min-h-[44px]">
+                            <label class="auth-label block font-heading text-xs sm:text-sm font-bold uppercase tracking-wider mb-2">Email or Username</label>
+                            <input id="login-identifier" type="text" placeholder="student@ncst.edu.ph or username" required class="auth-input w-full px-4 py-3 min-h-[44px]">
+                            <p class="auth-helper text-[11px] mt-1.5 italic">Use your @ncst.edu.ph email or chosen username.</p>
                         </div>
 
                         <div>
-                            <label class="block font-heading text-xs sm:text-sm font-bold text-ncst-gold uppercase tracking-wider mb-2">Password</label>
+                            <label class="auth-label block font-heading text-xs sm:text-sm font-bold uppercase tracking-wider mb-2">Password</label>
                             <div class="relative">
-                                <input id="login-password" type="password" placeholder="••••••••" required class="w-full px-4 pr-12 py-3 border border-ncst-gold/30 text-white placeholder-gray-500 focus:outline-none transition-all duration-300 min-h-[44px]">
-                                <button type="button" class="password-toggle-btn absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-ncst-neon transition-colors" data-target="login-password" aria-label="Show password">
+                                <input id="login-password" type="password" placeholder="••••••••" required class="auth-input w-full px-4 pr-12 py-3 min-h-[44px]">
+                                <button type="button" class="password-toggle-btn auth-password-toggle absolute right-3 top-1/2 -translate-y-1/2 transition-colors" data-target="login-password" aria-label="Show password">
                                     <i class="fa-solid fa-eye"></i>
                                 </button>
                             </div>
                         </div>
 
                         <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 text-xs">
-                            <label class="flex items-center gap-2 text-gray-400 cursor-pointer hover:text-ncst-neon transition-colors">
+                            <label class="auth-checkbox-label flex items-center gap-2 cursor-pointer transition-colors">
                                 <input type="checkbox" class="w-4 h-4">
                                 Remember me
                             </label>
-                            <button type="button" onclick="openForgotPassword()" class="text-ncst-neon hover:text-ncst-gold transition-colors">Forgot password?</button>
+                            <button type="button" onclick="openForgotPassword()" class="auth-link-btn transition-colors">Forgot password?</button>
                         </div>
 
                         <button type="submit" class="rune-btn w-full mt-6">
@@ -90,9 +92,9 @@
                         </button>
                     </form>
 
-                    <div class="mt-6 pt-6 border-t border-white/10 text-center">
-                        <p class="text-gray-400 text-xs sm:text-sm">Don't have an account? 
-                            <button type="button" class="text-ncst-neon hover:text-ncst-gold transition-colors font-bold toggle-auth" onclick="toggleAuth()">
+                    <div class="mt-6 pt-6 border-t border-ncst-gold/20 text-center">
+                        <p class="auth-switch-text text-xs sm:text-sm">Don't have an account? 
+                            <button type="button" class="auth-switch-btn transition-colors font-bold toggle-auth ml-1" onclick="toggleAuth()">
                                 Sign up here
                             </button>
                         </p>
@@ -102,47 +104,108 @@
 
             <!-- Signup Form -->
             <div id="signup-form" class="hidden animate-fadeInRight">
-                <div class="parchment-panel p-8">
-                    <div class="text-center mb-8">
+                <div class="parchment-panel p-6 sm:p-8">
+                    <div class="text-center mb-6">
                         <div class="wax-seal mx-auto mb-4"><i class="fa-solid fa-scroll text-xl"></i></div>
-                        <h2 class="font-magic text-4xl text-ncst-gold text-gold-glow mb-2">Join the Academy</h2>
-                        <p class="font-flavor italic text-sm" style="color:#a08060;">Forge your legend, adventurer</p>
+                        <h2 class="auth-title font-magic text-3xl sm:text-4xl mb-2">Join the Academy</h2>
+                        <p class="auth-subtitle font-flavor italic text-xs sm:text-sm">Forge your legend, adventurer</p>
+                    </div>
+
+                    <!-- Target Client Notice: Only NCST Engineering Students -->
+                    <div class="auth-notice-banner mb-6 p-4 rounded-xl text-center">
+                        <div class="auth-notice-title flex items-center justify-center gap-2 font-bold text-xs uppercase tracking-wider mb-1.5">
+                            <i class="fa-solid fa-graduation-cap text-sm"></i> NCST Engineering Students Only
+                        </div>
+                        <p class="auth-notice-text text-xs font-flavor leading-relaxed">
+                            Registration is restricted exclusively to enrolled <strong>NCST Engineering students</strong>. You must sign up using your official institutional email ending in <strong class="auth-email-domain">@ncst.edu.ph</strong>.
+                        </p>
                     </div>
 
                     <form class="space-y-4 sm:space-y-5">
-                        <div>
-                            <label class="block font-heading text-xs sm:text-sm font-bold text-ncst-gold uppercase tracking-wider mb-2">Full Name</label>
-                            <input id="signup-name" type="text" placeholder="Your full name" required class="w-full px-4 py-3 sm:py-3.5 min-h-[44px] border border-ncst-gold/30 text-white placeholder-gray-500 text-sm sm:text-base focus:outline-none transition-all duration-300">
-                        </div>
-
-                        <div>
-                            <label class="block font-heading text-xs sm:text-sm font-bold text-ncst-gold uppercase tracking-wider mb-2">Email Address</label>
-                            <input id="signup-email" type="email" placeholder="student@ncst.edu" required class="w-full px-4 py-3 sm:py-3.5 min-h-[44px] border border-ncst-gold/30 text-white placeholder-gray-500 text-sm sm:text-base focus:outline-none transition-all duration-300">
-                        </div>
-
-                        <div>
-                            <label class="block font-heading text-xs sm:text-sm font-bold text-ncst-gold uppercase tracking-wider mb-2">Password</label>
-                            <div class="relative">
-                                <input id="signup-password" type="password" placeholder="••••••••" required class="w-full px-4 pr-12 py-3 sm:py-3.5 min-h-[44px] border border-ncst-gold/30 text-white placeholder-gray-500 text-sm sm:text-base focus:outline-none transition-all duration-300">
-                                <button type="button" class="password-toggle-btn absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-ncst-neon transition-colors" data-target="signup-password" aria-label="Show password">
-                                    <i class="fa-solid fa-eye"></i>
-                                </button>
+                        <!-- First Name and Last Name -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                            <div>
+                                <label for="signup-first-name" class="auth-label block font-heading text-xs sm:text-sm font-bold uppercase tracking-wider mb-2">First Name</label>
+                                <input id="signup-first-name" type="text" placeholder="e.g. Juan" required autocomplete="given-name" class="auth-input w-full px-4 py-3 min-h-[44px]">
+                            </div>
+                            <div>
+                                <label for="signup-last-name" class="auth-label block font-heading text-xs sm:text-sm font-bold uppercase tracking-wider mb-2">Last Name</label>
+                                <input id="signup-last-name" type="text" placeholder="e.g. Dela Cruz" required autocomplete="family-name" class="auth-input w-full px-4 py-3 min-h-[44px]">
                             </div>
                         </div>
 
+                        <!-- Username -->
                         <div>
-                            <label class="block font-heading text-xs sm:text-sm font-bold text-ncst-gold uppercase tracking-wider mb-2">Confirm Password</label>
+                            <label for="signup-username" class="auth-label block font-heading text-xs sm:text-sm font-bold uppercase tracking-wider mb-2">Username</label>
+                            <input id="signup-username" type="text" placeholder="e.g. JuanMage23" required autocomplete="username" minlength="3" maxlength="24" class="auth-input w-full px-4 py-3 min-h-[44px]">
+                            <p class="auth-helper text-[11px] mt-1.5 italic">Used for game login.</p>
+                        </div>
+
+                        <!-- Email Address (NCST Institutional Only) -->
+                        <div>
+                            <label for="signup-email" class="auth-label block font-heading text-xs sm:text-sm font-bold uppercase tracking-wider mb-2">NCST Institutional Email</label>
+                            <input id="signup-email" type="email" placeholder="student.id@ncst.edu.ph" required autocomplete="email" class="auth-input w-full px-4 py-3 min-h-[44px]">
+                            <p class="auth-helper text-[11px] mt-1.5 italic">Must be your official NCST student email (<strong class="auth-email-domain">@ncst.edu.ph</strong>).</p>
+                        </div>
+
+                        <!-- Password with Live Requirements Checklist & Strength Indicator -->
+                        <div>
+                            <label for="signup-password" class="auth-label block font-heading text-xs sm:text-sm font-bold uppercase tracking-wider mb-2">Password</label>
                             <div class="relative">
-                                <input id="signup-confirm-password" type="password" placeholder="••••••••" required class="w-full px-4 pr-12 py-3 sm:py-3.5 min-h-[44px] border border-ncst-gold/30 text-white placeholder-gray-500 text-sm sm:text-base focus:outline-none transition-all duration-300">
-                                <button type="button" class="password-toggle-btn absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-ncst-neon transition-colors" data-target="signup-confirm-password" aria-label="Show password">
+                                <input id="signup-password" type="password" placeholder="Create a strong password" required autocomplete="new-password" class="auth-input w-full px-4 pr-12 py-3 min-h-[44px]">
+                                <button type="button" class="password-toggle-btn auth-password-toggle absolute right-3 top-1/2 -translate-y-1/2 transition-colors" data-target="signup-password" aria-label="Show password">
                                     <i class="fa-solid fa-eye"></i>
                                 </button>
                             </div>
+
+                            <!-- Live Password Strength Meter & Interactive Checklist -->
+                            <div id="password-requirements" class="auth-password-requirements mt-2.5 p-3.5 rounded-lg space-y-2.5">
+                                <div class="flex items-center justify-between text-xs">
+                                    <span class="auth-strength-heading font-heading tracking-wider uppercase text-[11px]">Security Strength:</span>
+                                    <span id="password-strength-label" class="auth-strength-label font-bold text-[11px] transition-colors">Enter a password</span>
+                                </div>
+                                <div class="auth-meter-track w-full h-2 rounded-full overflow-hidden">
+                                    <div id="password-strength-bar" class="h-full w-0 transition-all duration-300 rounded-full bg-gray-400"></div>
+                                </div>
+
+                                <p class="auth-requirements-note text-[11px] font-flavor italic pt-0.5">Password must include numbers, special characters, and casing:</p>
+
+                                <ul class="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1 text-xs">
+                                    <li id="rule-length" class="auth-rule-item is-unmet flex items-center gap-2 transition-colors">
+                                        <i class="fa-solid fa-circle-xmark rule-icon text-xs"></i>
+                                        <span class="text-[11px]">8+ characters</span>
+                                    </li>
+                                    <li id="rule-number" class="auth-rule-item is-unmet flex items-center gap-2 transition-colors">
+                                        <i class="fa-solid fa-circle-xmark rule-icon text-xs"></i>
+                                        <span class="text-[11px]">Numbers (0-9)</span>
+                                    </li>
+                                    <li id="rule-special" class="auth-rule-item is-unmet flex items-center gap-2 transition-colors">
+                                        <i class="fa-solid fa-circle-xmark rule-icon text-xs"></i>
+                                        <span class="text-[11px]">Special symbol (!@#$%^&*)</span>
+                                    </li>
+                                    <li id="rule-casing" class="auth-rule-item is-unmet flex items-center gap-2 transition-colors">
+                                        <i class="fa-solid fa-circle-xmark rule-icon text-xs"></i>
+                                        <span class="text-[11px]">Upper & lower case</span>
+                                    </li>
+                                </ul>
+                            </div>
                         </div>
 
-                        <label class="flex items-start gap-3 text-xs sm:text-sm text-gray-400 cursor-pointer hover:text-ncst-neon transition-colors mt-2 sm:mt-3 leading-relaxed">
+                        <!-- Confirm Password -->
+                        <div>
+                            <label for="signup-confirm-password" class="auth-label block font-heading text-xs sm:text-sm font-bold uppercase tracking-wider mb-2">Confirm Password</label>
+                            <div class="relative">
+                                <input id="signup-confirm-password" type="password" placeholder="Repeat your password" required autocomplete="new-password" class="auth-input w-full px-4 pr-12 py-3 min-h-[44px]">
+                                <button type="button" class="password-toggle-btn auth-password-toggle absolute right-3 top-1/2 -translate-y-1/2 transition-colors" data-target="signup-confirm-password" aria-label="Show password">
+                                    <i class="fa-solid fa-eye"></i>
+                                </button>
+                            </div>
+                            <p id="password-match-status" class="hidden text-[11px] mt-1.5 font-medium"></p>
+                        </div>
+
+                        <label class="auth-terms-label flex items-start gap-3 text-xs sm:text-sm cursor-pointer mt-3 leading-relaxed">
                             <input id="signup-terms" type="checkbox" class="w-4 h-4 mt-0.5 min-w-[16px] shrink-0 self-start" required>
-                            <span class="pt-0.5">I agree to the <a href="pages/terms-of-service.html" target="_blank" rel="noopener noreferrer" class="text-ncst-neon underline decoration-ncst-neon/50 underline-offset-2 hover:text-ncst-gold hover:decoration-ncst-gold transition-colors">Terms of Service</a> and <a href="pages/privacy-policy.html" target="_blank" rel="noopener noreferrer" class="text-ncst-neon underline decoration-ncst-neon/50 underline-offset-2 hover:text-ncst-gold hover:decoration-ncst-gold transition-colors">Privacy Policy</a></span>
+                            <span class="pt-0.5">I agree to the <a href="pages/terms-of-service.html" target="_blank" rel="noopener noreferrer" class="auth-terms-link underline underline-offset-2">Terms of Service</a> and <a href="pages/privacy-policy.html" target="_blank" rel="noopener noreferrer" class="auth-terms-link underline underline-offset-2">Privacy Policy</a></span>
                         </label>
 
                         <button type="submit" class="rune-btn w-full mt-6 sm:mt-8">
@@ -150,23 +213,13 @@
                         </button>
                     </form>
 
-                    <div class="mt-6 pt-6 border-t border-ncst-neon/15 text-center">
-                        <p class="text-gray-400 text-sm">Already have an account? 
-                            <button type="button" class="text-ncst-neon hover:text-ncst-gold transition-colors font-bold toggle-auth" onclick="toggleAuth()">
+                    <div class="mt-6 pt-6 border-t border-ncst-gold/20 text-center">
+                        <p class="auth-switch-text text-xs sm:text-sm">Already have an account? 
+                            <button type="button" class="auth-switch-btn transition-colors font-bold toggle-auth ml-1" onclick="toggleAuth()">
                                 Sign in here
                             </button>
                         </p>
                     </div>
-                </div>
-            </div>
-
-            <!-- Social Login -->
-            <div class="mt-8 sm:mt-10 space-y-3 sm:space-y-4">
-                <div class="ornate-hr"><span class="ornate-hr-diamond">&#9670;</span></div>
-                <div class="grid grid-cols-1 gap-3 sm:gap-4">
-                    <button id="google-sso-btn" class="iron-plaque-btn w-full" type="button">
-                        <i class="fa-brands fa-google"></i> Continue with Google
-                    </button>
                 </div>
             </div>
 
@@ -184,19 +237,19 @@
             <!-- Default State -->
             <div id="forgot-step-email" class="text-center">
                 <div class="wax-seal wax-seal-gold mx-auto mb-6"><i class="fa-solid fa-key"></i></div>
-                <h3 class="font-magic text-2xl sm:text-3xl text-ncst-gold text-gold-glow mb-2">Lost Your Spell?</h3>
-                <p class="font-flavor italic text-sm mb-6" style="color:#a08060;">Enter your scroll address and a raven shall deliver a restoration link.</p>
+                <h3 class="auth-title font-magic text-2xl sm:text-3xl mb-2">Lost Your Spell?</h3>
+                <p class="auth-subtitle font-flavor italic text-sm mb-6">Enter your scroll address and a raven shall deliver a restoration link.</p>
                 
                 <form onsubmit="submitForgotPassword(event)" class="space-y-4">
                         <div class="text-left">
-                            <label class="block font-heading text-xs font-bold text-ncst-gold uppercase tracking-wider mb-2">Email Address</label>
-                            <input type="email" id="forgot-email" placeholder="student@ncst.edu" required class="w-full px-4 py-3 border border-ncst-gold/30 text-white placeholder-gray-500 focus:outline-none transition-all duration-300 min-h-[44px]">
+                            <label class="auth-label block font-heading text-xs font-bold uppercase tracking-wider mb-2">Email Address</label>
+                            <input type="email" id="forgot-email" placeholder="student@ncst.edu.ph" required class="auth-input w-full px-4 py-3 min-h-[44px]">
                         </div>
                         
                         <button type="submit" class="rune-btn w-full">Send Raven</button>
                 </form>
                 
-                <button type="button" onclick="closeForgotPassword()" class="mt-4 text-sm text-gray-400 hover:text-ncst-neon transition-colors">
+                <button type="button" onclick="closeForgotPassword()" class="auth-link-btn mt-4 text-sm transition-colors">
                     <i class="fa-solid fa-arrow-left mr-2"></i> Back to Login
                 </button>
             </div>
@@ -204,11 +257,11 @@
             <!-- Success State -->
             <div id="forgot-step-success" class="text-center hidden">
                 <div class="w-16 h-16 mx-auto mb-6 rounded-full bg-green-500/20 flex items-center justify-center">
-                    <i class="fa-solid fa-check text-green-400 text-2xl"></i>
+                    <i class="fa-solid fa-check text-green-500 dark:text-green-400 text-2xl"></i>
                 </div>
-                <h3 class="font-magic text-2xl sm:text-3xl text-ncst-gold text-gold-glow mb-2">Raven Dispatched!</h3>
-                <p class="font-flavor italic text-sm mb-6" style="color:#a08060;">A restoration scroll has been sent to your address. Follow the enchantment within.</p>
-                <p class="text-xs text-gray-500 mb-6">If you don't see the email, check your spam folder.</p>
+                <h3 class="auth-title font-magic text-2xl sm:text-3xl mb-2">Raven Dispatched!</h3>
+                <p class="auth-subtitle font-flavor italic text-sm mb-4">A restoration scroll has been sent to your address. Follow the enchantment within.</p>
+                <p class="auth-helper text-xs mb-6">If you don't see the email, check your spam folder.</p>
                 
                 <button type="button" onclick="closeForgotPassword()" class="iron-plaque-btn w-full">
                     Return to Login
@@ -222,6 +275,64 @@
         document.getElementById('forgot-password-modal')?.addEventListener('click', function(e) {
             if (e.target === this) {
                 closeForgotPassword();
+            }
+        });
+    </script>
+
+    <!-- OTP Verification Modal -->
+    <div id="otp-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-stone-950/92">
+        <div class="parchment-panel p-6 sm:p-8 max-w-md w-full animate-fadeInLeft">
+            <div class="text-center">
+                <!-- Icon -->
+                <div class="wax-seal wax-seal-gold mx-auto mb-4">
+                    <i class="fa-solid fa-shield-halved text-xl"></i>
+                </div>
+
+                <!-- Title -->
+                <h3 class="auth-title font-magic text-2xl sm:text-3xl mb-2">Verify Your Identity</h3>
+                <p id="otp-subtitle" class="auth-subtitle font-flavor italic text-xs sm:text-sm mb-2">Enter the arcane code sent to your email</p>
+                <p id="otp-email-hint" class="auth-helper text-xs mb-6"></p>
+
+                <!-- 6-Digit OTP Input Fields -->
+                <div id="otp-inputs" class="flex justify-center gap-2 sm:gap-3 mb-4">
+                    <input type="text" class="otp-digit auth-input w-11 h-14 sm:w-12 sm:h-16 text-center text-xl sm:text-2xl font-bold tracking-widest" maxlength="1" inputmode="numeric" pattern="[0-9]" autocomplete="one-time-code" aria-label="Digit 1">
+                    <input type="text" class="otp-digit auth-input w-11 h-14 sm:w-12 sm:h-16 text-center text-xl sm:text-2xl font-bold tracking-widest" maxlength="1" inputmode="numeric" pattern="[0-9]" autocomplete="off" aria-label="Digit 2">
+                    <input type="text" class="otp-digit auth-input w-11 h-14 sm:w-12 sm:h-16 text-center text-xl sm:text-2xl font-bold tracking-widest" maxlength="1" inputmode="numeric" pattern="[0-9]" autocomplete="off" aria-label="Digit 3">
+                    <input type="text" class="otp-digit auth-input w-11 h-14 sm:w-12 sm:h-16 text-center text-xl sm:text-2xl font-bold tracking-widest" maxlength="1" inputmode="numeric" pattern="[0-9]" autocomplete="off" aria-label="Digit 4">
+                    <input type="text" class="otp-digit auth-input w-11 h-14 sm:w-12 sm:h-16 text-center text-xl sm:text-2xl font-bold tracking-widest" maxlength="1" inputmode="numeric" pattern="[0-9]" autocomplete="off" aria-label="Digit 5">
+                    <input type="text" class="otp-digit auth-input w-11 h-14 sm:w-12 sm:h-16 text-center text-xl sm:text-2xl font-bold tracking-widest" maxlength="1" inputmode="numeric" pattern="[0-9]" autocomplete="off" aria-label="Digit 6">
+                </div>
+
+                <!-- Error message -->
+                <p id="otp-error-msg" class="text-red-500 text-xs mb-4 hidden"></p>
+
+                <!-- Verify button -->
+                <button id="otp-verify-btn" type="button" class="rune-btn w-full mb-4">
+                    <i class="fa-solid fa-check-double mr-2"></i> Verify Code
+                </button>
+
+                <!-- Resend Section -->
+                <div class="flex flex-col items-center gap-2 mb-4">
+                    <p id="otp-countdown" class="auth-helper text-xs"></p>
+                    <button id="otp-resend-btn" type="button" class="auth-link-btn text-sm transition-colors" disabled>
+                        <i class="fa-solid fa-rotate-right mr-1"></i> Resend Code
+                    </button>
+                </div>
+
+                <!-- Cancel button -->
+                <button id="otp-cancel-btn" type="button" class="auth-link-btn text-sm transition-colors">
+                    <i class="fa-solid fa-arrow-left mr-2"></i> Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Close OTP modal on outside click -->
+    <script>
+        document.getElementById('otp-modal')?.addEventListener('click', function(e) {
+            if (e.target === this) {
+                const cancelBtn = document.getElementById('otp-cancel-btn');
+                if (cancelBtn) cancelBtn.click();
             }
         });
     </script>

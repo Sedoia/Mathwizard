@@ -44,12 +44,24 @@ class AuthService {
         return 'mw_' + Math.random().toString(36).slice(2) + Date.now().toString(36);
     }
 
-    getDefaultPlayerPayload(uid, name, email, role = 'player') {
+    getDefaultPlayerPayload(uid, name, email, role = 'player', extra = {}) {
+        const username = extra.username || (email ? email.split('@')[0] : 'wizard');
+        const firstName = extra.firstName || '';
+        const lastName = extra.lastName || '';
+        const resolvedName = (firstName && lastName)
+            ? `${firstName} ${lastName}`.trim()
+            : (name || username);
+
         return {
             id: uid,
-            username: email.split('@')[0],
+            username: username,
+            usernameLower: username.toLowerCase(),
+            firstName: firstName,
+            lastName: lastName,
             email,
-            name,
+            program: extra.program || 'Engineering',
+            department: extra.department || 'College of Engineering',
+            name: resolvedName,
             role,
             level: role === 'admin' ? 99 : 1,
             xp: role === 'admin' ? 999999 : 0,
@@ -90,6 +102,11 @@ class AuthService {
             return {
                 id: profile.id,
                 name: profile.name,
+                username: profile.username || 'admin',
+                firstName: profile.firstName || 'Admin',
+                lastName: profile.lastName || 'Overseer',
+                program: profile.program || 'Engineering',
+                department: profile.department || 'College of Engineering',
                 title: 'Grandmaster Overseer',
                 level: 99,
                 memberSince: 'Jan 2024',
@@ -160,6 +177,11 @@ class AuthService {
         return {
             id: profile.id,
             name: profile.name,
+            username: profile.username || '',
+            firstName: profile.firstName || '',
+            lastName: profile.lastName || '',
+            program: profile.program || 'Engineering',
+            department: profile.department || 'College of Engineering',
             title: 'Novice Spellcaster',
             level: 1,
             memberSince: new Date().toLocaleString('en-US', { month: 'short', year: 'numeric' }),
@@ -330,21 +352,28 @@ class AuthService {
         if (!identifier.includes('@')) {
             try {
                 const usersRef = window.firebaseDb.collection(this.USERS_COLLECTION);
-                const usernameQuery = await usersRef
-                    .where('username', '==', identifier)
+                let usernameQuery = await usersRef
+                    .where('usernameLower', '==', identifier)
                     .limit(1)
                     .get();
+
+                if (usernameQuery.empty) {
+                    usernameQuery = await usersRef
+                        .where('username', '==', identifier)
+                        .limit(1)
+                        .get();
+                }
 
                 if (!usernameQuery.empty) {
                     loginEmail = usernameQuery.docs[0].data().email;
                 } else {
-                    throw new Error(`Username "${emailOrUsername}" not found. Please use email or correct username.`);
+                    throw new Error(`Username "${emailOrUsername}" not found. Please use your official @ncst.edu.ph email or registered username.`);
                 }
             } catch (error) {
                 if (error.message.includes('not found')) {
                     throw error;
                 }
-                throw new Error('Error looking up username. Please try with email instead.');
+                throw new Error('Error looking up username. Please try signing in with your email instead.');
             }
         }
 
@@ -378,21 +407,90 @@ class AuthService {
         }
     }
 
-    async register(name, email, password) {
+    async register(nameOrPayload, emailArg, passwordArg) {
         await this._firebaseReady;
 
-        const normalizedEmail = (email || '').trim().toLowerCase();
+        let firstName = '';
+        let lastName = '';
+        let username = '';
+        let email = '';
+        let password = '';
+
+        if (typeof nameOrPayload === 'object' && nameOrPayload !== null) {
+            firstName = (nameOrPayload.firstName || '').trim();
+            lastName = (nameOrPayload.lastName || '').trim();
+            username = (nameOrPayload.username || '').trim();
+            email = (nameOrPayload.email || '').trim().toLowerCase();
+            password = nameOrPayload.password || '';
+        } else {
+            const rawName = (nameOrPayload || '').trim();
+            const nameParts = rawName.split(' ');
+            firstName = nameParts[0] || '';
+            lastName = nameParts.slice(1).join(' ') || '';
+            email = (emailArg || '').trim().toLowerCase();
+            username = email.split('@')[0] || '';
+            password = passwordArg || '';
+        }
+
+        // Domain restriction: NCST Institutional Email ONLY
+        if (!email.endsWith('@ncst.edu.ph')) {
+            throw new Error('Registration is restricted to NCST Engineering students. Please use your official @ncst.edu.ph email.');
+        }
+
+        // Username format check
+        if (!username || username.length < 3 || username.length > 24 || !/^[a-zA-Z0-9_]+$/.test(username)) {
+            throw new Error('Username must be between 3 and 24 characters and contain only letters, numbers, or underscores.');
+        }
+
+        // Check if username is already taken in Firestore
+        try {
+            const usersRef = window.firebaseDb.collection(this.USERS_COLLECTION);
+            const usernameLower = username.toLowerCase();
+            const usernameSnapshot = await usersRef
+                .where('usernameLower', '==', usernameLower)
+                .limit(1)
+                .get();
+
+            if (!usernameSnapshot.empty) {
+                throw new Error(`The username "${username}" is already taken. Please choose another username.`);
+            }
+        } catch (err) {
+            if (err.message && err.message.includes('already taken')) {
+                throw err;
+            }
+            console.warn('Could not verify username uniqueness:', err);
+        }
+
+        const fullName = (firstName && lastName)
+            ? `${firstName} ${lastName}`.trim()
+            : (firstName || lastName || username);
 
         try {
-            const credential = await window.firebaseAuth.createUserWithEmailAndPassword(normalizedEmail, password);
+            const credential = await window.firebaseAuth.createUserWithEmailAndPassword(email, password);
             const fbUser = credential.user;
+
+            // Update Firebase Auth display name
+            try {
+                if (fbUser && typeof fbUser.updateProfile === 'function') {
+                    await fbUser.updateProfile({ displayName: fullName });
+                }
+            } catch (e) {
+                console.warn('Failed to set displayName on Firebase Auth:', e);
+            }
 
             const role = 'player';
             const profile = this.getDefaultPlayerPayload(
                 fbUser.uid,
-                name,
-                normalizedEmail,
-                role
+                fullName,
+                email,
+                role,
+                {
+                    firstName,
+                    lastName,
+                    username,
+                    program: 'Engineering',
+                    department: 'College of Engineering'
+                }
             );
 
             await this.setUserDoc(fbUser.uid, profile, false);

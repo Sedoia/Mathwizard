@@ -25,50 +25,59 @@
     </div>
 
     <nav class="fixed top-0 w-full z-50 bg-ncst-dark/95 border-b border-ncst-neon/20" style="box-shadow: 0 2px 20px rgba(0,0,0,0.8), 0 1px 0 rgba(201,168,76,0.1);">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 sm:h-20 flex justify-between items-center">
-            <div class="flex items-center gap-2 sm:gap-3 group cursor-pointer">
-                <a href="index.html" class="flex items-center gap-2 sm:gap-3 logo-container">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-20 flex justify-between items-center gap-4">
+            <!-- Brand Logo -->
+            <div class="flex items-center shrink-0">
+                <a href="index.html" class="flex items-center gap-2.5 sm:gap-3 logo-container group">
                     <img src="assets/img/logo.png" alt="Math Wizard Logo" class="w-8 sm:w-10 h-8 sm:h-10 logo-image transition-all duration-500 group-hover:drop-shadow-[0_0_8px_#C9A84C]">
                     <div>
-                        <h1 class="font-magic text-lg sm:text-xl text-white tracking-widest">Math<span class="text-ncst-gold">Wizard</span></h1>
-                        <p class="text-[0.5rem] sm:text-[0.6rem] uppercase tracking-[0.2em] text-ncst-neon font-bold">The Era Of Mages</p>
+                        <h1 class="font-magic text-lg sm:text-xl text-white tracking-widest leading-none">Math<span class="text-ncst-gold">Wizard</span></h1>
+                        <p class="text-[0.5rem] sm:text-[0.6rem] uppercase tracking-[0.2em] text-ncst-neon font-bold mt-0.5">The Era Of Mages</p>
                     </div>
                 </a>
             </div>
             
-            <div class="hidden md:flex items-center gap-6 lg:gap-10">
-                <a href="/pages/features.html" class="text-xs lg:text-sm uppercase tracking-widest hover:text-ncst-neon transition-colors relative group">
+            <!-- Center Nav Links -->
+            <div class="hidden lg:flex items-center justify-center gap-4 xl:gap-8 mx-auto px-4">
+                <a href="pages/features.html" class="nav-item text-xs xl:text-sm uppercase tracking-widest text-white hover:text-ncst-neon transition-colors py-1 whitespace-nowrap group">
                     <span class="text-ncst-neon mr-1 font-bold">01.</span> Features
                 </a>
-                <a href="index.html#gameplay" class="text-xs lg:text-sm uppercase tracking-widest hover:text-ncst-neon transition-colors relative group">
+                <a href="index.html#gameplay" class="nav-item text-xs xl:text-sm uppercase tracking-widest text-white hover:text-ncst-neon transition-colors py-1 whitespace-nowrap group">
                     <span class="text-ncst-neon mr-1 font-bold">02.</span> Gameplay
                 </a>
-                <a href="index.html#world" class="text-xs lg:text-sm uppercase tracking-widest hover:text-ncst-neon transition-colors relative group">
+                <a href="index.html#world" class="nav-item text-xs xl:text-sm uppercase tracking-widest text-white hover:text-ncst-neon transition-colors py-1 whitespace-nowrap group">
                     <span class="text-ncst-neon mr-1 font-bold">03.</span> World
                 </a>
-                <a href="pages/about.html" class="text-xs lg:text-sm uppercase tracking-widest hover:text-ncst-neon transition-colors relative group">
+                <a href="pages/about.html" class="nav-item text-xs xl:text-sm uppercase tracking-widest text-white hover:text-ncst-neon transition-colors py-1 whitespace-nowrap group">
                     <span class="text-ncst-neon mr-1 font-bold">04.</span> About
                 </a>
-                <a href="index.html#contact" class="text-xs lg:text-sm uppercase tracking-widest hover:text-ncst-neon transition-colors relative group">
+                <a href="index.html#contact" class="nav-item text-xs xl:text-sm uppercase tracking-widest text-white hover:text-ncst-neon transition-colors py-1 whitespace-nowrap group">
                     <span class="text-ncst-neon mr-1 font-bold">05.</span> Contact
                 </a>
             </div>
 
-            <a href="index.html#download" class="hidden md:flex iron-plaque-btn text-xs lg:text-sm">
-                DOWNLOAD <i class="fa-solid fa-download ml-2"></i>
-            </a>
-            <div id="desktop-auth-slot" class="hidden md:flex items-center gap-2">
-                <a id="desktop-signin-btn" href="auth.html" class="hidden md:flex rune-btn text-xs lg:text-sm">
-                SIGN IN <i class="fa-solid fa-arrow-right"></i>
+            <!-- Right Actions Cluster (Download & Sign In) -->
+            <div class="hidden lg:flex items-center gap-3 shrink-0">
+                <a href="index.html#download" class="iron-plaque-btn text-xs xl:text-sm whitespace-nowrap px-4 py-2">
+                    DOWNLOAD <i class="fa-solid fa-download ml-1.5"></i>
                 </a>
+                <div id="desktop-auth-slot" class="flex items-center gap-2">
+                    <a id="desktop-signin-btn" href="auth.html" class="rune-btn text-xs xl:text-sm whitespace-nowrap px-4 xl:px-5 py-2">
+                        SIGN IN <i class="fa-solid fa-arrow-right ml-1.5"></i>
+                    </a>
+                </div>
             </div>
-            <button class="md:hidden text-ncst-neon text-xl sm:text-2xl menu-toggle"><i class="fa-solid fa-bars-staggered"></i></button>
+
+            <!-- Mobile Menu Toggle Button -->
+            <button class="lg:hidden text-ncst-neon text-xl sm:text-2xl menu-toggle p-2 hover:text-ncst-gold transition-colors focus:outline-none" aria-label="Toggle navigation menu">
+                <i class="fa-solid fa-bars-staggered"></i>
+            </button>
         </div>
     </nav>
 
     <!-- Mobile Menu -->
-    <div id="mobile-menu" class="hidden fixed top-16 sm:top-20 left-0 right-0 bg-ncst-dark/95 border-b border-ncst-neon/20 md:hidden z-40 py-4 sm:py-6 px-4 sm:px-6 space-y-3 sm:space-y-4 animate-slideDown" style="background-color: rgba(26, 14, 5, 0.97);">
-        <a href="index.html#features" class="block text-xs sm:text-sm uppercase tracking-widest hover:text-ncst-neon transition-colors py-2">
+    <div id="mobile-menu" class="hidden fixed top-16 sm:top-20 left-0 right-0 bg-ncst-dark/95 border-b border-ncst-neon/20 lg:hidden z-40 py-4 sm:py-6 px-4 sm:px-6 space-y-3 sm:space-y-4 animate-slideDown" style="background-color: rgba(26, 14, 5, 0.97);">
+        <a href="pages/features.html" class="block text-xs sm:text-sm uppercase tracking-widest hover:text-ncst-neon transition-colors py-2">
             <span class="text-ncst-neon mr-1 font-bold">01.</span> Features
         </a>
         <a href="index.html#gameplay" class="block text-xs sm:text-sm uppercase tracking-widest hover:text-ncst-neon transition-colors py-2">
