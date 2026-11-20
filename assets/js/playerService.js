@@ -60,13 +60,16 @@ class PlayerService {
             },
             currency: {
                 gold: 0,
-                aether: 500,
-                crystals: 50,
+                aether: 0,
+                crystals: 0,
+                numerals: 0,
                 energy: {
                     current: 100,
                     max: 100
                 }
             },
+            crystals: 0,
+            numerals: 0,
             dailyChallenges: [],
             activeQuests: [],
             inventory: [],
@@ -132,10 +135,22 @@ class PlayerService {
         const xp = Number(p.stats?.xp ?? p.xp ?? u.xp ?? defaults.stats.xp);
         const maxXp = Number(p.stats?.maxXp ?? p.maxXp ?? u.xpToNextLevel ?? defaults.stats.maxXp);
 
-        // Currencies: Gold/Aether, Arcane Crystals, Mana Energy
-        const gold = Number(p.currency?.aether ?? p.currency?.gold ?? p.gold ?? u.aether ?? u.gold ?? defaults.currency.gold);
+        // Currencies: Gold/Aether, Arcane Crystals / Numerals, Mana Energy
+        const gold = Number(p.currency?.aether ?? p.currency?.gold ?? p.gold ?? u.aether ?? u.gold ?? defaults.currency.gold ?? 0);
         const aether = gold;
-        const crystals = Number(p.currency?.crystals ?? p.crystals ?? u.crystals ?? defaults.currency.crystals);
+        const crystals = Number(
+            p.currency?.numerals ??
+            p.currency?.crystals ??
+            p.numerals ??
+            p.crystals ??
+            u.currency?.numerals ??
+            u.currency?.crystals ??
+            u.numerals ??
+            u.crystals ??
+            defaults.currency.crystals ??
+            0
+        );
+        const numerals = crystals;
 
         let energyCurrent = 100;
         let energyMax = 100;
@@ -243,11 +258,14 @@ class PlayerService {
                 gold,
                 aether,
                 crystals,
+                numerals,
                 energy: {
                     current: energyCurrent,
                     max: energyMax
                 }
             },
+            crystals,
+            numerals,
             achievements,
             settings: {
                 ...defaults.settings,

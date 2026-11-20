@@ -67,7 +67,8 @@ class AuthService {
             xp: role === 'admin' ? 999999 : 0,
             xpToNextLevel: role === 'admin' ? 1000000 : 1000,
             gold: role === 'admin' ? 999999 : 0,
-            crystals: role === 'admin' ? 99999 : 50,
+            crystals: role === 'admin' ? 99999 : 0,
+            numerals: role === 'admin' ? 99999 : 0,
             energy: 100,
             createdAt: new Date().toISOString(),
             avatar: null,
@@ -210,12 +211,15 @@ class AuthService {
             },
             currency: {
                 gold: Number.isFinite(profile.gold) ? profile.gold : 0,
-                crystals: profile.crystals || 50,
+                crystals: Number.isFinite(profile.crystals) ? profile.crystals : (Number.isFinite(profile.numerals) ? profile.numerals : 0),
+                numerals: Number.isFinite(profile.numerals) ? profile.numerals : (Number.isFinite(profile.crystals) ? profile.crystals : 0),
                 energy: {
                     current: profile.energy || 100,
                     max: 100
                 }
             },
+            crystals: Number.isFinite(profile.crystals) ? profile.crystals : (Number.isFinite(profile.numerals) ? profile.numerals : 0),
+            numerals: Number.isFinite(profile.numerals) ? profile.numerals : (Number.isFinite(profile.crystals) ? profile.crystals : 0),
             dailyChallenges: [
                 { id: 'dc_1', name: 'Derivative Duel', progress: 0, max: 5, reward: '250 Gold', icon: 'fa-flash' },
                 { id: 'dc_2', name: 'Integration Challenge', progress: 0, max: 3, reward: '300 Gold', icon: 'fa-cube' },

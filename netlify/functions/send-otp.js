@@ -1,6 +1,6 @@
 /**
  * Netlify Serverless Function: send-otp
- * Generates an OTP, signs a verification token (HMAC), and delivers the code via email.
+ * Generates an OTP, signs a verification token (HMAC), and delivers the code via real email.
  *
  * Environment variables:
  *   OTP_SECRET: Secret key for signing verification tokens (fallback to system secret)
@@ -117,7 +117,7 @@ exports.handler = async (event) => {
 </html>`;
 
     let emailSent = false;
-    let providerUsed = 'none';
+    let deliveryError = null;
 
     // --- Strategy 1: Resend API ---
     if (process.env.RESEND_API_KEY) {
@@ -139,12 +139,13 @@ exports.handler = async (event) => {
 
             if (res.ok) {
                 emailSent = true;
-                providerUsed = 'resend';
             } else {
                 const errText = await res.text();
+                deliveryError = `Resend delivery failed: ${res.status}`;
                 console.error('Resend delivery failed:', res.status, errText);
             }
         } catch (err) {
+            deliveryError = `Resend error: ${err.message}`;
             console.error('Resend error:', err);
         }
     }
@@ -171,26 +172,27 @@ exports.handler = async (event) => {
             });
 
             emailSent = true;
-            providerUsed = 'smtp';
+            deliveryError = null;
         } catch (err) {
+            deliveryError = `SMTP error: ${err.message}`;
             console.error('SMTP error:', err);
         }
     }
 
-    const responsePayload = {
-        success: true,
-        token: token,
-        expiresAt: expiresAt,
-        emailSent: emailSent,
-        provider: providerUsed
-    };
-
-    // If email could not be sent (e.g. SMTP credentials not yet provided in Netlify),
-    // provide the debugCode so developer/tester is not blocked
     if (!emailSent) {
-        console.warn(`[MathWizard OTP] No email provider configured or delivery failed. OTP for ${email}: ${code}`);
-        responsePayload.debugCode = code;
-        responsePayload.notice = 'Email provider not configured in Netlify yet. Use debug code for testing.';
+        const errorMsg = deliveryError || 'Email delivery service is not configured. Please set SMTP_HOST/SMTP_USER/SMTP_PASS or RESEND_API_KEY in Netlify.';
+        console.error('[MathWizard OTP]', errorMsg);
+        return {
+            statusCode: 500,
+            headers: {
+                'content-type': 'application/json; charset=utf-8',
+                'cache-control': 'no-store'
+            },
+            body: JSON.stringify({
+                success: false,
+                error: 'Unable to send verification email. Please check that the email service is properly configured or try again later.'
+            })
+        };
     }
 
     return {
@@ -199,6 +201,12 @@ exports.handler = async (event) => {
             'content-type': 'application/json; charset=utf-8',
             'cache-control': 'no-store'
         },
-        body: JSON.stringify(responsePayload)
+        body: JSON.stringify({
+            success: true,
+            token: token,
+            expiresAt: expiresAt,
+            emailSent: true,
+            message: 'Verification code sent to your email.'
+        })
     };
 };

@@ -244,7 +244,8 @@ class ProfileRenderer {
 
         const crystalsEl = document.getElementById('player-crystals');
         if (crystalsEl) {
-            crystalsEl.textContent = Number(currency.crystals ?? this.playerData.crystals ?? 0).toLocaleString();
+            const numeralsVal = Number(currency.numerals ?? currency.crystals ?? this.playerData.numerals ?? this.playerData.crystals ?? 0);
+            crystalsEl.textContent = numeralsVal.toLocaleString();
         }
 
         const energyEl = document.getElementById('player-energy');
@@ -529,7 +530,7 @@ class ProfileRenderer {
         const hours = Number(stats.playTime || 0);
         const currentStreak = Number(streak.current || 0);
         const bestStreak = Number(streak.best || currentStreak || 0);
-        const crystals = Number(currency.crystals ?? this.playerData.crystals ?? 0);
+        const crystals = Number(currency.numerals ?? currency.crystals ?? this.playerData.numerals ?? this.playerData.crystals ?? 0);
         const energyCurrent = Number(currency.energy?.current ?? currency.energy ?? this.playerData.energy ?? 100);
         const energyMax = Number(currency.energy?.max ?? 100);
 

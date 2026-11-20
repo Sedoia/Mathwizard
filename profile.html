@@ -49,9 +49,12 @@
                 const goldEl = document.getElementById('player-gold');
                 if (goldEl) goldEl.textContent = (user.gold || 0).toLocaleString();
                 
-                // Update crystals
+                // Update Numerals (formerly Arcane Crystals)
                 const crystalsEl = document.getElementById('player-crystals');
-                if (crystalsEl) crystalsEl.textContent = (user.crystals || 0).toLocaleString();
+                if (crystalsEl) {
+                    const numVal = Number(user.numerals ?? user.crystals ?? user.currency?.numerals ?? user.currency?.crystals ?? 0);
+                    crystalsEl.textContent = numVal.toLocaleString();
+                }
 
                 // Update energy
                 const energyEl = document.getElementById('player-energy');

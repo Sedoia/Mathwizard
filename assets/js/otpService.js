@@ -13,10 +13,6 @@ class OTPService {
         this.purpose = null;
         this.attempts = 0;
         this.MAX_ATTEMPTS = 5;
-
-        // Local development fallback state
-        this.isLocalDev = false;
-        this.localDevCode = null;
     }
 
     /**
@@ -25,7 +21,7 @@ class OTPService {
      *
      * @param {string} email - Recipient email
      * @param {string} purpose - 'registration' or 'login'
-     * @returns {Promise<{success: boolean, message: string, emailSent: boolean, debugCode?: string}>}
+     * @returns {Promise<{success: boolean, message: string}>}
      */
     async sendOTP(email, purpose = 'registration') {
         const normalizedEmail = (email || '').trim().toLowerCase();
@@ -37,69 +33,27 @@ class OTPService {
         this.email = normalizedEmail;
         this.purpose = purpose;
 
-        try {
-            const response = await fetch('/.netlify/functions/send-otp', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    email: normalizedEmail,
-                    purpose: purpose
-                })
-            });
+        const response = await fetch('/.netlify/functions/send-otp', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                email: normalizedEmail,
+                purpose: purpose
+            })
+        });
 
-            if (response.ok) {
-                const data = await response.json();
-                this.token = data.token;
-                this.expiresAt = data.expiresAt;
-                this.isLocalDev = false;
+        const data = await response.json().catch(() => ({}));
 
-                if (data.debugCode) {
-                    console.log(
-                        `%c[MathWizard OTP]: ${data.debugCode}`,
-                        'background: #1a1a2e; color: #c9a84c; font-size: 16px; font-weight: bold; padding: 6px 12px; border-radius: 6px; border: 1px solid #c9a84c;'
-                    );
-                }
-
-                return {
-                    success: true,
-                    message: data.emailSent
-                        ? 'Verification code sent to your NCST email address.'
-                        : 'Verification code generated.',
-                    emailSent: Boolean(data.emailSent),
-                    debugCode: data.debugCode || null
-                };
-            }
-
-            // If Netlify function returned an error status (e.g. 404 in local Live Server)
-            console.warn('Netlify send-otp endpoint returned status:', response.status);
-            return this._fallbackLocalDev(normalizedEmail, purpose);
-
-        } catch (networkErr) {
-            console.warn('send-otp network error, falling back to local dev verification:', networkErr?.message || networkErr);
-            return this._fallbackLocalDev(normalizedEmail, purpose);
+        if (!response.ok || !data.success) {
+            throw new Error(data.error || 'Failed to send verification code. Please try again.');
         }
-    }
 
-    /**
-     * Fallback for local development when Netlify functions are not running locally.
-     */
-    _fallbackLocalDev(email, purpose) {
-        this.isLocalDev = true;
-        // Generate a 6-digit dev code
-        const devCode = String(Math.floor(100000 + Math.random() * 900000));
-        this.localDevCode = devCode;
-        this.expiresAt = Date.now() + 5 * 60 * 1000;
-
-        console.log(
-            `%c[MathWizard Dev Mode OTP]: ${devCode} (Valid for 5 minutes)`,
-            'background: #1a1a2e; color: #c9a84c; font-size: 16px; font-weight: bold; padding: 6px 12px; border-radius: 6px; border: 1px solid #c9a84c;'
-        );
+        this.token = data.token;
+        this.expiresAt = data.expiresAt;
 
         return {
             success: true,
-            message: 'Dev Mode: Code generated. Check browser console (F12) for code.',
-            emailSent: false,
-            debugCode: devCode
+            message: data.message || 'Verification code sent to your NCST email address.'
         };
     }
 
@@ -133,21 +87,6 @@ class OTPService {
             return { success: false, message: 'Verification code has expired. Please request a new code.' };
         }
 
-        // Local development mode verification
-        if (this.isLocalDev) {
-            if (normalizedCode === this.localDevCode) {
-                return { success: true, message: 'Email verified successfully!' };
-            }
-            const remaining = this.MAX_ATTEMPTS - this.attempts;
-            return {
-                success: false,
-                message: remaining > 0
-                    ? `Incorrect code. ${remaining} attempt${remaining === 1 ? '' : 's'} remaining.`
-                    : 'Too many incorrect attempts. Please request a new code.'
-            };
-        }
-
-        // Production serverless verification
         try {
             const response = await fetch('/.netlify/functions/verify-otp', {
                 method: 'POST',
@@ -195,8 +134,6 @@ class OTPService {
         this.email = null;
         this.purpose = null;
         this.attempts = 0;
-        this.isLocalDev = false;
-        this.localDevCode = null;
     }
 
     /**
