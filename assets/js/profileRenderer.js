@@ -142,6 +142,19 @@ class ProfileRenderer {
             `;
         }
 
+        // Update bio
+        const bioEl = document.getElementById('player-bio');
+        if (bioEl) {
+            const bioText = (data.bio || window.authService?.getCurrentUser?.()?.bio || '').trim();
+            if (bioText) {
+                bioEl.textContent = bioText;
+                bioEl.classList.remove('hidden');
+            } else {
+                bioEl.textContent = '';
+                bioEl.classList.add('hidden');
+            }
+        }
+
         // Update level if element present
         const levelEl = document.getElementById('player-level');
         if (levelEl) levelEl.textContent = data.level;

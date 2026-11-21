@@ -156,7 +156,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             emailInput.value = currentUser.email || '';
         }
         if (bioInput) {
-            bioInput.value = playerData.bio || '';
+            bioInput.value = playerData.bio || currentUser?.bio || '';
         }
         if (discordInput) {
             discordInput.value = playerData.socialLinks?.discord || '';

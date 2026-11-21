@@ -42,6 +42,19 @@
                 const nameEl = document.getElementById('player-name');
                 if (nameEl) nameEl.textContent = user.name || user.username;
                 
+                // Update username
+                const usernameEl = document.getElementById('player-username');
+                if (usernameEl && user.username) {
+                    usernameEl.textContent = `@${String(user.username).replace(/^@+/, '')}`;
+                }
+
+                // Update bio
+                const bioEl = document.getElementById('player-bio');
+                if (bioEl && user.bio) {
+                    bioEl.textContent = user.bio;
+                    bioEl.classList.remove('hidden');
+                }
+                
                 // Update level
                 const levelEl = document.getElementById('player-level');
                 if (levelEl) levelEl.textContent = user.level || 1;
@@ -169,6 +182,7 @@
                         <h2 id="player-name" class="font-magic text-lg sm:text-xl text-ncst-gold text-gold-glow mb-1 runic-glow">Loading...</h2>
                         <p id="player-username" class="text-xs text-gray-400 mb-2"></p>
                         <div id="rank-badge" class="hidden text-center mb-3 py-1 px-3 rounded-full bg-ncst-gold/10 border border-ncst-gold/30"></div>
+                        <p id="player-bio" class="hidden text-xs text-gray-500 dark:text-gray-300 italic mb-3 px-2 line-clamp-3 break-words"></p>
 
                         <div class="text-xs border-t border-ncst-neon/20 pt-2 flex justify-between items-center">
                             <span class="text-gray-400">Member Since</span>
@@ -374,7 +388,7 @@
 
                         <div>
                             <label class="block text-xs font-bold text-ncst-neon uppercase tracking-wider mb-2">Bio</label>
-                            <textarea id="bio-input" rows="3" placeholder="Tell others about yourself..." class="w-full px-4 py-3 bg-ncst-dark/50 border border-ncst-neon/30 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-ncst-neon focus:ring-1 focus:ring-ncst-neon/50 transition-all resize-none">Math enthusiast and calculus champion from NCST. On a quest to master all mathematical spells! 🧙‍♂️</textarea>
+                            <textarea id="bio-input" rows="3" placeholder="Tell others about yourself..." class="w-full px-4 py-3 bg-ncst-dark/50 border border-ncst-neon/30 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-ncst-neon focus:ring-1 focus:ring-ncst-neon/50 transition-all resize-none"></textarea>
                         </div>
 
                         <!-- Social Links -->
