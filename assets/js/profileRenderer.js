@@ -267,25 +267,6 @@ class ProfileRenderer {
      */
     renderOverview() {
         const stats = this.playerData.stats || {};
-        const solved = Number(stats.challengesWon || 0);
-        const accuracy = Number(stats.accuracy || 0);
-        const baseMastery = solved > 0 ? accuracy : 0;
-
-        const derivativeScore = Math.min(100, Math.max(0, Math.round(baseMastery)));
-        const integralScore = Math.min(100, Math.max(0, Math.round(baseMastery * 0.92)));
-        const limitsScore = Math.min(100, Math.max(0, Math.round(baseMastery * 0.88)));
-        const applicationsScore = Math.min(100, Math.max(0, Math.round(baseMastery * 0.85)));
-
-        const container = document.getElementById('overview-topic-bars');
-        if (container) {
-            container.innerHTML = `
-                ${this.renderTopicBar('Derivatives & Rates of Change', derivativeScore, 'from-ncst-neon to-green-400', 'text-ncst-neon')}
-                ${this.renderTopicBar('Integrals & Area Calculations', integralScore, 'from-ncst-gold to-yellow-400', 'text-ncst-gold')}
-                ${this.renderTopicBar('Limits & Continuity', limitsScore, 'from-blue-400 to-blue-500', 'text-blue-400')}
-                ${this.renderTopicBar('Applications of Derivatives', applicationsScore, 'from-purple-400 to-purple-500', 'text-purple-400')}
-            `;
-        }
-
         const currency = this.playerData.currency || {};
         const streak = this.playerData.streak || {};
         const goldVal = Number(currency.aether ?? currency.gold ?? this.playerData.gold ?? 0);

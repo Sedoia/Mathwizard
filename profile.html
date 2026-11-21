@@ -271,98 +271,45 @@
                     </div>
                 </div>
 
-                <!-- Topic Mastery / Learning Progress -->
+                <!-- Quick Stats -->
                 <div class="parchment-panel p-5 sm:p-6 mb-5">
-                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 mb-6">
-                        <div>
-                            <h3 class="font-magic text-xl sm:text-2xl text-ncst-gold text-gold-glow flex items-center gap-2">
-                                <i class="fa-solid fa-graduation-cap text-ncst-gold"></i>Calculus Topic Mastery
-                            </h3>
-                            <p class="text-xs text-gray-400">Real-time proficiency tracked across arcane mathematical realms</p>
-                        </div>
-                        <span class="text-xs font-mono text-ncst-neon bg-ncst-neon/10 px-3 py-1 rounded-full border border-ncst-neon/20">
-                            Live Game Tracking
+                    <div class="flex items-center justify-between mb-5">
+                        <h3 class="font-magic text-xl sm:text-2xl text-ncst-gold text-gold-glow flex items-center gap-2">
+                            <i class="fa-solid fa-chart-simple text-ncst-gold"></i>Quick Stats
+                        </h3>
+                        <span class="text-[11px] text-gray-400 flex items-center gap-1">
+                            <i class="fa-solid fa-circle text-ncst-neon text-[8px] animate-pulse"></i> Live from Firebase
                         </span>
                     </div>
-
-                    <div id="overview-topic-bars" class="space-y-4">
-                        <!-- Populated dynamically by profileRenderer -->
-                        <div>
-                            <div class="flex justify-between text-sm mb-1">
-                                <span class="text-gray-400">Derivatives & Rates of Change</span>
-                                <span class="text-ncst-neon font-bold">0%</span>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        <div class="glass-panel p-4 rounded-xl text-center border border-ncst-gold/20 hover:border-ncst-gold/50 transition-all group">
+                            <div class="w-10 h-10 mx-auto mb-2 rounded-full bg-ncst-gold/15 flex items-center justify-center group-hover:scale-110 transition-transform">
+                                <i class="fa-solid fa-coins text-ncst-gold text-lg"></i>
                             </div>
-                            <div class="h-3 bg-ncst-dark/50 rounded-full overflow-hidden">
-                                <div class="h-full bg-gradient-to-r from-ncst-neon to-green-400 rounded-full" style="width: 0%"></div>
-                            </div>
+                            <p id="overview-gold" class="text-2xl font-bold text-ncst-gold">0</p>
+                            <p class="text-xs text-gray-400 mt-1 uppercase tracking-wider">Aether</p>
+                            <a href="pages/top-up.html" class="text-[10px] text-ncst-neon hover:underline mt-1 inline-block">Top Up &rarr;</a>
                         </div>
-                        <div>
-                            <div class="flex justify-between text-sm mb-1">
-                                <span class="text-gray-400">Integrals & Area Calculations</span>
-                                <span class="text-ncst-gold font-bold">0%</span>
+                        <div class="glass-panel p-4 rounded-xl text-center border border-ncst-neon/20 hover:border-ncst-neon/50 transition-all group">
+                            <div class="w-10 h-10 mx-auto mb-2 rounded-full bg-ncst-neon/15 flex items-center justify-center group-hover:scale-110 transition-transform">
+                                <i class="fa-solid fa-gem text-ncst-neon text-lg"></i>
                             </div>
-                            <div class="h-3 bg-ncst-dark/50 rounded-full overflow-hidden">
-                                <div class="h-full bg-gradient-to-r from-ncst-gold to-yellow-400 rounded-full" style="width: 0%"></div>
-                            </div>
+                            <p id="overview-crystals" class="text-2xl font-bold text-ncst-neon">0</p>
+                            <p class="text-xs text-gray-400 mt-1 uppercase tracking-wider">Numerals</p>
                         </div>
-                        <div>
-                            <div class="flex justify-between text-sm mb-1">
-                                <span class="text-gray-400">Limits & Continuity</span>
-                                <span class="text-blue-400 font-bold">0%</span>
+                        <div class="glass-panel p-4 rounded-xl text-center border border-orange-400/20 hover:border-orange-400/50 transition-all group">
+                            <div class="w-10 h-10 mx-auto mb-2 rounded-full bg-orange-400/15 flex items-center justify-center group-hover:scale-110 transition-transform">
+                                <i class="fa-solid fa-fire text-orange-400 text-lg"></i>
                             </div>
-                            <div class="h-3 bg-ncst-dark/50 rounded-full overflow-hidden">
-                                <div class="h-full bg-gradient-to-r from-blue-400 to-blue-500 rounded-full" style="width: 0%"></div>
-                            </div>
+                            <p id="overview-streak" class="text-2xl font-bold text-orange-400">0 Days</p>
+                            <p class="text-xs text-gray-400 mt-1 uppercase tracking-wider">Current Streak</p>
                         </div>
-                        <div>
-                            <div class="flex justify-between text-sm mb-1">
-                                <span class="text-gray-400">Applications of Derivatives</span>
-                                <span class="text-purple-400 font-bold">0%</span>
+                        <div class="glass-panel p-4 rounded-xl text-center border border-yellow-400/20 hover:border-yellow-400/50 transition-all group">
+                            <div class="w-10 h-10 mx-auto mb-2 rounded-full bg-yellow-400/15 flex items-center justify-center group-hover:scale-110 transition-transform">
+                                <i class="fa-solid fa-clock text-yellow-400 text-lg"></i>
                             </div>
-                            <div class="h-3 bg-ncst-dark/50 rounded-full overflow-hidden">
-                                <div class="h-full bg-gradient-to-r from-purple-400 to-purple-500 rounded-full" style="width: 0%"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Game Status & Vault Quick Glance -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-                    <div class="parchment-panel p-6 border-l-4 border-ncst-gold">
-                        <div class="flex items-center justify-between mb-3">
-                            <h4 class="font-heading text-xs uppercase tracking-wider text-ncst-gold">
-                                <i class="fa-solid fa-vault mr-2"></i>Currencies in Vault
-                            </h4>
-                            <a href="pages/top-up.html" class="text-xs text-ncst-neon hover:underline">Top Up &rarr;</a>
-                        </div>
-                        <div class="grid grid-cols-2 gap-3 mt-4">
-                            <div class="glass-panel p-3 rounded-lg text-center">
-                                <p class="text-xs text-gray-400 mb-1">Aether</p>
-                                <p id="overview-gold" class="text-2xl font-bold text-ncst-gold">0</p>
-                            </div>
-                            <div class="glass-panel p-3 rounded-lg text-center">
-                                <p class="text-xs text-gray-400 mb-1">Numerals</p>
-                                <p id="overview-crystals" class="text-2xl font-bold text-ncst-neon">0</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="parchment-panel p-6 border-l-4 border-ncst-neon">
-                        <div class="flex items-center justify-between mb-3">
-                            <h4 class="font-heading text-xs uppercase tracking-wider text-ncst-neon">
-                                <i class="fa-solid fa-gamepad mr-2"></i>Session Highlights
-                            </h4>
-                            <span class="text-[11px] text-gray-400">Firebase Cloud</span>
-                        </div>
-                        <div class="grid grid-cols-2 gap-3 mt-4">
-                            <div class="glass-panel p-3 rounded-lg text-center">
-                                <p class="text-xs text-gray-400 mb-1">Current Streak</p>
-                                <p id="overview-streak" class="text-2xl font-bold text-ncst-gold">0 Days</p>
-                            </div>
-                            <div class="glass-panel p-3 rounded-lg text-center">
-                                <p class="text-xs text-gray-400 mb-1">Total Play Time</p>
-                                <p id="overview-playtime" class="text-2xl font-bold text-yellow-400">0.0h</p>
-                            </div>
+                            <p id="overview-playtime" class="text-2xl font-bold text-yellow-400">0.0h</p>
+                            <p class="text-xs text-gray-400 mt-1 uppercase tracking-wider">Play Time</p>
                         </div>
                     </div>
                 </div>
