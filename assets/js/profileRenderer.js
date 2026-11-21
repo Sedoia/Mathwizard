@@ -128,9 +128,10 @@ class ProfileRenderer {
             titleEl.appendChild(crown);
         }
 
-        // Update rank badge
-        const rankBadge = document.querySelector('[class*="border-ncst-gold/50"]');
-        if (rankBadge) {
+        // Update rank badge — targets the dedicated #rank-badge element only
+        const rankBadge = document.getElementById('rank-badge');
+        if (rankBadge && safeRankName) {
+            rankBadge.classList.remove('hidden');
             rankBadge.innerHTML = `
                 <div class="flex items-center justify-center gap-2 mb-2">
                     <i class="fa-solid fa-star text-ncst-gold"></i>
