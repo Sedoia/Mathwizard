@@ -13,6 +13,10 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
     }
 
+    if (new URLSearchParams(window.location.search).get('mode') === 'register') {
+        toggleAuth();
+    }
+
     // Form elements
     const loginFormContainer = document.getElementById('login-form');
     const signupFormContainer = document.getElementById('signup-form');
