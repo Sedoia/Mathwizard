@@ -76,10 +76,10 @@
     const currency = user.currency && typeof user.currency === 'object' ? user.currency : {};
 
     const aether = Number(
-      user.aether
-      ?? currency.aether
-      ?? user.gold
+      user.gold
       ?? currency.gold
+      ?? user.aether
+      ?? currency.aether
       ?? 0
     );
 
@@ -173,23 +173,30 @@
         return false;
       }
 
-      const [playerDoc, userDoc] = await Promise.all([
+      const [playerDoc, userDoc, gameUserDoc] = await Promise.all([
         db.collection('players').doc(userId).get(),
-        db.collection('users').doc(userId).get()
+        db.collection('users').doc(userId).get(),
+        db.collection('game_users').doc(userId).get()
       ]);
 
+      const gameData = gameUserDoc.exists ? gameUserDoc.data() : null;
+      const playerData = playerDoc.exists ? playerDoc.data() : null;
+      const userData = userDoc.exists ? userDoc.data() : null;
+      const gameGold = Number(gameData?.gold ?? gameData?.currency?.gold);
       const playerAether = playerDoc.exists
-        ? Number(playerDoc.data()?.currency?.aether ?? playerDoc.data()?.currency?.gold)
+        ? Number(playerData?.currency?.gold ?? playerData?.gold ?? playerData?.currency?.aether)
         : NaN;
       const userAether = userDoc.exists
-        ? Number(userDoc.data()?.aether ?? userDoc.data()?.gold)
+        ? Number(userData?.gold ?? userData?.currency?.gold ?? userData?.aether)
         : NaN;
 
-      const aether = Number.isFinite(playerAether)
-        ? playerAether
-        : Number.isFinite(userAether)
-          ? userAether
-          : Number(user?.aether ?? user?.gold ?? 0);
+      const aether = Number.isFinite(gameGold)
+        ? gameGold
+        : Number.isFinite(playerAether)
+          ? playerAether
+          : Number.isFinite(userAether)
+            ? userAether
+            : Number(user?.gold ?? user?.aether ?? 0);
 
       const safeAether = Number.isFinite(aether) ? Math.max(0, aether) : 0;
 
