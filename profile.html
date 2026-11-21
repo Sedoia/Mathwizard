@@ -213,7 +213,7 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4 mb-5">
                 <div class="parchment-panel p-4 sm:p-5 border-2 border-ncst-gold flex items-center justify-between">
                     <div class="flex items-center gap-3.5">
-                        <div class="text-2xl sm:text-3xl text-ncst-gold"><i class="fa-solid fa-coins"></i></div>
+                        <div class="w-9 h-9 flex items-center justify-center shrink-0"><img src="assets/img/ICON_PremiumCurrency.png" alt="Aether" class="w-9 h-9 object-contain"></div>
                         <div>
                             <p class="font-heading text-xs uppercase tracking-wider" style="color:#a08060;">Aether Reserve</p>
                             <p id="player-gold" class="text-2xl sm:text-3xl font-bold text-ncst-gold">0</p>
@@ -250,28 +250,22 @@
             </div>
 
             <!-- Overview Tab (Redesigned) -->
+            <!-- Overview Tab -->
             <div id="profile-tab-overview" class="profile-tab-content">
-                <!-- Adventure Sanctum Banner -->
+                <!-- Sanctum Banner (no duplicate button) -->
                 <div class="parchment-panel p-5 sm:p-6 mb-5 border border-ncst-gold/40 relative overflow-hidden">
-                    <div class="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                        <div>
-                            <span class="text-xs uppercase tracking-widest text-ncst-neon font-bold flex items-center gap-2 mb-1">
-                                <i class="fa-solid fa-wand-magic-sparkles"></i> Wizard's Chamber
-                            </span>
-                            <h3 class="font-magic text-xl sm:text-2xl text-ncst-gold text-gold-glow">Adventure Overview</h3>
-                            <p class="text-xs text-gray-400 mt-1 max-w-xl">
-                                Welcome to your sanctum. Track your active calculus journey, keep your daily fire burning, and manage your mystical reserves.
-                            </p>
-                        </div>
-                        <div class="flex flex-wrap gap-3">
-                            <a href="pages/top-up.html" class="rune-btn text-xs px-4 py-2 flex items-center gap-2 whitespace-nowrap">
-                                <i class="fa-solid fa-coins"></i> Get Aether
-                            </a>
-                        </div>
+                    <div class="relative z-10">
+                        <span class="text-xs uppercase tracking-widest text-ncst-neon font-bold flex items-center gap-2 mb-1">
+                            <i class="fa-solid fa-wand-magic-sparkles"></i> Wizard's Chamber
+                        </span>
+                        <h3 class="font-magic text-xl sm:text-2xl text-ncst-gold text-gold-glow">Adventure Overview</h3>
+                        <p class="text-xs text-gray-400 mt-1 max-w-xl">
+                            Welcome to your sanctum. Track your active calculus journey, keep your daily fire burning, and manage your mystical reserves.
+                        </p>
                     </div>
                 </div>
 
-                <!-- Quick Stats -->
+                <!-- Quick Stats — unique data not shown elsewhere -->
                 <div class="parchment-panel p-5 sm:p-6 mb-5">
                     <div class="flex items-center justify-between mb-5">
                         <h3 class="font-magic text-xl sm:text-2xl text-ncst-gold text-gold-glow flex items-center gap-2">
@@ -282,34 +276,37 @@
                         </span>
                     </div>
                     <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                        <div class="glass-panel p-4 rounded-xl text-center border border-ncst-gold/20 hover:border-ncst-gold/50 transition-all group">
-                            <div class="w-10 h-10 mx-auto mb-2 rounded-full bg-ncst-gold/15 flex items-center justify-center group-hover:scale-110 transition-transform">
-                                <i class="fa-solid fa-coins text-ncst-gold text-lg"></i>
-                            </div>
-                            <p id="overview-gold" class="text-2xl font-bold text-ncst-gold">0</p>
-                            <p class="text-xs text-gray-400 mt-1 uppercase tracking-wider">Aether</p>
-                            <a href="pages/top-up.html" class="text-[10px] text-ncst-neon hover:underline mt-1 inline-block">Top Up &rarr;</a>
-                        </div>
+                        <!-- Problems Solved -->
                         <div class="glass-panel p-4 rounded-xl text-center border border-ncst-neon/20 hover:border-ncst-neon/50 transition-all group">
                             <div class="w-10 h-10 mx-auto mb-2 rounded-full bg-ncst-neon/15 flex items-center justify-center group-hover:scale-110 transition-transform">
-                                <i class="fa-solid fa-gem text-ncst-neon text-lg"></i>
+                                <i class="fa-solid fa-check-double text-ncst-neon text-lg"></i>
                             </div>
-                            <p id="overview-crystals" class="text-2xl font-bold text-ncst-neon">0</p>
-                            <p class="text-xs text-gray-400 mt-1 uppercase tracking-wider">Numerals</p>
+                            <p id="overview-solved" class="text-2xl font-bold text-ncst-neon">0</p>
+                            <p class="text-xs text-gray-400 mt-1 uppercase tracking-wider">Problems Solved</p>
                         </div>
+                        <!-- Accuracy -->
+                        <div class="glass-panel p-4 rounded-xl text-center border border-ncst-gold/20 hover:border-ncst-gold/50 transition-all group">
+                            <div class="w-10 h-10 mx-auto mb-2 rounded-full bg-ncst-gold/15 flex items-center justify-center group-hover:scale-110 transition-transform">
+                                <i class="fa-solid fa-bullseye text-ncst-gold text-lg"></i>
+                            </div>
+                            <p id="overview-accuracy" class="text-2xl font-bold text-ncst-gold">0%</p>
+                            <p class="text-xs text-gray-400 mt-1 uppercase tracking-wider">Accuracy Rate</p>
+                        </div>
+                        <!-- Best Streak -->
                         <div class="glass-panel p-4 rounded-xl text-center border border-orange-400/20 hover:border-orange-400/50 transition-all group">
                             <div class="w-10 h-10 mx-auto mb-2 rounded-full bg-orange-400/15 flex items-center justify-center group-hover:scale-110 transition-transform">
-                                <i class="fa-solid fa-fire text-orange-400 text-lg"></i>
+                                <i class="fa-solid fa-trophy text-orange-400 text-lg"></i>
                             </div>
-                            <p id="overview-streak" class="text-2xl font-bold text-orange-400">0 Days</p>
-                            <p class="text-xs text-gray-400 mt-1 uppercase tracking-wider">Current Streak</p>
+                            <p id="overview-best-streak" class="text-2xl font-bold text-orange-400">0</p>
+                            <p class="text-xs text-gray-400 mt-1 uppercase tracking-wider">Best Streak</p>
                         </div>
-                        <div class="glass-panel p-4 rounded-xl text-center border border-yellow-400/20 hover:border-yellow-400/50 transition-all group">
-                            <div class="w-10 h-10 mx-auto mb-2 rounded-full bg-yellow-400/15 flex items-center justify-center group-hover:scale-110 transition-transform">
-                                <i class="fa-solid fa-clock text-yellow-400 text-lg"></i>
+                        <!-- Level -->
+                        <div class="glass-panel p-4 rounded-xl text-center border border-purple-400/20 hover:border-purple-400/50 transition-all group">
+                            <div class="w-10 h-10 mx-auto mb-2 rounded-full bg-purple-400/15 flex items-center justify-center group-hover:scale-110 transition-transform">
+                                <i class="fa-solid fa-star text-purple-400 text-lg"></i>
                             </div>
-                            <p id="overview-playtime" class="text-2xl font-bold text-yellow-400">0.0h</p>
-                            <p class="text-xs text-gray-400 mt-1 uppercase tracking-wider">Play Time</p>
+                            <p id="overview-level" class="text-2xl font-bold text-purple-400">1</p>
+                            <p class="text-xs text-gray-400 mt-1 uppercase tracking-wider">Level</p>
                         </div>
                     </div>
                 </div>

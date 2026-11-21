@@ -269,11 +269,31 @@ class ProfileRenderer {
         const stats = this.playerData.stats || {};
         const currency = this.playerData.currency || {};
         const streak = this.playerData.streak || {};
+
+        const solved = Number(stats.challengesWon || 0);
+        const accuracy = Number(stats.accuracy || 0);
+        const currentStreak = Number(streak.current || 0);
+        const bestStreak = Number(streak.best || currentStreak || 0);
+        const hours = Number(stats.playTime || 0);
+        const level = Number(this.playerData.level || 1);
+
         const goldVal = Number(currency.aether ?? currency.gold ?? this.playerData.gold ?? 0);
         const numeralsVal = Number(currency.numerals ?? currency.crystals ?? this.playerData.numerals ?? this.playerData.crystals ?? 0);
-        const currentStreak = Number(streak.current || 0);
-        const hours = Number(stats.playTime || 0);
 
+        // Quick Stats cards (unique — not duplicated elsewhere on the page)
+        const ovSolved = document.getElementById('overview-solved');
+        if (ovSolved) ovSolved.textContent = solved.toLocaleString();
+
+        const ovAccuracy = document.getElementById('overview-accuracy');
+        if (ovAccuracy) ovAccuracy.textContent = `${accuracy.toFixed(1)}%`;
+
+        const ovBestStreak = document.getElementById('overview-best-streak');
+        if (ovBestStreak) ovBestStreak.textContent = bestStreak;
+
+        const ovLevel = document.getElementById('overview-level');
+        if (ovLevel) ovLevel.textContent = level;
+
+        // Mirror currency & session values used by other renderers (keep in sync)
         const ovGold = document.getElementById('overview-gold');
         if (ovGold) ovGold.textContent = goldVal.toLocaleString();
 
