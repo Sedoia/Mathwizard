@@ -555,10 +555,6 @@ class ProfileRenderer {
 
         tab.innerHTML = `
             <div class="parchment-panel p-6 sm:p-8 mb-8">
-                <h3 class="font-magic text-2xl text-ncst-gold text-gold-glow mb-6">
-                    <i class="fa-solid fa-chart-line text-ncst-gold mr-2"></i>Detailed Statistics
-                </h3>
-
                 <!-- Primary Metrics -->
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
                     <div class="parchment-panel p-4 text-center border-t-4 border-ncst-neon">
@@ -597,14 +593,6 @@ class ProfileRenderer {
                     </div>
                 </div>
 
-                <h4 class="font-bold text-white mb-4 text-sm uppercase tracking-wider">Performance by Topic</h4>
-                <div class="space-y-4">
-                    ${this.renderTopicBar('Derivatives & Rates of Change', derivativeScore, 'from-ncst-neon to-green-400', 'text-ncst-neon')}
-                    ${this.renderTopicBar('Integrals & Area Calculations', integralScore, 'from-ncst-gold to-yellow-400', 'text-ncst-gold')}
-                    ${this.renderTopicBar('Limits & Continuity', limitsScore, 'from-blue-400 to-blue-500', 'text-blue-400')}
-                    ${this.renderTopicBar('Applications of Derivatives', applicationsScore, 'from-purple-400 to-purple-500', 'text-purple-400')}
-                    ${this.renderTopicBar('Series & Sequences', seriesScore, 'from-ncst-accent to-pink-400', 'text-ncst-accent')}
-                </div>
             </div>
         `;
     }

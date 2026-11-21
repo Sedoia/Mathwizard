@@ -423,7 +423,7 @@
     const form = document.getElementById('identity-form');
     const message = document.getElementById('identity-message');
 
-    form.addEventListener('submit', (event) => {
+    form.addEventListener('submit', async (event) => {
       event.preventDefault();
 
       const username = sanitizeText(document.getElementById('username').value, 32);
@@ -453,6 +453,38 @@
         message.className = 'text-xs min-h-[1.25rem] text-red-300';
         updateProceedState();
         return;
+      }
+
+      // Validate username against Firestore to prevent wrong-username top-up
+      const db = window.firebaseDb;
+      if (db) {
+        try {
+          message.textContent = 'Verifying account…';
+          message.className = 'text-xs min-h-[1.25rem] text-gray-400';
+
+          const userDoc = await db.collection('users').doc(userId).get();
+          if (!userDoc.exists) {
+            state.identified = false;
+            message.textContent = 'No account found for this User ID. Please check and try again.';
+            message.className = 'text-xs min-h-[1.25rem] text-red-300';
+            updateProceedState();
+            return;
+          }
+
+          const storedUsername = String(userDoc.data()?.username || '').replace(/^@/, '').trim().toLowerCase();
+          const enteredUsername = username.replace(/^@/, '').trim().toLowerCase();
+
+          if (enteredUsername !== storedUsername) {
+            state.identified = false;
+            message.textContent = 'Username does not match this User ID. Please check your username and try again.';
+            message.className = 'text-xs min-h-[1.25rem] text-red-300';
+            updateProceedState();
+            return;
+          }
+        } catch (error) {
+          // If Firestore is unavailable, fall through and allow — don't block legitimate users
+          console.warn('[TopUp] Could not verify username against Firestore:', error);
+        }
       }
 
       state.identified = true;
