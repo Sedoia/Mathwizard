@@ -122,10 +122,11 @@ class PlayerService {
         }
     }
 
-    normalizePlayerData(playerId, playerDoc, userDoc) {
+    normalizePlayerData(playerId, playerDoc, userDoc, gameUserDoc) {
         const defaults = this.getDefaultPlayerData(playerId);
         const p = playerDoc || {};
         const u = userDoc || {};
+        const g = gameUserDoc || {};
 
         const level = Number(p.level ?? u.level ?? defaults.level);
         const xp = Number(p.stats?.xp ?? p.xp ?? u.xp ?? defaults.stats.xp);
@@ -155,7 +156,19 @@ class PlayerService {
         );
 
         // Currencies: Gold/Aether, Arcane Crystals / Numerals, Mana Energy
-        const gold = Number(p.currency?.aether ?? p.currency?.gold ?? p.gold ?? u.aether ?? u.gold ?? defaults.currency.gold ?? 0);
+        const gold = Number(
+            g.gold ??
+            g.currency?.gold ??
+            u.gold ??
+            p.currency?.gold ??
+            p.gold ??
+            u.currency?.gold ??
+            g.aether ??
+            p.currency?.aether ??
+            u.aether ??
+            defaults.currency.gold ??
+            0
+        );
         const aether = gold;
         let crystals = Number(
             p.currency?.numerals ??
@@ -317,19 +330,22 @@ class PlayerService {
             // Fetch real database records from Firestore
             let playerDoc = null;
             let userDoc = null;
+            let gameUserDoc = null;
 
             try {
-                const [playerDocSnap, userDocSnap] = await Promise.all([
+                const [playerDocSnap, userDocSnap, gameUserDocSnap] = await Promise.all([
                     window.firebaseDb.collection('players').doc(playerId).get(),
-                    window.firebaseDb.collection('users').doc(playerId).get()
+                    window.firebaseDb.collection('users').doc(playerId).get(),
+                    window.firebaseDb.collection('game_users').doc(playerId).get()
                 ]);
                 if (playerDocSnap.exists) playerDoc = playerDocSnap.data();
                 if (userDocSnap.exists) userDoc = userDocSnap.data();
+                if (gameUserDocSnap.exists) gameUserDoc = gameUserDocSnap.data();
             } catch (fetchErr) {
                 console.warn('Firestore fetch notice:', fetchErr?.message || fetchErr);
             }
 
-            const playerData = this.normalizePlayerData(playerId, playerDoc, userDoc || currentUser);
+            const playerData = this.normalizePlayerData(playerId, playerDoc, userDoc || currentUser, gameUserDoc);
 
             // If player document does not exist yet in Firestore, initialize it
             if (!playerDoc && window.firebaseDb) {
@@ -362,11 +378,18 @@ class PlayerService {
 
         let unsubscribePlayer = null;
         let unsubscribeUser = null;
+        let unsubscribeGameUser = null;
         let latestPlayerDoc = null;
         let latestUserDoc = null;
+        let latestGameUserDoc = null;
 
         const notify = () => {
-            const merged = this.normalizePlayerData(playerId, latestPlayerDoc, latestUserDoc || authService?.getCurrentUser?.());
+            const merged = this.normalizePlayerData(
+                playerId,
+                latestPlayerDoc,
+                latestUserDoc || authService?.getCurrentUser?.(),
+                latestGameUserDoc
+            );
             this.currentPlayer = merged;
             this.cachePlayer(playerId, merged);
             if (typeof callback === 'function') {
@@ -388,6 +411,11 @@ class PlayerService {
                     notify();
                 }
             }, err => console.warn('User snapshot notice:', err?.message || err));
+
+            unsubscribeGameUser = window.firebaseDb.collection('game_users').doc(playerId).onSnapshot(doc => {
+                latestGameUserDoc = doc.exists ? doc.data() : null;
+                notify();
+            }, err => console.warn('Game user snapshot notice:', err?.message || err));
         } catch (e) {
             console.warn('Real-time listener setup notice:', e);
         }
@@ -395,6 +423,7 @@ class PlayerService {
         return () => {
             if (unsubscribePlayer) unsubscribePlayer();
             if (unsubscribeUser) unsubscribeUser();
+            if (unsubscribeGameUser) unsubscribeGameUser();
         };
     }
 

@@ -256,6 +256,7 @@ async function processPaidTopupEvent(db, payload, eventData) {
 
     const userRef = db.collection('users').doc(resolvedUserId);
     const playerRef = db.collection('players').doc(resolvedUserId);
+    const gameUserRef = db.collection('game_users').doc(resolvedUserId);
 
     const [userDoc, playerDoc] = await Promise.all([
       tx.get(userRef),
@@ -312,6 +313,11 @@ async function processPaidTopupEvent(db, payload, eventData) {
         aether: admin.firestore.FieldValue.increment(resolvedCreditsToAdd)
       },
       purchaseHistory: admin.firestore.FieldValue.arrayUnion(transactionRecord),
+      updatedAt: now
+    }, { merge: true });
+
+    tx.set(gameUserRef, {
+      gold: admin.firestore.FieldValue.increment(resolvedCreditsToAdd),
       updatedAt: now
     }, { merge: true });
 
