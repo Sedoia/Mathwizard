@@ -18,6 +18,7 @@
  */
 
 const crypto = require('crypto');
+const { sendEmail } = require('./otp-common');
 
 function getSecret() {
     return process.env.OTP_SECRET ||
@@ -116,72 +117,10 @@ exports.handler = async (event) => {
 </body>
 </html>`;
 
-    let emailSent = false;
-    let deliveryError = null;
-
-    // --- Strategy 1: Resend API ---
-    if (process.env.RESEND_API_KEY) {
-        try {
-            const fromEmail = process.env.OTP_FROM_EMAIL || 'MathWizard <onboarding@resend.dev>';
-            const res = await fetch('https://api.resend.com/emails', {
-                method: 'POST',
-                headers: {
-                    'Authorization': `Bearer ${process.env.RESEND_API_KEY}`,
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    from: fromEmail,
-                    to: [email],
-                    subject: subject,
-                    html: htmlBody
-                })
-            });
-
-            if (res.ok) {
-                emailSent = true;
-            } else {
-                const errText = await res.text();
-                deliveryError = `Resend delivery failed: ${res.status}`;
-                console.error('Resend delivery failed:', res.status, errText);
-            }
-        } catch (err) {
-            deliveryError = `Resend error: ${err.message}`;
-            console.error('Resend error:', err);
-        }
-    }
-
-    // --- Strategy 2: Nodemailer SMTP ---
-    if (!emailSent && process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS) {
-        try {
-            const nodemailer = require('nodemailer');
-            const transporter = nodemailer.createTransport({
-                host: process.env.SMTP_HOST,
-                port: parseInt(process.env.SMTP_PORT || '587', 10),
-                secure: parseInt(process.env.SMTP_PORT || '587', 10) === 465,
-                auth: {
-                    user: process.env.SMTP_USER,
-                    pass: process.env.SMTP_PASS
-                }
-            });
-
-            await transporter.sendMail({
-                from: process.env.SMTP_FROM || `"MathWizard" <${process.env.SMTP_USER}>`,
-                to: email,
-                subject: subject,
-                html: htmlBody
-            });
-
-            emailSent = true;
-            deliveryError = null;
-        } catch (err) {
-            deliveryError = `SMTP error: ${err.message}`;
-            console.error('SMTP error:', err);
-        }
-    }
-
-    if (!emailSent) {
-        const errorMsg = deliveryError || 'Email delivery service is not configured. Please set SMTP_HOST/SMTP_USER/SMTP_PASS or RESEND_API_KEY in Netlify.';
-        console.error('[MathWizard OTP]', errorMsg);
+    try {
+        await sendEmail(email, subject, htmlBody);
+    } catch (error) {
+        console.error('[MathWizard OTP]', error.message);
         return {
             statusCode: 500,
             headers: {
