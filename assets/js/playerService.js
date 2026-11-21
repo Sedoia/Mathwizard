@@ -170,7 +170,19 @@ class PlayerService {
             0
         );
         const aether = gold;
+        let gameWallet = g.progress?.MathWizard_Wallet;
+        if (typeof gameWallet === 'string') {
+            try {
+                gameWallet = JSON.parse(gameWallet);
+            } catch (error) {
+                console.warn('Could not parse game wallet:', error?.message || error);
+                gameWallet = null;
+            }
+        }
+        const gameNumerals = gameWallet?.standard == null ? NaN : Number(gameWallet.standard);
+        const hasGameNumerals = Number.isFinite(gameNumerals);
         let crystals = Number(
+            (hasGameNumerals ? gameNumerals : undefined) ??
             p.currency?.numerals ??
             p.currency?.crystals ??
             p.numerals ??
@@ -185,7 +197,7 @@ class PlayerService {
 
         // Auto-fix: if an account had the legacy default of 50 seeded and hasn't unlocked levels or won challenges yet, reset to 0
         const isFreshPlayer = (challengesWon === 0) && (level === 1) && (p.role !== 'admin') && (u.role !== 'admin');
-        if (isFreshPlayer && (crystals === 50 || p.currency?.crystals === 50 || u.crystals === 50)) {
+        if (!hasGameNumerals && isFreshPlayer && (crystals === 50 || p.currency?.crystals === 50 || u.crystals === 50)) {
             crystals = 0;
             // Also sync the correction to Firestore so it persists permanently in the database
             if (window.firebaseDb && playerId && playerId !== 'player_12345') {
